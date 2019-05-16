@@ -10,6 +10,7 @@ import Exceptions.LoginSampleException;
 import FacadeLayer.KundeFacade;
 import FunctionLayer.SVG;
 import Model.Customer;
+import Model.Order;
 import Model.User;
 
 import java.io.IOException;
@@ -98,6 +99,10 @@ public class FrontController extends HttpServlet {
                 } else {
                     destination = "index.jsp";
                 }
+                break;
+            case "ordre":
+
+                ArrayList<Order> orders;
                 break;
 
         }
@@ -240,9 +245,14 @@ public class FrontController extends HttpServlet {
                             foundCustomer = KundeFacade.getCustomer(sb.toString(), action);
                         }
 
-                        request.setAttribute("foundCustomer", foundCustomer);
+                        if (foundCustomer == null || foundCustomer.equals(null)) {
+                            destination = "index.jsp";
+                        } else {
+                            request.setAttribute("foundCustomer", foundCustomer);
 
-                        destination = "/WEB-INF/search.jsp";
+                            destination = "/WEB-INF/search.jsp";
+                        }
+
                     } else {
                         destination = "index.jsp";
                     }

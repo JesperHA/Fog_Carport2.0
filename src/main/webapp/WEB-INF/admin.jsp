@@ -48,7 +48,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="kunde" id="kunde" placeholder="søg vh.a. kundens id eller kundens mail" autocomplete="off" required>
                                         <span class="input-group-btn">
-                                                <button class="btn btn-primary" type="button">Søg</button>
+                                                <button class="btn btn-primary" type="submit">Søg</button>
                                            </span>
                                     </div>
                                 </form>

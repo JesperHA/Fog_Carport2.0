@@ -41,11 +41,11 @@
                         <div class="row" style="margin-top:35px;">
                             <div class="col mx-auto">
                                 <form action="FrontController" method="post">
-                                    <input type="hidden" name="source" value="adminSearch" />
+                                    <input type="hidden" name="source" value="search" />
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="search" placeholder="søg vh.a. kundens id eller kundens mail" autocomplete="off" required>
+                                        <input type="text" class="form-control" name="kunde" id="kunde" placeholder="søg vh.a. kundens id eller kundens mail" autocomplete="off" required>
                                         <span class="input-group-btn">
-                                                <button class="btn btn-primary" type="button">Søg</button>
+                                                <button class="btn btn-primary" type="submit">Søg</button>
                                            </span>
                                     </div>
                                 </form>
