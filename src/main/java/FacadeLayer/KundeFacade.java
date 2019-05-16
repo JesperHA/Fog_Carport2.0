@@ -17,4 +17,8 @@ public class KundeFacade {
         return customerList;
     }
 
+    public static Customer getCustomer(String search, String action) {
+        return CustomerMapper.getCustomer(search, action);
+    }
+
 }

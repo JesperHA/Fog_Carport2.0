@@ -96,4 +96,44 @@ public class CustomerMapper {
             throw new LoginSampleException(ex.getMessage());
         }
     }
+
+    public static Customer getCustomer( String search, String action ) {
+
+        String SQL;
+
+        if (action.equals("mail")) {
+            SQL = "SELECT * FROM customers "
+                    + "WHERE email=?";
+        } else {
+            SQL = "SELECT * FROM customers "
+                    + "WHERE customer_id=?";
+        }
+
+        try {
+            Connection con = Connector.connection();
+            PreparedStatement ps = con.prepareStatement( SQL );
+            ps.setString( 1, search );
+            ResultSet rs = ps.executeQuery();
+            if ( rs.next() ) {
+                int customer_id = rs.getInt( "customer_id" );
+                String name = rs.getString("name");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String phone = rs.getString("phone");
+                String address = rs.getString("address");
+                String zipcode = rs.getString("zipcode");
+                String city = rs.getString("city");
+                int role = rs.getInt( "employee" );
+                Customer customer = new Customer(name, email, password, phone, address, zipcode, city, role);
+                customer.setId( customer_id );
+                return customer;
+            } else {
+                throw new LoginSampleException( "Could not validate user" );
+            }
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+
+        return null;
+    }
 }
