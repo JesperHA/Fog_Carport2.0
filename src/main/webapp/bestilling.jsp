@@ -66,14 +66,18 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Column 1</th>
-                                    <th>Column 2</th>
+                                    <th>stolper</th>
+                                    <th>længde</th>
+                                    <th>antal</th>
+                                    <th>pris</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>Cell 1</td>
-                                    <td>Cell 2</td>
+                                    <td><% out.println(materials.get(0).getProduct_description()); %></td>
+                                    <td><% out.println(materials.get(0).getUnit());%></td>
+                                    <td><% out.println(materials.get(0).getAmount());%></td>
+                                    <td><% out.println((((materials.get(0).getPrice() * materials.get(0).getUnit()) * materials.get(0).getAmount())) / 100);%></td>
                                 </tr>
                                 <tr>
                                     <td>Cell 3</td>

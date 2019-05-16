@@ -36,12 +36,45 @@ public class MaterialCalculator extends HttpServlet {
             specs = new ArrayList<>();
         }
 
+        session.removeAttribute("materials");
+
+        ArrayList<Material> materialBeregning;
+        materialBeregning = (ArrayList<Material>) session.getAttribute("materials");
+        if(materialBeregning == null){
+            materialBeregning = new ArrayList<>();
+        }
+
+
 
 
         switch(source){
 
             case "bygcarport":
 
+                ArrayList<Material> materialList = MaterialFacade.getMaterials();
+
+
+                //henter materialerne ud af ArrayList her:
+
+                Material reglar = materialList.get(0);
+                Material spærtræ = materialList.get(1);
+                Material stolper = materialList.get(2);
+                Material remme = materialList.get(2);
+                Material vinkel = materialList.get(3);
+                Material beslagskruer = materialList.get(4);
+                Material Skruer80mm = materialList.get(5);
+                Material skruer50mm = materialList.get(6);
+                Material vindtrækbånd = materialList.get(7);
+                Material trapezplade = materialList.get(8);
+                Material bundskrue = materialList.get(9);
+                Material eternit = materialList.get(10);
+                Material eternitskrue = materialList.get(11);
+                Material tagkrydsfiner = materialList.get(12);
+                Material tagpap = materialList.get(13);
+                Material tagfod = materialList.get(14);
+                Material vindskede = materialList.get(15);
+                Material klinkbeklædning = materialList.get(16);
+                Material bræt = materialList.get(17);
 
                 // henter parametre her
                 int size = Integer.parseInt(request.getParameter("size"));
@@ -53,9 +86,23 @@ public class MaterialCalculator extends HttpServlet {
                 int shedLength = Integer.parseInt(request.getParameter("shed_length"));
                 int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
 
+                //sætter længden på enhederne her:
 
+                stolper.setUnit(height + 100);
 
+                // sætter mængden af enheder her:
 
+                if(size == 0){
+                    stolper.setAmount(4);
+                }else{
+                    stolper.setAmount(6);
+                }
+                System.out.println(size);
+
+                // sætter materialerne ind i session
+
+                materialBeregning.add(stolper);
+                session.setAttribute("materials", materialBeregning);
 
 
 
