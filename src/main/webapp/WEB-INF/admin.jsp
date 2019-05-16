@@ -33,9 +33,12 @@
         padding: 20px;
     }
     #table-found {
-        margin:auto;
-        width:100%;
-        padding: 20px;
+        padding-right: 60px;
+    }
+    #customer-info {
+        padding-left: 60px;
+        text-align: left;
+
     }
 </style>
 
@@ -184,7 +187,6 @@
                                 </thead>
                                 <tbody>
                                 <%
-
                                     if (customerList.size() > 0) {
 
                                         int start = customerList.size()-1;
@@ -200,7 +202,9 @@
                                                     "<td><form method='post' action='FrontController' style='display:inline'><input type='hidden' name='source' value='search' /><button class='btn btn-dark btn-xs' type='submit' name='kunde' value='" + customerList.get(i).getCustomer_id() + "'><span style='font-size:12px;'>Se Kunde</span></button></form></td>\n" +
                                                     "</tr>");
                                         }
-                                    } %>
+                                    } else {
+                                        out.print("<tr><td><h5>Ingen</h5></td><td><h5>eksisterende</h5></td><td><h5>kunder</h5></td></tr>");
+                                    }%>
                                 </tbody>
                             </table>
                         </form>

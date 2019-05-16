@@ -124,8 +124,7 @@ public class CustomerMapper {
                 String zipcode = rs.getString("zipcode");
                 String city = rs.getString("city");
                 int role = rs.getInt( "employee" );
-                Customer customer = new Customer(name, email, password, phone, address, zipcode, city, role);
-                customer.setId( customer_id );
+                Customer customer = new Customer(customer_id, name, email, password, phone, address, zipcode, city, role);
                 return customer;
             } else {
                 throw new LoginSampleException( "Could not validate user" );
