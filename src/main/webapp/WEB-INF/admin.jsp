@@ -78,7 +78,7 @@
 
             if (searched != null) {
 
-            Customer foundCustomer = null;
+            Customer foundCustomer;
 
             foundCustomer = (Customer) request.getAttribute("foundCustomer");
 
@@ -88,7 +88,8 @@
         <%
                 } else { %>
                     <div class="row" style="text-align:center">
-                        <h3 style="padding-left:100px">Ingen kunde blev fundet!</h3>
+                        <h3 style="padding-left:100px">Ingen kunde blev fundet for søgeterm <i>"<%String searchTerm = (String) request.getAttribute("searchterm");
+                        out.print(searchTerm);%>"!</i></h3>
                     </div>
                 <% }
             }
@@ -108,8 +109,9 @@
                         <form method="post" action="FrontController" style="display:inline">
                             <input type="hidden" name="source" value="searchorders">
                             <input type="hidden" name="type" value="all">
-                            <button class="btn btn-primary float-right" type="submit" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
+                            <button class="btn btn-primary float-right" type="submit" style="display:inline-block;margin-top: 10px;">Se alle</button>
                         </form>
+                    </div>
                     <div id="table-orders">
                         <table class="table">
                             <thead class="thead-dark">
@@ -195,7 +197,7 @@
                                                     "<td> " + customerList.get(i).getName() + "</td>\n" +
                                                     "<td> " + customerList.get(i).getPhone() + "</td>\n" +
                                                     "<td> " + customerList.get(i).getCity() + "</td>\n" +
-                                                    "<td><button class=\"btn btn-dark btn-xs\" type=\"submit\" name='search' value='" + customerList.get(i).getCustomer_id() + "'><span style=\"font-size:12px;\">Se Kunde</span></button></td>\n" +
+                                                    "<td><form method='post' action='FrontController' style='display:inline'><input type='hidden' name='source' value='search' /><button class='btn btn-dark btn-xs' type='submit' name='kunde' value='" + customerList.get(i).getCustomer_id() + "'><span style='font-size:12px;'>Se Kunde</span></button></form></td>\n" +
                                                     "</tr>");
                                         }
                                     } %>

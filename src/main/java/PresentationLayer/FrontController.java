@@ -218,6 +218,9 @@ public class FrontController extends HttpServlet {
                     request.setAttribute("customers", customers);
 
                     String kundeSearch = (String) request.getParameter("kunde");
+                    request.setAttribute("searchterm", kundeSearch);
+
+                    System.out.println("SearchTerm: " + kundeSearch);
 
                     if (kundeSearch != null || !kundeSearch.isEmpty()) {
 
@@ -277,6 +280,18 @@ public class FrontController extends HttpServlet {
                 if (login != null && roleCheck == 1) {
                     if (type.equals("single")) {
                         // find en enkelt ordre
+
+                        String order_id = (String) request.getParameter("orderid");
+
+                        Order order = null;
+                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
+
+                        if (order != null) {
+                            request.setAttribute("foundOrder", order);
+                            request.setAttribute("type", type);
+
+                            destination = "WEB-INF/order.jsp";
+                        }
                     } else {
                         // send alle ordre
 
