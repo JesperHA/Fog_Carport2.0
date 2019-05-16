@@ -33,10 +33,10 @@
         String type = (String) request.getAttribute("type");
 
         if (type.equals("single")) { %>
-            <%@include file="includes/singleOrder.jsp"%>
+            <%@include file="inc_order/singleOrder.jsp"%>
 
         <% } else { %>
-            <%@include file="includes/allOrders.jsp"%>
+            <%@include file="inc_order/allOrders.jsp"%>
        <% } %>
 
 <%@include file="../include/footer.jsp"%>

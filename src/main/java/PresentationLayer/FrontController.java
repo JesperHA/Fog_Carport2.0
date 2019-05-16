@@ -271,7 +271,6 @@ public class FrontController extends HttpServlet {
             case "searchorders":
 
                 roleCheck = 0;
-
                 roleCheck = login.get(0).getRole();
 
                 String type = (String) request.getParameter("type");
@@ -303,9 +302,71 @@ public class FrontController extends HttpServlet {
                         destination = "WEB-INF/order.jsp";
                     }
 
-
                 } else {
                     destination = "index.jsp";
+                }
+                break;
+            case "changeOrder":
+                roleCheck = 0;
+                roleCheck = login.get(0).getRole();
+
+                if (login != null && roleCheck == 1) {
+
+                    String typeOf;
+
+                    ArrayList<Order> orderList = OrderFacade.getOrderList();
+                    String changeType = request.getParameter("changetype");
+
+                    if (changeType.equals("order")) {
+
+                        typeOf = "single";
+
+                        int updateOrder_id = Integer.parseInt(request.getParameter("updateOrder_id"));
+                        int updateCustomer_id = Integer.parseInt(request.getParameter("updateCustomer_id"));
+                        int updateLength = Integer.parseInt(request.getParameter("updateLength")); // length
+                        int updateHeight = Integer.parseInt(request.getParameter("updateHeight")); // height
+                        int updateWidth = Integer.parseInt(request.getParameter("updateWidth")); // width
+                        int updateRoof = Integer.parseInt(request.getParameter("updateRoof")); // roof
+                        int updateShed = Integer.parseInt(request.getParameter("updateShed")); // shed
+                        int updateShedtype = Integer.parseInt(request.getParameter("updateShedtype")); // shedtype
+                        int updateOrder_status = Integer.parseInt(request.getParameter("updateOrder_status")); // order_status
+                        String updateDate = request.getParameter("updateDate"); // date
+
+                        Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, updateDate);
+
+                        Order result = OrderFacade.changeOrder(updateOrder);
+
+                        if (result != null) {
+                            request.setAttribute("foundOrder", result);
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+                            destination = "WEB-INF/order.jsp";
+                        } else {
+                            request.setAttribute("updateOrderStatus", "fail");
+                            request.setAttribute("updateOrderId", updateOrder_id);
+
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+                            destination = "WEB-INF/order.jsp";
+                        }
+                    } else if (changeType.equals("status")){
+                        typeOf = "single";
+
+                        String statusOrder_id = request.getParameter("statusOrder_id");
+                        int newStatus = Integer.parseInt(request.getParameter("newStatus"));
+
+                        String success = OrderFacade.changeStatus(statusOrder_id, newStatus);
+
+                        if (success.equals("done")) {
+                            Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
+                            request.setAttribute("foundOrder", updatedOrder);
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+                            destination = "WEB-INF/order.jsp";
+                        } else if (success.equals("delete")) {
+                            // To Be Done
+                        }
+                    }
                 }
                 break;
 

@@ -108,4 +108,53 @@ public class OrderMapper {
         }
         return order;
     }
+
+    public static String changeStatus(String id, int status) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        String sqlQuery = "UPDATE orders SET order_status = ? WHERE order_id = ?";
+
+        try {
+            connection = Connector.connection();
+            ps = connection.prepareStatement(sqlQuery);
+            ps.setInt(1, status);
+            ps.setInt(2, Integer.parseInt(id));
+            ps.executeQuery();
+
+            System.out.println("Order status changed to " + status + ", for order id " + id);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return "failed";
+        }
+
+        return "done";
+    }
+
+    public static Order updateOrder(Order order) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        String sqlQuery = "UPDATE orders SET customer_id = ?, length = ?, height = ?, width = ?, roof = ?, shed = ?, shedtype = ?, date = ? WHERE order_id = ?";
+
+        try {
+            connection = Connector.connection();
+            ps = connection.prepareStatement(sqlQuery);
+            ps.setInt(1, order.getCustomer_id());
+            ps.setInt(2, order.getLength());
+            ps.setInt(3, order.getHeight());
+            ps.setInt(4, order.getWidth());
+            ps.setInt(5, order.getRoof());
+            ps.setInt(6, order.getShed());
+            ps.setInt(7, order.getShedtype());
+            ps.setString(8, order.getDate());
+            ps.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return order;
+    }
 }

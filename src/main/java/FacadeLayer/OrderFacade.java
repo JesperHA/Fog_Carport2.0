@@ -18,4 +18,16 @@ public class OrderFacade {
         Order order = OrderMapper.getOrder(id);
         return order;
     }
+
+    public static String changeStatus(String order_id, int status) {
+        String success = OrderMapper.changeStatus(order_id, status);
+
+        return success;
+    }
+
+    public static Order changeOrder(Order order) {
+        order = OrderMapper.updateOrder(order);
+
+        return order;
+    }
 }
