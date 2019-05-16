@@ -57,6 +57,8 @@ public class MaterialCalculator extends HttpServlet {
 
 
 
+
+
 //                for (int i = 0; i < materials.size(); i++) {
 //
 //                    System.out.println("Looper igennem antal gange: " + i);
