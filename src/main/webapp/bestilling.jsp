@@ -29,7 +29,9 @@
             <div class="col-md-12" style="margin-bottom: 30px;">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Her kan du se materialeliste samt en plantegning af din carport</h4>
+                        <h4 class="card-title">Din bestilling</h4>
+                        <p>Vi har genereret en materialeliste og en plantegning til dig.</p>
+                        <p>Din materialeliste afventer i øjeblikket godkendelse. </p>
                     </div>
                 </div>
             </div>
