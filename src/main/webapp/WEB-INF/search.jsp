@@ -5,6 +5,8 @@
 
     ArrayList<Customer> customer = (ArrayList<Customer>) session.getAttribute("login");
 
+    Customer foundCustomer = (Customer) request.getAttribute("foundCustomer");
+
 %>
 
 <%@include file="../include/header.jsp"%>
@@ -25,7 +27,7 @@
 </style>
 
 <main class="page pricing-table-page">
-    <h1 style="margin-bottom: 50px;margin-top: 120px;">Velkommen til admin panelet, <%out.println(customer.get(0).getName());%>!</h1>
+    <h1 style="margin-bottom: 50px;margin-top: 120px;">Brugersøgning fandt <%out.println(foundCustomer.getName());%>!</h1>
 </main>
 <div>
     <div class="container" style="margin-bottom: 50px;">
@@ -39,9 +41,9 @@
                         <div class="row" style="margin-top:35px;">
                             <div class="col mx-auto">
                                 <form action="FrontController" method="post">
-                                    <input type="hidden" name="source" value="search" />
+                                    <input type="hidden" name="source" value="adminSearch" />
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="kunde" id="kunde" placeholder="søg vh.a. kundens id eller kundens mail" autocomplete="off" required>
+                                        <input type="text" class="form-control" name="search" placeholder="søg vh.a. kundens id eller kundens mail" autocomplete="off" required>
                                         <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button">Søg</button>
                                            </span>
@@ -61,7 +63,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Seneste Ordre</h4>
-                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her kan du se et udtag af de seneste ordre</h6><button class="btn btn-primary float-right" type="button" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
+                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her kan du se kundens seneste ordre</h6><button class="btn btn-primary float-right" type="button" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
 
                     <div style="margin:auto;width:100%;">
                         <table class="table">
@@ -111,12 +113,6 @@
 
             <!-- Kunder -->
 
-
-
-            <%
-                ArrayList<Customer> customerList = (ArrayList<Customer>) request.getAttribute("customers");
-            %>
-
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -137,13 +133,15 @@
                                 </thead>
                                 <tbody>
                                 <%
-
+                                    /*
                                     if (customerList.size() > 0) {
 
                                         int start = customerList.size()-1;
                                         int stop = customerList.size()-4;
 
                                         for (int i = start; i >= stop; i=i-1) {
+
+                                            System.out.println("Kundens navn: " + customerList.get(i).getName());
 
                                             out.println("<tr>\n" +
                                                     "<th scope=\"row\"> " + customerList.get(i).getCustomer_id() + "</th>\n" +
@@ -153,7 +151,9 @@
                                                     "<td><button class=\"btn btn-dark btn-xs\" type=\"submit\" name='search' value='" + customerList.get(i).getCustomer_id() + "'><span style=\"font-size:12px;\">Se Kunde</span></button></td>\n" +
                                                     "</tr>");
                                         }
-                                    } %>
+                                    }
+
+                                */%>
                                 </tbody>
                             </table>
                         </form>
