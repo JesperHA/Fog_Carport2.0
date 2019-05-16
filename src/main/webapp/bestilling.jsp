@@ -75,14 +75,19 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <%
+                                    for (int i = 0; i < materials.size(); i++) {
+
+                                    %>
                                 <tr>
-                                    <td><% out.println(materials.get(0).getProduct_id()); %></td>
-                                    <td><% out.println(materials.get(0).getProduct_name()); %></td>
-                                    <td><% out.println(materials.get(0).getProduct_description()); %></td>
-                                    <td><% out.println(materials.get(0).getUnit());%> cm.</td>
-                                    <td><% out.println(materials.get(0).getAmount());%></td>
-                                    <td><% out.println(materials.get(0).getPrice());%></td>
+                                    <td><% out.println(materials.get(i).getProduct_id()); %></td>
+                                    <td><% out.println(materials.get(i).getProduct_name()); %></td>
+                                    <td><% out.println(materials.get(i).getProduct_description()); %></td>
+                                    <td><% out.println(materials.get(i).getUnit());%> cm.</td>
+                                    <td><% out.println(materials.get(i).getAmount());%></td>
+                                    <td><% out.println(materials.get(i).getPrice());%></td>
                                 </tr>
+                                <%}%>
                                 <tr>
                                     <td></td>
                                     <td></td>

@@ -9,9 +9,7 @@ public class Material {
     double unit = 0;
     int amount = 0;
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+
 
     public Material(int product_id, String product_name, String product_description, double price, double unit, int amount) {
         this.product_id = product_id;
@@ -20,6 +18,10 @@ public class Material {
         this.price = price;
         this.unit = unit;
         this.amount = amount;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public void setUnit(double unit) {

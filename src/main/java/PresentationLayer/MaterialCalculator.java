@@ -53,14 +53,15 @@ public class MaterialCalculator extends HttpServlet {
 
                 ArrayList<Material> materialList = MaterialFacade.getMaterials();
 
-                int nedgravningICm = 100;
 
 
                 //henter materialerne ud af ArrayList her:
 
+
                 Material reglar = materialList.get(0);
                 Material spærtræ = materialList.get(1);
-                Material stolper = materialList.get(2);
+                Material stolper = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
+                Material stolper2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material remme = materialList.get(2);
                 Material vinkel = materialList.get(3);
                 Material beslagskruer = materialList.get(4);
@@ -90,37 +91,57 @@ public class MaterialCalculator extends HttpServlet {
 
                 //sætter længden på enhederne her:
 
+                int nedgravningICm = 100;
+                int maxLængde = 600;
+                int minLængde = 240;
+                double stolpeAntal = stolper.getUnit() / maxLængde;
+
                 stolper.setUnit(height + nedgravningICm);
+                stolper2.setUnit(height + nedgravningICm);
 
                 // sætter mængden af enheder her:
 
                 if(size == 0){
                     stolper.setAmount(4);
+                    if(stolpeAntal > 1){
+                        stolper.setAmount(4 * (int)stolpeAntal);
+                    }
 
-                }else{
+                }else if(size == 1){
                     stolper.setAmount(6);
+                    if(stolpeAntal > 1){
+                        stolper.setAmount(6 * (int)stolpeAntal);
+                    }
                 }
+
+                if(stolpeAntal > 1){
+                    double længdeRest = stolper2.getUnit() % maxLængde;
+                    stolper2.setUnit(længdeUdregning(længdeRest));
+
+                    if(size == 0){
+                        stolper2.setAmount(4);
+                    }else{
+                        stolper2.setAmount(6);
+                    }
+
+
+                    double prisIalt = ((stolper2.getPrice() * stolper2.getAmount()) * stolper2.getUnit()) / 100;
+                    stolper2.setPrice(prisIalt);
+
+
+                    materialBeregning.add(stolper2);
+
+                }
+
 
                 //udregner nærmeste passende mål på enhed
 
-                double passendeMål = stolper.getUnit() % 30;
-                double minLængde = 240;
-                double maxLængde = 600;
-
-                if(passendeMål != 0){
-                    double divideretLængde = Math.ceil(stolper.getUnit() / 30);
-                    double passendeLængde = divideretLængde * 30;
-                    stolper.setUnit(passendeLængde);
-                }
-
-                if(stolper.getUnit() < minLængde){
-                    stolper.setUnit(minLængde);
-                }else if(stolper.getUnit() > maxLængde){
-                    stolper.setUnit(maxLængde);
-                }
+                stolper.setUnit(længdeUdregning(stolper.getUnit()));
 
 
                 // konverterer fra cm til m. og udregner pris for ordrelinbje
+
+
                 double prisIalt = ((stolper.getPrice() * stolper.getAmount()) * stolper.getUnit()) / 100;
                 stolper.setPrice(prisIalt);
 
@@ -128,9 +149,15 @@ public class MaterialCalculator extends HttpServlet {
                 // sætter materialerne ind i session
 
                 materialBeregning.add(stolper);
+
+
                 session.setAttribute("materials", materialBeregning);
 
 
+                for (int i = 0; i < materialBeregning.size(); i++) {
+                    System.out.println(materialBeregning.get(i).getUnit());
+
+                }
 
 //                for (int i = 0; i < materials.size(); i++) {
 //
@@ -141,8 +168,6 @@ public class MaterialCalculator extends HttpServlet {
 //                    session.setAttribute("materials", materialSession);
 //
 //                }
-
-
 
                 SVG svg = new SVG();
 
@@ -156,6 +181,28 @@ public class MaterialCalculator extends HttpServlet {
         request.getRequestDispatcher(destination).forward(request,response);
     }
 
+    private double længdeUdregning(double l) {
+
+        double længde = l;
+
+        double passendeMål = længde % 30;
+        double minLængde = 240;
+        double maxLængde = 600;
+
+        if(passendeMål != 0){
+            double divideretLængde = Math.ceil(længde / 30);
+            double passendeLængde = divideretLængde * 30;
+            længde = passendeLængde;
+        }
+
+        if(længde < minLængde){
+            længde = minLængde;
+        }else if(længde > maxLængde){
+            længde = maxLængde;
+        }
+
+        return længde;
+    }
 
 
     protected void doGet( HttpServletRequest request, HttpServletResponse response )
