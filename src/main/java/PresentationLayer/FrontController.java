@@ -7,6 +7,7 @@ package PresentationLayer;
 
 import DBAccess.CustomerMapper;
 import Exceptions.LoginSampleException;
+import FacadeLayer.KundeFacade;
 import FunctionLayer.SVG;
 import Model.Customer;
 import Model.User;
@@ -68,6 +69,8 @@ public class FrontController extends HttpServlet {
         String source = request.getParameter("source");
         HttpSession session = request.getSession();
 
+        ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+        int role;
 
         switch(source){
 
@@ -81,9 +84,13 @@ public class FrontController extends HttpServlet {
                 destination = "/index.jsp";
                 break;
             case "admin":
-                int role = 0;
 
-                ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+                ArrayList<Customer> customers = KundeFacade.getKunderList();
+
+                request.setAttribute("customers", customers);
+
+                role = 0;
+
                 role = login.get(0).getRole();
 
                 if (login != null && role == 1) {
@@ -137,8 +144,6 @@ public class FrontController extends HttpServlet {
                 for (int i = 0; i < customerList.size(); i++) {
                     if(customerList.get(i).getEmail().equals(email) && customerList.get(i).getPassword().equals(password)){
 
-                        System.out.println("Kommer ind i loop");
-
                         int customer_id = customerList.get(i).getCustomer_id();
                         String name = customerList.get(i).getName();
                         String phone = customerList.get(i).getPhone();
@@ -191,11 +196,62 @@ public class FrontController extends HttpServlet {
             case "bygcarport":
                 destination = "bestilling.jsp";
                 break;
+            case "search":
+
+                ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+                int role;
+
+                role = login.get(0).getRole();
+
+                String action;
+                Customer foundCustomer = null;
+
+                if (login != null && role == 1) {
+
+                    String kundeSearch = (String) request.getParameter("kunde");
+
+                    if (kundeSearch != null || !kundeSearch.isEmpty()) {
+
+                        if (kundeSearch.contains("@")) {
+                            // Extract full string as email
+
+                            String kundeSearchLower = kundeSearch.toLowerCase();
+
+                            action = "mail";
+                            foundCustomer = KundeFacade.getCustomer(kundeSearchLower, action);
+                        } else {
+                            // Extract all numbers to make sure it's only numbers.
+
+                            StringBuilder sb = new StringBuilder();
+                            boolean found = false;
+                            for (char c : kundeSearch.toCharArray()) {
+                                if (Character.isDigit(c)) {
+                                    sb.append(c);
+                                    found = true;
+                                } else if (found) {
+                                    // If we already found a digit before and this char is not a digit, stop looping
+                                    break;
+                                }
+                            }
+
+                            System.out.println("Numbers: " + sb.toString());
+
+                            action = "id";
+                            foundCustomer = KundeFacade.getCustomer(sb.toString(), action);
+                        }
+
+                        request.setAttribute("foundCustomer", foundCustomer);
+
+                        destination = "/WEB-INF/search.jsp";
+                    } else {
+                        destination = "index.jsp";
+                    }
+                } else {
+                    destination = "index.jsp";
+                }
+                break;
 
         }
-
-
-
 
         request.getRequestDispatcher(destination).forward(request,response);
 
