@@ -5,11 +5,15 @@ public class Material {
     int product_id = 0;
     String product_name;
     String product_description;
-    int price = 0;
+    double price = 0;
     double unit = 0;
     int amount = 0;
 
-    public Material(int product_id, String product_name, String product_description, int price, double unit, int amount) {
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Material(int product_id, String product_name, String product_description, double price, double unit, int amount) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.product_description = product_description;
@@ -38,7 +42,7 @@ public class Material {
         return product_description;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 

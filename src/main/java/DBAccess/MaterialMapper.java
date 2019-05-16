@@ -30,7 +30,7 @@ public class MaterialMapper {
                 int product_id = resultSet.getInt("product_id");
                 String product_name = resultSet.getString("product_name");
                 String product_description = resultSet.getString("product_description");
-                int price = resultSet.getInt("price");
+                double price = resultSet.getDouble("price");
                 double unit = resultSet.getDouble("unit");
                 int amount = resultSet.getInt("amount");
 

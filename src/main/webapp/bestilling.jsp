@@ -66,22 +66,26 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>stolper</th>
-                                    <th>længde</th>
-                                    <th>antal</th>
-                                    <th>pris</th>
+                                    <th>Varenr.</th>
+                                    <th>Produkt</th>
+                                    <th>Beskrivelse</th>
+                                    <th>Enhed</th>
+                                    <th>Antal</th>
+                                    <th>Pris</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
+                                    <td><% out.println(materials.get(0).getProduct_id()); %></td>
+                                    <td><% out.println(materials.get(0).getProduct_name()); %></td>
                                     <td><% out.println(materials.get(0).getProduct_description()); %></td>
-                                    <td><% out.println(materials.get(0).getUnit());%></td>
+                                    <td><% out.println(materials.get(0).getUnit());%> cm.</td>
                                     <td><% out.println(materials.get(0).getAmount());%></td>
-                                    <td><% out.println((((materials.get(0).getPrice() * materials.get(0).getUnit()) * materials.get(0).getAmount())) / 100);%></td>
+                                    <td><% out.println(materials.get(0).getPrice());%></td>
                                 </tr>
                                 <tr>
-                                    <td>Cell 3</td>
-                                    <td>Cell 4</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 </tbody>
                             </table>

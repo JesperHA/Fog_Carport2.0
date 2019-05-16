@@ -53,6 +53,8 @@ public class MaterialCalculator extends HttpServlet {
 
                 ArrayList<Material> materialList = MaterialFacade.getMaterials();
 
+                int nedgravningICm = 100;
+
 
                 //henter materialerne ud af ArrayList her:
 
@@ -88,16 +90,40 @@ public class MaterialCalculator extends HttpServlet {
 
                 //sætter længden på enhederne her:
 
-                stolper.setUnit(height + 100);
+                stolper.setUnit(height + nedgravningICm);
 
                 // sætter mængden af enheder her:
 
                 if(size == 0){
                     stolper.setAmount(4);
+
                 }else{
                     stolper.setAmount(6);
                 }
-                System.out.println(size);
+
+                //udregner nærmeste passende mål på enhed
+
+                double passendeMål = stolper.getUnit() % 30;
+                double minLængde = 240;
+                double maxLængde = 600;
+
+                if(passendeMål != 0){
+                    double divideretLængde = Math.ceil(stolper.getUnit() / 30);
+                    double passendeLængde = divideretLængde * 30;
+                    stolper.setUnit(passendeLængde);
+                }
+
+                if(stolper.getUnit() < minLængde){
+                    stolper.setUnit(minLængde);
+                }else if(stolper.getUnit() > maxLængde){
+                    stolper.setUnit(maxLængde);
+                }
+
+
+                // konverterer fra cm til m. og udregner pris for ordrelinbje
+                double prisIalt = ((stolper.getPrice() * stolper.getAmount()) * stolper.getUnit()) / 100;
+                stolper.setPrice(prisIalt);
+
 
                 // sætter materialerne ind i session
 
