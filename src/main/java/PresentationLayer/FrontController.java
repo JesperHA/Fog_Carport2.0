@@ -198,8 +198,6 @@ public class FrontController extends HttpServlet {
                 break;
             case "search":
 
-                System.out.println("kom hertil");
-
                 ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
                 int role;
 
@@ -254,9 +252,6 @@ public class FrontController extends HttpServlet {
                 break;
 
         }
-
-
-
 
         request.getRequestDispatcher(destination).forward(request,response);
 
