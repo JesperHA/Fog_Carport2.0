@@ -17,7 +17,7 @@
                             <ul class="nav nav-tabs card-header-tabs" id="tabs" role="tablist">
                                 <li class="nav-item"><a class="nav-link active" id="carport-tab" data-toggle="tab" href="#carport">Carport</a></li>
                                 <li class="nav-item"><a class="nav-link" id="taget-tab" data-toggle="tab" href="#taget">Taget</a></li>
-                                <li class="nav-item"><a class="nav-link" id="afslut-tab" data-toggle="tab" href="#afslut">Bekræftelse</a></li>
+                                <li class="nav-item"><a class="nav-link" id="afslut-tab" data-toggle="tab" onclick="Confirm()" href="#afslut">Bekræftelse</a></li>
                             </ul>
                         </div>
 
@@ -66,13 +66,13 @@
 
                                 <label><b>Angiv mål på carport</b></label>
                                 <div class="row">
-                                    <div class="col"><label>Længde (cm):</label><input class="form-control" name="length" type="text" style="min-width: 100%;margin-bottom: 15px;"></div>
+                                    <div class="col"><label>Længde (cm):</label><input class="form-control" name="length" id="length" type="text" style="min-width: 100%;margin-bottom: 15px;"></div>
                                 </div>
                                 <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" name="width" type="text" style="min-width: 100%;"></div>
+                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" name="width" id="width" type="text" style="min-width: 100%;"></div>
                                 </div>
                                 <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Højde (cm):</label><input class="form-control" name="height" type="text" style="min-width: 100%;"></div>
+                                    <div class="col"><label>Højde (cm):</label><input class="form-control" name="height" id="height" type="text" style="min-width: 100%;"></div>
                                 </div>
 
 
@@ -99,59 +99,15 @@
 
                             <!-- Taget -->
                             <div class="card-body tab-pane fade" id="taget" role="tabpanel" aria-labelledby="taget-tab">
-                                <label><b>Angiv taget på carporten</b></label>
-                                <div class="row" style="margin-bottom: 35px;">
-                                    <div class="col-xl-6" style="min-height: 50px;"><button class="btn btn-primary" id="" type="button" onclick="Enkelt()" style="min-width: 100%;">Enkelt</button></div>
-                                    <div class="col"><button class="btn btn-primary" id="" type="button" onclick="Dobbelt()" style="min-width: 100%;">Dobbelt</button></div>
-                                </div>
-
-                                <label><b>Angiv om du ønsker skur.</b></label>
+                                <label><b>Angiv tagets type</b></label>
                                 <div class="row" style="margin-bottom: 35px;">
                                     <div class="col-xl-6" style="min-height: 50px;">
-                                        <button class="btn btn-primary" id="" type="button" onclick="MedSkur()" style="min-width: 100%;">Med skur</button>
+                                        <button class="btn btn-primary" id="medrejsning" onclick="medRejsning()" type="button"  style="min-width: 100%;">m/Rejsning</button>
                                     </div>
                                     <div class="col">
-                                        <button class="btn btn-primary" id="" type="button" onclick="UdenSkur()" style="min-width: 100%;">Uden skur</button>
+                                        <button class="btn btn-primary" id="udenrejsning" onclick="udenRejsning()" type="button"  style="min-width: 100%;">u/Rejsning</button>
                                     </div>
                                 </div>
-
-                                <div id="skurCover" style="display:none">
-                                    <label><b>Vælg skurbeklædning</b></label>
-                                    <div class="row" style="margin-bottom: 35px;">
-                                        <div class="col-xl-6" style="min-height: 50px;">
-                                            <button class="btn btn-primary" id="" onclick="EnPåTo" type="button" style="min-width: 100%;">En på to</button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-primary" id="" onclick="Klink" type="button" style="min-width: 100%;">Klinkbeklædning</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <label><b>Angiv mål på carport</b></label>
-                                <div class="row">
-                                    <div class="col"><label>Længde (cm):</label><input class="form-control" type="text" style="min-width: 100%;margin-bottom: 15px;"></div>
-                                </div>
-                                <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" type="text" style="min-width: 100%;"></div>
-                                </div>
-                                <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Højde (cm):</label><input class="form-control" type="text" style="min-width: 100%;"></div>
-                                </div>
-
-                                <div id="skurCM" style="display:none">
-                                    <label><b>Angiv mål på skur</b></label>
-                                    <div class="row">
-                                        <div class="col"><label>Længde (cm):</label>
-                                            <input class="form-control" type="text" style="min-width: 100%;margin-bottom: 15px;">
-                                        </div>
-                                    </div>
-                                    <div class="row" style="margin-bottom: 15px;">
-                                        <div class="col"><label>Bredde (cm):</label>
-                                            <input class="form-control" type="text" style="min-width: 100%;">
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('carport-tab').click()">Tilbage</button>
                                 <button class="btn btn-primary" type="button" style="float: right;" onclick="getElementById('afslut-tab').click()">Næste</button>
                                 <br>
@@ -159,56 +115,39 @@
 
                             <!-- Afslut -->
                             <div class="card-body tab-pane fade" id="afslut" role="tabpanel" aria-labelledby="afslut-tab">
-                                <label><b>Angiv afslut på carporten</b></label>
-                                <div class="row" style="margin-bottom: 35px;">
-                                    <div class="col-xl-6" style="min-height: 50px;"><button class="btn btn-primary" id="Enkeltknap" type="button" onclick="Enkelt()" style="min-width: 100%;">Enkelt</button></div>
-                                    <div class="col"><button class="btn btn-primary" id="Dobbeltknap" type="button" onclick="Dobbelt()" style="min-width: 100%;">Dobbelt</button></div>
-                                </div>
-
-                                <label><b>Angiv om du ønsker skur.</b></label>
-                                <div class="row" style="margin-bottom: 35px;">
-                                    <div class="col-xl-6" style="min-height: 50px;">
-                                        <button class="btn btn-primary" id="Medskurknap" type="button" onclick="MedSkur()" style="min-width: 100%;">Med skur</button>
-                                    </div>
-                                    <div class="col">
-                                        <button class="btn btn-primary" id="Udenskurknap" type="button" onclick="UdenSkur()" style="min-width: 100%;">Uden skur</button>
-                                    </div>
-                                </div>
-
-                                <div id="skurCover" style="display:none">
-                                    <label><b>Vælg skurbeklædning</b></label>
-                                    <div class="row" style="margin-bottom: 35px;">
-                                        <div class="col-xl-6" style="min-height: 50px;">
-                                            <button class="btn btn-primary" type="button" style="min-width: 100%;">En på to</button>
-                                        </div>
-                                        <div class="col">
-                                            <button class="btn btn-primary" type="button" style="min-width: 100%;">Klinkbeklædning</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <label><b>Angiv mål på carport</b></label>
-                                <div class="row">
-                                    <div class="col"><label>Længde (cm):</label><input class="form-control" type="text" style="min-width: 100%;margin-bottom: 15px;"></div>
-                                </div>
-                                <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" type="text" style="min-width: 100%;"></div>
-                                </div>
-                                <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Højde (cm):</label><input class="form-control" type="text" style="min-width: 100%;"></div>
-                                </div>
-
-                                <div id="skurCM" style="display:none">
-                                    <label><b>Angiv mål på skur</b></label>
-                                    <div class="row">
-                                        <div class="col"><label>Længde (cm):</label>
-                                            <input class="form-control" type="text" style="min-width: 100%;margin-bottom: 15px;">
-                                        </div>
-                                    </div>
+                                <label><b>Du har valgt følgende</b></label>
                                     <div class="row" style="margin-bottom: 15px;">
-                                        <div class="col"><label>Bredde (cm):</label>
-                                            <input class="form-control" type="text" style="min-width: 100%;">
+                                        <div class="col"><label>Størrelse: &nbsp;</label><label id="getStorrelse"> </label>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-bottom: 15px;">
+                                        <div class="col"><label>Skur: &nbsp;</label><label id="getSkur"> </label>
                                         </div>
+                                </div>
+
+
+                                <label><b>Carport Mål</b></label>
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col"><label>Længde (cm): &nbsp;</label><label id="getLength"></label>
+
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col"><label>Bredde (cm): &nbsp;</label><label id="getWidth"></label>
+
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col"><label>Højde (cm): &nbsp;</label><label id="getHeight"></label>
+
+                                    </div>
+                                </div>
+
+
+                                <label><b>Carport Tag</b></label>
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col"><label>Rejsning: &nbsp;</label><label id="getTaget"> </label>
                                     </div>
                                 </div>
 
@@ -231,6 +170,10 @@
     var variableSkur = 0;
     var variableEnPåTo = 0;
     var variableKlink = 0;
+    var variableMedrejsning = 0;
+    var variableUdenrejsning = 0;
+
+
 
     function Enkelt() {
         document.getElementById('Enkeltknap').style.backgroundColor = "#074180";
@@ -324,6 +267,55 @@
         }
         document.getElementById('shedtype').value = "2";
 
+    }
+
+    function medRejsning(){
+        if(variableUdenrejsning == 1) {
+            document.getElementById('udenrejsning').style.backgroundColor = "#007bff";
+            document.getElementById('medrejsning').style.backgroundColor = "#074180";
+            variableUdenrejsning = 0;
+            variableMedrejsning = 1;
+        }else {
+            document.getElementById('udenrejsning').style.backgroundColor = "#007bff";
+            document.getElementById('medrejsning').style.backgroundColor = "#074180";
+            variableMedrejsning = 1;
+        }
+    }
+
+    function udenRejsning(){
+        if(variableMedrejsning == 1) {
+            document.getElementById('medrejsning').style.backgroundColor = "#007bff";
+            document.getElementById('udenrejsning').style.backgroundColor = "#074180";
+            variableMedrejsning = 0;
+            variableUdenrejsning = 1;
+        }else {
+            document.getElementById('medrejsning').style.backgroundColor = "#007bff";
+            document.getElementById('udenrejsning').style.backgroundColor = "#074180";
+            variableUdenrejsning = 1;
+        }
+    }
+
+    function Confirm() {
+        if(variableDobbelt == 1){
+            document.getElementById("getStorrelse").innerHTML = "Dobbelt";
+        }else{
+            document.getElementById("getStorrelse").innerHTML = "Enkelt";
+        }
+
+        if(variableSkur == 1){
+            document.getElementById("getSkur").innerHTML = "Ja";
+        }else{
+            document.getElementById("getSkur").innerHTML = "Nej";
+        }
+
+        if(variableMedrejsning == 1){
+            document.getElementById("getTaget").innerHTML = "Ja";
+        }else{
+            document.getElementById("getTaget").innerHTML = "Nej";
+        }
+        document.getElementById("getWidth").innerHTML = document.getElementById("width").value;
+        document.getElementById("getHeight").innerHTML = document.getElementById("height").value;
+        document.getElementById("getLength").innerHTML = document.getElementById("length").value;
     }
 
 </script>
