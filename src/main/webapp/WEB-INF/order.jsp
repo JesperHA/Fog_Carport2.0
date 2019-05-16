@@ -10,7 +10,6 @@
 %>
 
 <%@include file="../include/header.jsp"%>
-
 <style>
     .btn-group-xs > .btn, .btn-xs {
         padding: .25rem .4rem;
@@ -30,7 +29,14 @@
         padding: 20px;
     }
 </style>
+    <%
+        String type = (String) request.getAttribute("type");
 
-<%@include file="includes/allOrders.jsp"%>
+        if (type.equals("single")) { %>
+            <%@include file="includes/singleOrder.jsp"%>
+
+        <% } else { %>
+            <%@include file="includes/allOrders.jsp"%>
+       <% } %>
 
 <%@include file="../include/footer.jsp"%>

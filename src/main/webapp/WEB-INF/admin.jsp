@@ -22,7 +22,17 @@
     .table th {
         text-align: center;
     }
-    #table-in-card {
+    #table-orders {
+        margin:auto;
+        width:100%;
+        padding: 20px;
+    }
+    #table-customers {
+        margin:auto;
+        width:100%;
+        padding: 20px;
+    }
+    #table-found {
         margin:auto;
         width:100%;
         padding: 20px;
@@ -59,6 +69,34 @@
                 </div>
             </div>
         </div>
+
+        <%
+            // Tjek om der er søgt
+
+            String searched = null;
+            searched = (String) request.getAttribute("searched");
+
+            if (searched != null) {
+
+            Customer foundCustomer = null;
+
+            foundCustomer = (Customer) request.getAttribute("foundCustomer");
+
+            if (foundCustomer != null) {
+                %>
+            <%@include file="search.jsp"%>
+        <%
+                } else { %>
+                    <div class="row" style="text-align:center">
+                        <h3 style="padding-left:100px">Ingen kunde blev fundet!</h3>
+                    </div>
+                <% }
+            }
+
+        %>
+
+        <br>
+
         <div class="row">
 
             <!-- Ordre -->
@@ -66,9 +104,13 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Seneste Ordre</h4>
-                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her kan du se et udtag af de seneste ordre</h6><button class="btn btn-primary float-right" type="button" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
-
-                    <div id="table-in-card">
+                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her kan du se et udtag af de seneste ordre</h6>
+                        <form method="post" action="FrontController" style="display:inline">
+                            <input type="hidden" name="source" value="searchorders">
+                            <input type="hidden" name="type" value="all">
+                            <button class="btn btn-primary float-right" type="submit" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
+                        </form>
+                    <div id="table-orders">
                         <table class="table">
                             <thead class="thead-dark">
                             <tr>
@@ -116,8 +158,6 @@
 
             <!-- Kunder -->
 
-
-
             <%
                 ArrayList<Customer> customerList = (ArrayList<Customer>) request.getAttribute("customers");
             %>
@@ -128,7 +168,7 @@
                         <h4 class="card-title">Nyeste kunder</h4>
                         <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her er de nyeste kunder</h6><button class="btn btn-primary float-right" type="button" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
 
-                    <div id="table-in-card">
+                    <div id="table-customers">
                         <form action="FrontController" method="post">
                             <table class="table">
                                 <thead class="thead-dark">

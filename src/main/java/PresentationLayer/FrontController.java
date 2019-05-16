@@ -8,6 +8,7 @@ package PresentationLayer;
 import DBAccess.CustomerMapper;
 import Exceptions.LoginSampleException;
 import FacadeLayer.KundeFacade;
+import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
 import Model.Customer;
 import Model.Order;
@@ -100,10 +101,6 @@ public class FrontController extends HttpServlet {
                     destination = "index.jsp";
                 }
                 break;
-            case "ordre":
-
-                ArrayList<Order> orders;
-                break;
 
         }
 
@@ -128,6 +125,8 @@ public class FrontController extends HttpServlet {
 
         HttpSession session = request.getSession();
 
+        ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+        int roleCheck;
 
         ArrayList<Customer> customer;
         customer = (ArrayList<Customer>) session.getAttribute("login");
@@ -203,15 +202,20 @@ public class FrontController extends HttpServlet {
                 break;
             case "search":
 
-                ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
-                int role;
+                roleCheck = 0;
 
-                role = login.get(0).getRole();
+                roleCheck = login.get(0).getRole();
 
                 String action;
                 Customer foundCustomer = null;
 
-                if (login != null && role == 1) {
+                request.setAttribute("searched", "searched");
+
+                if (login != null && roleCheck == 1) {
+
+                    ArrayList<Customer> customers = KundeFacade.getKunderList();
+
+                    request.setAttribute("customers", customers);
 
                     String kundeSearch = (String) request.getParameter("kunde");
 
@@ -246,16 +250,45 @@ public class FrontController extends HttpServlet {
                         }
 
                         if (foundCustomer == null || foundCustomer.equals(null)) {
-                            destination = "index.jsp";
+                            destination = "/WEB-INF/admin.jsp";
                         } else {
+
                             request.setAttribute("foundCustomer", foundCustomer);
 
-                            destination = "/WEB-INF/search.jsp";
+                            destination = "/WEB-INF/admin.jsp";
                         }
 
                     } else {
-                        destination = "index.jsp";
+                        destination = "/WEB-INF/admin.jsp";
                     }
+                } else {
+                    destination = "index.jsp";
+                }
+                break;
+            case "searchorders":
+
+                roleCheck = 0;
+
+                roleCheck = login.get(0).getRole();
+
+                String type = (String) request.getParameter("type");
+                ArrayList<Order> orders;
+
+                if (login != null && roleCheck == 1) {
+                    if (type.equals("single")) {
+                        // find en enkelt ordre
+                    } else {
+                        // send alle ordre
+
+                        orders = OrderFacade.getOrderList();
+
+                        request.setAttribute("orderlist", orders);
+                        request.setAttribute("type", type);
+
+                        destination = "WEB-INF/order.jsp";
+                    }
+
+
                 } else {
                     destination = "index.jsp";
                 }
