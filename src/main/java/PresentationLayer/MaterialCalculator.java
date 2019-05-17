@@ -135,6 +135,7 @@ public class MaterialCalculator extends HttpServlet {
 //            }
 
                 //udregner nærmeste passende mål på enhed
+                // sætter længden på enheder her:
 
                 stolper.setUnit(længdeUdregning(stolper.getUnit()));
                 remme.setUnit(længdeUdregning(remme.getUnit()));
@@ -197,16 +198,13 @@ public class MaterialCalculator extends HttpServlet {
 
         if (size == 0) {
 
-            double ekstraLængde = Math.ceil((double)length / 300);
-            ekstraLængder = (int)ekstraLængde;
-
-            System.out.println(length);
-            System.out.println(ekstraLængde);
+            int temp = length / 300;
+            ekstraLængder = temp * 2;
 
         }else if(size == 1){
 
-            double ekstraLængde = Math.ceil((double)length / 300);
-            ekstraLængder = (int)ekstraLængde + 1;
+            int temp = length / 300;
+            ekstraLængder = temp * 3;
 
         }
      return ekstraLængder;
