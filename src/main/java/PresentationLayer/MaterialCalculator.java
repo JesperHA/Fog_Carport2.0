@@ -18,16 +18,12 @@ import javax.servlet.http.HttpSession;
 @WebServlet( name = "MaterialCalculator", urlPatterns = { "/MaterialCalculator" } )
 public class MaterialCalculator extends HttpServlet {
 
-
-
     protected void doPost( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
 
         String destination = "index.jsp";
-
         String source = request.getParameter("source");
         HttpSession session = request.getSession();
-
         session.removeAttribute("specs");
 
         ArrayList<String> specs;
@@ -35,13 +31,8 @@ public class MaterialCalculator extends HttpServlet {
         if(specs == null){
             specs = new ArrayList<>();
         }
-
-
-
         switch(source){
-
             case "bygcarport":
-
 
                 // henter parametre her
                 int size = Integer.parseInt(request.getParameter("size"));
@@ -53,10 +44,6 @@ public class MaterialCalculator extends HttpServlet {
                 int shedLength = Integer.parseInt(request.getParameter("shed_length"));
                 int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
 
-
-
-
-
 //                for (int i = 0; i < materials.size(); i++) {
 //
 //                    System.out.println("Looper igennem antal gange: " + i);
@@ -67,17 +54,11 @@ public class MaterialCalculator extends HttpServlet {
 //
 //                }
 
-
-
                 SVG svg = new SVG();
-
                 session.setAttribute("svg", svg.createSVG(width,length));
-
                 destination = "bestilling.jsp";
-
                 break;
         }
-
         request.getRequestDispatcher(destination).forward(request,response);
     }
 
@@ -86,8 +67,6 @@ public class MaterialCalculator extends HttpServlet {
     protected void doGet( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
         String destination = "index.jsp";
-
-
         request.getRequestDispatcher(destination).forward(request,response);
     }
 }
