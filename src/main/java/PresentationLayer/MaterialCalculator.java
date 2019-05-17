@@ -65,7 +65,7 @@ public class MaterialCalculator extends HttpServlet {
                 Material stolper2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material remme = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material remme2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
-                Material vinkel = materialList.get(3);
+                Material vinkel = new Material(materialList.get(3).getProduct_id(),materialList.get(3).getProduct_name(),materialList.get(3).getProduct_description(), materialList.get(3).getPrice(), materialList.get(3).getUnit(), materialList.get(3).getAmount());
                 Material beslagskruer = materialList.get(4);
                 Material Skruer80mm = materialList.get(5);
                 Material skruer50mm = materialList.get(6);
@@ -90,6 +90,7 @@ public class MaterialCalculator extends HttpServlet {
                 int height = Integer.parseInt(request.getParameter("height"));
                 int shedLength = Integer.parseInt(request.getParameter("shed_length"));
                 int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
+                int rooftype = Integer.parseInt(request.getParameter("rooftype"));
 
                 //sætter længden på enhederne her:
 
@@ -98,8 +99,8 @@ public class MaterialCalculator extends HttpServlet {
                 int minLængde = 240;
                 int ekstraStolper = 0;
                 int maxSpændvidde = 300;
-                int minSpærafstand = 50;
                 int maxSpærafstand = 90;
+                int ekstraSpær = 1;
 
                 stolper.setUnit(height + nedgravningICm);
                 stolper2.setUnit(height + nedgravningICm);
@@ -107,8 +108,11 @@ public class MaterialCalculator extends HttpServlet {
                 remme2.setUnit(length);
                 spærtræ.setUnit(width);
                 spærtræ2.setUnit(width);
-
-
+                if(rooftype == 1){
+                    spærtræ.setUnit(width / 2);
+                    spærtræ2.setUnit(width / 2);
+                }
+                vinkel.setUnit(1);
 
                 // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
                 double stolpeAntal = stolper.getUnit() / maxLængde;
@@ -127,11 +131,13 @@ public class MaterialCalculator extends HttpServlet {
                 stolper.setAmount(mængdeUdregner(size, stolpeAntal, 4, 6) + ekstraStolper);
                 remme.setAmount(mængdeUdregner(size, remAntal, 2, 3));
 
-
                 double antalSpær = Math.ceil((double)length / maxSpærafstand);
-                spærtræ.setAmount((int)antalSpær + 1);
-
-
+                if(rooftype == 1){
+                    antalSpær = antalSpær * 2;
+                    ekstraSpær = 2;
+                }
+                spærtræ.setAmount((int)antalSpær + ekstraSpær);
+                vinkel.setAmount(vinkelBeregner(size, rooftype, spærtræ.getAmount(), stolper.getAmount()));
 
 //            if(size == 0){
 //                stolper.setAmount(4);
@@ -146,42 +152,46 @@ public class MaterialCalculator extends HttpServlet {
 //                }
 //            }
 
-                //udregner nærmeste passende mål på enhed
-                // sætter længden på enheder her:
+            //udregner nærmeste passende mål på enhed
+            // sætter længden på enheder her:
 
-                stolper.setUnit(længdeUdregning(stolper.getUnit()));
-                remme.setUnit(længdeUdregning(remme.getUnit()));
-                spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
-
-
-                // udregner priser på materialer
-
-                double stolpePrisIalt = prisUdregner(stolper.getPrice(), stolper.getAmount(), stolper.getUnit());
-                double remPrisIalt = prisUdregner(remme.getPrice(), remme.getAmount(), remme.getUnit());
-                double spærPrisIalt = prisUdregner(spærtræ.getPrice(), spærtræ.getAmount(), spærtræ.getUnit());
+            stolper.setUnit(længdeUdregning(stolper.getUnit()));
+            remme.setUnit(længdeUdregning(remme.getUnit()));
+            spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
 
 
-                //indsætter priser på materialer
+            // udregner priser på materialer
 
-                stolper.setPrice(stolpePrisIalt);
-                remme.setPrice(remPrisIalt);
-                spærtræ.setPrice(spærPrisIalt);
-
-
-                // sætter materialerne ind i session
-                // stolper:
-                materialBeregning.add(stolper);
-                ekstraEnhedUdregner(materialBeregning, stolper2, size, maxLængde, stolpeAntal, 4, 6);
-                // remme:
-                materialBeregning.add(remme);
-                ekstraEnhedUdregner(materialBeregning, remme2, size, maxLængde, remAntal, 2, 3);
-                // spær:
-                materialBeregning.add(spærtræ);
-                ekstraEnhedUdregner(materialBeregning, spærtræ2, size, maxLængde, spærLængder, (int)antalSpær + 1, (int)antalSpær + 1);
+            double stolpePrisIalt = prisUdregner(stolper.getPrice(), stolper.getAmount(), stolper.getUnit());
+            double remPrisIalt = prisUdregner(remme.getPrice(), remme.getAmount(), remme.getUnit());
+            double spærPrisIalt = prisUdregner(spærtræ.getPrice(), spærtræ.getAmount(), spærtræ.getUnit());
+            double vinkelPrisIalt = ((vinkel.getPrice() * vinkel.getUnit()) * vinkel.getAmount());
 
 
+            //indsætter priser på materialer
 
-                session.setAttribute("materials", materialBeregning);
+            stolper.setPrice(stolpePrisIalt);
+            remme.setPrice(remPrisIalt);
+            spærtræ.setPrice(spærPrisIalt);
+            vinkel.setPrice(vinkelPrisIalt);
+
+
+            // sætter materialerne ind i session
+            // stolper:
+            materialBeregning.add(stolper);
+            ekstraEnhedUdregner(materialBeregning, stolper2, size, maxLængde, stolpeAntal, 4, 6);
+            // remme:
+            materialBeregning.add(remme);
+            ekstraEnhedUdregner(materialBeregning, remme2, size, maxLængde, remAntal, 2, 3);
+            // spær:
+            materialBeregning.add(spærtræ);
+            ekstraEnhedUdregner(materialBeregning, spærtræ2, size, maxLængde, spærLængder, (int)antalSpær + ekstraSpær, (int)antalSpær + ekstraSpær);
+            // vinkler:
+                materialBeregning.add(vinkel);
+
+
+
+            session.setAttribute("materials", materialBeregning);
 
 //                for (int i = 0; i < materials.size(); i++) {
 //
@@ -195,7 +205,7 @@ public class MaterialCalculator extends HttpServlet {
 
 
 
-                // SVG
+            // SVG
 
             SVG svg = new SVG();
 
@@ -209,6 +219,19 @@ public class MaterialCalculator extends HttpServlet {
         request.getRequestDispatcher(destination).forward(request,response);
     }
 
+    private int vinkelBeregner(int size, int rooftype, int spær, int antalStolper){
+
+        int antalVinkler = 0;
+
+        if (size == 0 && rooftype == 0) {
+            antalVinkler = (spær * 4) - 4;
+            antalVinkler = antalVinkler + ((antalStolper * 2) - 4);
+        } else if (size == 1 || rooftype == 1) {
+            antalVinkler = (spær * 6) - 6;
+            antalVinkler = antalVinkler + ((antalStolper * 2) - 6);
+        }
+        return antalVinkler;
+    }
 
     private int ekstraStolpeUdregner(int length, int size){
 

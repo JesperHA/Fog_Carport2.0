@@ -87,7 +87,7 @@
                                     <td><% out.println(materials.get(i).getProduct_id()); %></td>
                                     <td><% out.println(materials.get(i).getProduct_name()); %></td>
                                     <td><% out.println(materials.get(i).getProduct_description()); %></td>
-                                    <td><% out.println(materials.get(i).getUnit());%> cm.</td>
+                                    <td><% out.println(materials.get(i).getUnit());%></td>
                                     <td><% out.println(materials.get(i).getAmount());%></td>
                                     <td><% out.println(materials.get(i).getPrice());%></td>
                                 </tr>

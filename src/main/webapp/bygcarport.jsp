@@ -25,12 +25,14 @@
                         <form action="MaterialCalculator" method="post">
                             <input type="hidden" name="source" value="bygcarport"/>
 
+                            <input class="form-control" type="hidden" name="size" id="size" value="0" />
+                            <input class="form-control" type="hidden" name="shed" id="shed" value="0" />
+                            <input class="form-control" type="hidden" name="shedtype" id="shedtype" value="0" />
+                            <input class="form-control" type="hidden" name="rooftype" id="rooftype" value="0" />
+
                             <div class="tab-content" id="tabContent">
                                 <!-- Carport -->
 
-                                <input class="form-control" type="hidden" name="size" id="size" value="0" />
-                                <input class="form-control" type="hidden" name="shed" id="shed" value="0" />
-                                <input class="form-control" type="hidden" name="shedtype" id="shedtype" value="0" />
 
                             <div class="card-body tab-pane fade show active" id="carport" role="tabpanel" aria-labelledby="carport-tab">
                                 <label><b>Angiv størrelse på carport</b></label>
@@ -270,29 +272,27 @@
     }
 
     function medRejsning(){
+        document.getElementById('udenrejsning').style.backgroundColor = "#007bff";
+        document.getElementById('medrejsning').style.backgroundColor = "#074180";
         if(variableUdenrejsning == 1) {
-            document.getElementById('udenrejsning').style.backgroundColor = "#007bff";
-            document.getElementById('medrejsning').style.backgroundColor = "#074180";
             variableUdenrejsning = 0;
             variableMedrejsning = 1;
         }else {
-            document.getElementById('udenrejsning').style.backgroundColor = "#007bff";
-            document.getElementById('medrejsning').style.backgroundColor = "#074180";
             variableMedrejsning = 1;
         }
+        document.getElementById('rooftype').value = "1";
     }
 
     function udenRejsning(){
+        document.getElementById('medrejsning').style.backgroundColor = "#007bff";
+        document.getElementById('udenrejsning').style.backgroundColor = "#074180";
         if(variableMedrejsning == 1) {
-            document.getElementById('medrejsning').style.backgroundColor = "#007bff";
-            document.getElementById('udenrejsning').style.backgroundColor = "#074180";
             variableMedrejsning = 0;
             variableUdenrejsning = 1;
         }else {
-            document.getElementById('medrejsning').style.backgroundColor = "#007bff";
-            document.getElementById('udenrejsning').style.backgroundColor = "#074180";
             variableUdenrejsning = 1;
         }
+        document.getElementById('rooftype').value = "0";
     }
 
     function Confirm() {
