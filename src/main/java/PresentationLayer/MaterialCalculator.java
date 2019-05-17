@@ -62,7 +62,8 @@ public class MaterialCalculator extends HttpServlet {
                 Material spærtræ = materialList.get(1);
                 Material stolper = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material stolper2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
-                Material remme = materialList.get(2);
+                Material remme = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
+                Material remme2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material vinkel = materialList.get(3);
                 Material beslagskruer = materialList.get(4);
                 Material Skruer80mm = materialList.get(5);
@@ -94,70 +95,74 @@ public class MaterialCalculator extends HttpServlet {
                 int nedgravningICm = 100;
                 int maxLængde = 600;
                 int minLængde = 240;
-                double stolpeAntal = stolper.getUnit() / maxLængde;
+                int ekstraStolper = 0;
+                int maxSpændvidde = 300;
 
                 stolper.setUnit(height + nedgravningICm);
                 stolper2.setUnit(height + nedgravningICm);
+                remme.setUnit(length);
+                remme2.setUnit(length);
+
+
+
+                // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
+                double stolpeAntal = stolper.getUnit() / maxLængde;
+                double remAntal = remme.getUnit() / maxLængde;
+
+
+                // tilføjer ekstra stolper hvis rem spændvidden er for lang
+
+                if(length > maxSpændvidde) {
+                    ekstraStolper = ekstraStolpeUdregner(length, size);
+                }
 
                 // sætter mængden af enheder her:
 
-                if(size == 0){
-                    stolper.setAmount(4);
-                    if(stolpeAntal > 1){
-                        stolper.setAmount(4 * (int)stolpeAntal);
-                    }
+                stolper.setAmount(mængdeUdregner(size, stolpeAntal, 4, 6) + ekstraStolper);
+                remme.setAmount(mængdeUdregner(size, remAntal, 2, 3));
 
-                }else if(size == 1){
-                    stolper.setAmount(6);
-                    if(stolpeAntal > 1){
-                        stolper.setAmount(6 * (int)stolpeAntal);
-                    }
-                }
-
-                if(stolpeAntal > 1){
-                    double længdeRest = stolper2.getUnit() % maxLængde;
-                    stolper2.setUnit(længdeUdregning(længdeRest));
-
-                    if(size == 0){
-                        stolper2.setAmount(4);
-                    }else{
-                        stolper2.setAmount(6);
-                    }
-
-
-                    double prisIalt = ((stolper2.getPrice() * stolper2.getAmount()) * stolper2.getUnit()) / 100;
-                    stolper2.setPrice(prisIalt);
-
-
-                    materialBeregning.add(stolper2);
-
-                }
-
+//            if(size == 0){
+//                stolper.setAmount(4);
+//                if(stolpeAntal > 1){
+//                    stolper.setAmount(4 * (int)stolpeAntal);
+//                }
+//
+//            }else if(size == 1){
+//                stolper.setAmount(6);
+//                if(stolpeAntal > 1){
+//                    stolper.setAmount(6 * (int)stolpeAntal);
+//                }
+//            }
 
                 //udregner nærmeste passende mål på enhed
 
                 stolper.setUnit(længdeUdregning(stolper.getUnit()));
+                remme.setUnit(længdeUdregning(remme.getUnit()));
 
 
-                // konverterer fra cm til m. og udregner pris for ordrelinbje
+                // udregner priser på materialer
+
+                double stolpePrisIalt = prisUdregner(stolper.getPrice(), stolper.getAmount(), stolper.getUnit());
+                double remPrisIalt = prisUdregner(remme.getPrice(), remme.getAmount(), remme.getUnit());
 
 
-                double prisIalt = ((stolper.getPrice() * stolper.getAmount()) * stolper.getUnit()) / 100;
-                stolper.setPrice(prisIalt);
+                //indsætter priser på materialer
+
+                stolper.setPrice(stolpePrisIalt);
+                remme.setPrice(remPrisIalt);
 
 
                 // sætter materialerne ind i session
-
+                // stolper:
                 materialBeregning.add(stolper);
+                ekstraEnhedUdregner(materialBeregning, stolper2, size, maxLængde, stolpeAntal, 4, 6);
+                // remme:
+                materialBeregning.add(remme);
+                ekstraEnhedUdregner(materialBeregning, remme2, size, maxLængde, remAntal, 2, 3);
+
 
 
                 session.setAttribute("materials", materialBeregning);
-
-
-                for (int i = 0; i < materialBeregning.size(); i++) {
-                    System.out.println(materialBeregning.get(i).getUnit());
-
-                }
 
 //                for (int i = 0; i < materials.size(); i++) {
 //
@@ -169,16 +174,87 @@ public class MaterialCalculator extends HttpServlet {
 //
 //                }
 
-                SVG svg = new SVG();
 
-                session.setAttribute("svg", svg.createSVG(width,length));
 
-                destination = "bestilling.jsp";
+                // SVG
 
-                break;
+            SVG svg = new SVG();
+
+            session.setAttribute("svg", svg.createSVG(width,length));
+
+            destination = "bestilling.jsp";
+
+            break;
         }
 
         request.getRequestDispatcher(destination).forward(request,response);
+    }
+
+
+    private int ekstraStolpeUdregner(int length, int size){
+
+        int ekstraLængder = 0;
+
+        if (size == 0) {
+
+            double ekstraLængde = Math.ceil((double)length / 300);
+            ekstraLængder = (int)ekstraLængde;
+
+            System.out.println(length);
+            System.out.println(ekstraLængde);
+
+        }else if(size == 1){
+
+            double ekstraLængde = Math.ceil((double)length / 300);
+            ekstraLængder = (int)ekstraLængde + 1;
+
+        }
+     return ekstraLængder;
+    }
+
+    private void ekstraEnhedUdregner(ArrayList<Material> materialBeregning, Material material, int size, int maxLængde, double stolpeAntal, int i1, int i2) {
+        if(stolpeAntal > 1){
+            double længdeRest = material.getUnit() % maxLængde;
+            material.setUnit(længdeUdregning(længdeRest));
+
+            if(size == 0){
+                material.setAmount(i1);
+            }else{
+                material.setAmount(i2);
+            }
+
+
+            double prisIalt = prisUdregner(material.getPrice(), material.getAmount(), material.getUnit());
+            material.setPrice(prisIalt);
+
+
+            materialBeregning.add(material);
+
+        }
+    }
+
+    private double prisUdregner(double pris, double amount, double unit){
+
+        double prisIalt = ((pris * amount) * unit) / 100;
+
+        return prisIalt;
+    }
+    private int mængdeUdregner(int size, double Antal, int min, int max) {
+
+        int amount = 0;
+
+        if (size == 0) {
+            amount = min;
+            if (Antal > 1) {
+                amount = min * (int) Antal;
+            }
+        } else if (size == 1) {
+            amount = max;
+            if (Antal > 1) {
+                amount = max * (int) Antal;
+            }
+        }
+        return amount;
     }
 
     private double længdeUdregning(double l) {
@@ -199,6 +275,7 @@ public class MaterialCalculator extends HttpServlet {
             længde = minLængde;
         }else if(længde > maxLængde){
             længde = maxLængde;
+            System.out.println("Længden sendt til længdeberegneren er større end maxlængden!!");
         }
 
         return længde;
