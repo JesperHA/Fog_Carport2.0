@@ -59,7 +59,8 @@ public class MaterialCalculator extends HttpServlet {
 
 
                 Material reglar = materialList.get(0);
-                Material spærtræ = materialList.get(1);
+                Material spærtræ = new Material(materialList.get(1).getProduct_id(),materialList.get(1).getProduct_name(),materialList.get(1).getProduct_description(), materialList.get(1).getPrice(), materialList.get(1).getUnit(), materialList.get(1).getAmount());
+                Material spærtræ2 = new Material(materialList.get(1).getProduct_id(),materialList.get(1).getProduct_name(),materialList.get(1).getProduct_description(), materialList.get(1).getPrice(), materialList.get(1).getUnit(), materialList.get(1).getAmount());
                 Material stolper = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material stolper2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material remme = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
@@ -97,17 +98,22 @@ public class MaterialCalculator extends HttpServlet {
                 int minLængde = 240;
                 int ekstraStolper = 0;
                 int maxSpændvidde = 300;
+                int minSpærafstand = 50;
+                int maxSpærafstand = 90;
 
                 stolper.setUnit(height + nedgravningICm);
                 stolper2.setUnit(height + nedgravningICm);
                 remme.setUnit(length);
                 remme2.setUnit(length);
+                spærtræ.setUnit(width);
+                spærtræ2.setUnit(width);
 
 
 
                 // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
                 double stolpeAntal = stolper.getUnit() / maxLængde;
                 double remAntal = remme.getUnit() / maxLængde;
+                double spærLængder = spærtræ.getUnit() / maxLængde;
 
 
                 // tilføjer ekstra stolper hvis rem spændvidden er for lang
@@ -120,6 +126,12 @@ public class MaterialCalculator extends HttpServlet {
 
                 stolper.setAmount(mængdeUdregner(size, stolpeAntal, 4, 6) + ekstraStolper);
                 remme.setAmount(mængdeUdregner(size, remAntal, 2, 3));
+
+
+                double antalSpær = Math.ceil((double)length / maxSpærafstand);
+                spærtræ.setAmount((int)antalSpær + 1);
+
+
 
 //            if(size == 0){
 //                stolper.setAmount(4);
@@ -139,18 +151,21 @@ public class MaterialCalculator extends HttpServlet {
 
                 stolper.setUnit(længdeUdregning(stolper.getUnit()));
                 remme.setUnit(længdeUdregning(remme.getUnit()));
+                spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
 
 
                 // udregner priser på materialer
 
                 double stolpePrisIalt = prisUdregner(stolper.getPrice(), stolper.getAmount(), stolper.getUnit());
                 double remPrisIalt = prisUdregner(remme.getPrice(), remme.getAmount(), remme.getUnit());
+                double spærPrisIalt = prisUdregner(spærtræ.getPrice(), spærtræ.getAmount(), spærtræ.getUnit());
 
 
                 //indsætter priser på materialer
 
                 stolper.setPrice(stolpePrisIalt);
                 remme.setPrice(remPrisIalt);
+                spærtræ.setPrice(spærPrisIalt);
 
 
                 // sætter materialerne ind i session
@@ -160,6 +175,9 @@ public class MaterialCalculator extends HttpServlet {
                 // remme:
                 materialBeregning.add(remme);
                 ekstraEnhedUdregner(materialBeregning, remme2, size, maxLængde, remAntal, 2, 3);
+                // spær:
+                materialBeregning.add(spærtræ);
+                ekstraEnhedUdregner(materialBeregning, spærtræ2, size, maxLængde, spærLængder, (int)antalSpær + 1, (int)antalSpær + 1);
 
 
 
