@@ -20,7 +20,7 @@
                                     <input type="hidden" name="source" value="searchorders" />
                                     <input type="hidden" name="type" value="single" />
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="order_id" id="order_id" placeholder="ordrens id" autocomplete="off" required>
+                                        <input type="text" class="form-control" name="order_id" placeholder="ordrens id" autocomplete="off" required>
                                         <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button">Søg</button>
                                            </span>

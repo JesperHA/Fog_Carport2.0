@@ -21,12 +21,13 @@
             </div>
             <div class="row">
 
-            <div class="col-md-6" id="customer-info">
+            <div class="col-md-6" id="customer-info" style="padding-bottom:15px;">
                 <b>Kunde: </b> <% out.print(foundCustomer.getName()); %> <br>
                 <b>Email: </b> <% out.print(foundCustomer.getEmail()); %> <br>
                 <b>Addresse: </b> <% out.println(foundCustomer.getAdress()); %> - <%out.println(foundCustomer.getZipcode());%> - <%out.println(foundCustomer.getCity());%> <br>
                 <b>Tlf.: </b> <% out.print(foundCustomer.getPhone()); %> <br>
                 <b>Rolle: </b><% if (foundCustomer.getRole() > 0) { out.print("Medarbejder"); } else { out.print("Kunde"); } %>
+                <br>
             </div>
 
             <div class="col-md-6" id="table-found">

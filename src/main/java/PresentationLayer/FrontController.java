@@ -222,8 +222,6 @@ public class FrontController extends HttpServlet {
                     String kundeSearch = (String) request.getParameter("kunde");
                     request.setAttribute("searchterm", kundeSearch);
 
-                    System.out.println("SearchTerm: " + kundeSearch);
-
                     if (kundeSearch != null || !kundeSearch.isEmpty()) {
 
                         if (kundeSearch.contains("@")) {
@@ -247,8 +245,6 @@ public class FrontController extends HttpServlet {
                                     break;
                                 }
                             }
-
-                            System.out.println("Numbers: " + sb.toString());
 
                             action = "id";
                             foundCustomer = KundeFacade.getCustomer(sb.toString(), action);
