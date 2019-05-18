@@ -43,6 +43,42 @@ public class OrderMapper {
         return orderList;
     }
 
+    public static ArrayList<Order> getOrderListForCustomer(int customer_id) {
+
+        ArrayList<Order> orderList = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        String sqlQuery = "SELECT * FROM orders WHERE customer_id = ?";
+
+        try {
+            connection = Connector.connection();
+            ps = connection.prepareStatement(sqlQuery);
+            ps.setInt(1, customer_id);
+            resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                int order_id = resultSet.getInt("order_id");
+                int length = resultSet.getInt("length");
+                int height = resultSet.getInt("height");
+                int width = resultSet.getInt("width");
+                int roof = resultSet.getInt("roof");
+                int shed = resultSet.getInt("shed");
+                int shedtype = resultSet.getInt("shedtype");
+                int order_status = resultSet.getInt("order_status");
+                String date = resultSet.getString("date");
+
+                Order order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
+                orderList.add(order);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderList;
+    }
+
     public static void createOrder( Order order ) throws LoginSampleException {
         try {
             Connection con = Connector.connection();

@@ -263,6 +263,10 @@ public class FrontController extends HttpServlet {
                             request.setAttribute("orders", orders);
                             request.setAttribute("foundCustomer", foundCustomer);
 
+                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(foundCustomer.getCustomer_id());
+
+                            request.setAttribute("foundCustomerOrders", customerOrders);
+
                             destination = "/WEB-INF/admin.jsp";
                         }
 

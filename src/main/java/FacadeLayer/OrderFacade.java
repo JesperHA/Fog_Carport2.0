@@ -14,6 +14,11 @@ public class OrderFacade {
         return orderList;
     }
 
+    public static ArrayList<Order> getOrderListForCustomer(int customer_id) {
+        orderList = OrderMapper.getOrderListForCustomer(customer_id);
+        return orderList;
+    }
+
     public static Order getOrder(int id) {
         Order order = OrderMapper.getOrder(id);
         return order;

@@ -33,14 +33,15 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Ordre</h4>
-                        <h6 class="text-muted card-subtitle mb-2">Du kan enten søge efter en ordre med et ordre id eller med kundens navn, eller du kan se en komplet liste over alle ordre.</h6>
+                        <h6 class="text-muted card-subtitle mb-2">Du kan søge efter en ordre med et ordre id.</h6>
                         <hr>
                         <div class="row" style="margin-top:35px;">
                             <div class="col mx-auto">
                                 <form action="FrontController" method="post">
-                                    <input type="hidden" name="source" value="search" />
+                                    <input type="hidden" name="source" value="searchorders" />
+                                    <input type="hidden" name="type" value="single" />
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="kunde" id="kunde" placeholder="søg vh.a. ordrens id eller kundens mail" autocomplete="off" required>
+                                        <input type="text" class="form-control" name="order_id" id="order_id" placeholder="ordrens id" autocomplete="off" required>
                                         <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button">Søg</button>
                                            </span>
