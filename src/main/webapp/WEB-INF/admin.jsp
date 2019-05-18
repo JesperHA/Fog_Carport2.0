@@ -4,7 +4,7 @@
 
 <%
 
-    ArrayList<Customer> customer = (ArrayList<Customer>) session.getAttribute("login");
+    Customer customer = (Customer) session.getAttribute("login");
 
 %>
 
@@ -44,7 +44,7 @@
 </style>
 
 <main class="page pricing-table-page">
-    <h1 style="margin-bottom: 50px;margin-top: 120px;">Velkommen til admin panelet, <%out.println(customer.get(0).getName());%>!</h1>
+    <h1 style="margin-bottom: 50px;margin-top: 120px;">Velkommen til admin panelet, <%out.println(customer.getName());%>!</h1>
 </main>
 <div>
     <div class="container" style="margin-bottom: 50px;">
@@ -53,7 +53,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Adgang</h4>
-                        <h6 class="text-muted card-subtitle mb-2">Du har adgang til administrator funktionerne for brugeren <%out.println("<i>" + customer.get(0).getEmail() + "</i>");%></h6>
+                        <h6 class="text-muted card-subtitle mb-2">Du har adgang til administrator funktionerne for brugeren <%out.println("<i>" + customer.getEmail() + "</i>");%></h6>
                         <hr>
                         <div class="row" style="margin-top:35px;">
                             <div class="col mx-auto">

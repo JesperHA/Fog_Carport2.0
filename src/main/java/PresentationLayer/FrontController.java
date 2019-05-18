@@ -71,7 +71,7 @@ public class FrontController extends HttpServlet {
         String source = request.getParameter("source");
         HttpSession session = request.getSession();
 
-        ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+        Customer login = (Customer) session.getAttribute("login");
         int role;
 
         switch(source){
@@ -88,7 +88,7 @@ public class FrontController extends HttpServlet {
             case "admin":
 
                 role = 0;
-                role = login.get(0).getRole();
+                role = login.getRole();
 
                 if (login != null && role == 1) {
                     ArrayList<Customer> customers = KundeFacade.getKunderList();
@@ -126,42 +126,27 @@ public class FrontController extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+        Customer login;
+        login = (Customer) session.getAttribute("login");
         int roleCheck;
-
-        ArrayList<Customer> customer;
-        customer = (ArrayList<Customer>) session.getAttribute("login");
-        if(customer == null){
-            customer = new ArrayList<>();
-        }
-
 
         switch(source){
 
             case "login":
-
-                ArrayList<Customer> customerList = FacadeLayer.KundeFacade.getKunderList();
-
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
 
+                Customer customerCheck = KundeFacade.getCustomer(email, "mail");
 
-                for (int i = 0; i < customerList.size(); i++) {
-                    if(customerList.get(i).getEmail().equals(email) && customerList.get(i).getPassword().equals(password)){
+                if (customerCheck != null && customerCheck.getPassword().equals(password)) {
+                    // login
 
-                        int customer_id = customerList.get(i).getCustomer_id();
-                        String name = customerList.get(i).getName();
-                        String phone = customerList.get(i).getPhone();
-                        String address = customerList.get(i).getAdress();
-                        String zipcode = customerList.get(i).getZipcode();
-                        String city = customerList.get(i).getCity();
-                        int role = customerList.get(i).getRole();
-                        customer.add(new Customer(customer_id, name, email, password, phone, address, zipcode, city, role));
-                        session.setAttribute("login", customer);
-                    }
-
+                    session.setAttribute("login", customerCheck);
+                    destination = "/WEB-INF/brugerside.jsp";
+                } else {
+                    request.setAttribute("fail", "failed");
+                    destination = "login.jsp";
                 }
-                destination = "/WEB-INF/brugerside.jsp";
                 break;
 
             case "register":
@@ -205,7 +190,7 @@ public class FrontController extends HttpServlet {
 
                 roleCheck = 0;
 
-                roleCheck = login.get(0).getRole();
+                roleCheck = login.getRole();
 
                 String action;
                 Customer foundCustomer = null;
@@ -278,7 +263,7 @@ public class FrontController extends HttpServlet {
             case "searchorders":
 
                 roleCheck = 0;
-                roleCheck = login.get(0).getRole();
+                roleCheck = login.getRole();
 
                 String type = (String) request.getParameter("type");
                 ArrayList<Order> orderArrayList;
@@ -318,7 +303,7 @@ public class FrontController extends HttpServlet {
                 break;
             case "changeOrder":
                 roleCheck = 0;
-                roleCheck = login.get(0).getRole();
+                roleCheck = login.getRole();
 
                 if (login != null && roleCheck == 1) {
 

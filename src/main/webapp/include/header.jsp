@@ -4,9 +4,9 @@
 <%
     int role = 0;
 
-    ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
+    Customer login = (Customer) session.getAttribute("login");
     if (login != null) {
-        role = login.get(0).getRole();
+        role = login.getRole();
     }
 %>
 
