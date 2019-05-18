@@ -87,15 +87,16 @@ public class FrontController extends HttpServlet {
                 break;
             case "admin":
 
-                ArrayList<Customer> customers = KundeFacade.getKunderList();
-
-                request.setAttribute("customers", customers);
-
                 role = 0;
-
                 role = login.get(0).getRole();
 
                 if (login != null && role == 1) {
+                    ArrayList<Customer> customers = KundeFacade.getKunderList();
+                    ArrayList<Order> orders = OrderFacade.getOrderList();
+
+                    request.setAttribute("customers", customers);
+                    request.setAttribute("orders", orders);
+
                     destination = "/WEB-INF/admin.jsp";
                 } else {
                     destination = "index.jsp";
@@ -280,12 +281,15 @@ public class FrontController extends HttpServlet {
                     if (type.equals("single")) {
                         // find en enkelt ordre
 
-                        String order_id = (String) request.getParameter("orderid");
+                        String order_id = (String) request.getParameter("order_id");
 
                         Order order = null;
                         order = OrderFacade.getOrder(Integer.parseInt(order_id));
-
                         if (order != null) {
+
+                            Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+
+                            request.setAttribute("customerIQ", customerRelative);
                             request.setAttribute("foundOrder", order);
                             request.setAttribute("type", type);
 

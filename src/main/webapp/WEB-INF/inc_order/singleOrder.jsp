@@ -1,6 +1,11 @@
-﻿
+﻿<%@ page import="Model.Order" %>
+
+<%
+    Customer customerInQuestion = (Customer) request.getAttribute("customerIQ");
+    Order order = (Order) request.getAttribute("foundOrder");
+%>
 <main class="page pricing-table-page">
-    <h1 style="margin-bottom: 50px;margin-top: 120px;">Ordren blev fundet af kunden #Kundenavn</h1>
+    <h1 style="margin-bottom: 50px;margin-top: 120px;">Ordren blev fundet afgivet af kunden <b><%out.print(customerInQuestion.getName());%></b></h1>
 </main>
 <div>
     <div class="container" style="margin-bottom: 50px;">

@@ -1,4 +1,8 @@
-﻿<main class="page pricing-table-page">
+﻿
+<%
+    ArrayList<Order> orderList = (ArrayList<Order>) request.getAttribute("orderlist");
+%>
+<main class="page pricing-table-page">
     <h1 style="margin-bottom: 50px;margin-top: 120px;">Velkommen til admin panelet</h1>
 </main>
 <div>
@@ -53,163 +57,29 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
+                                        <%
+                                            if (orderList != null) {
+                                                int listSize = orderList.size() - 1;
 
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>ID</td>
-                                            <td>Kunde ID</td>
-                                            <td>Længde</td>
-                                            <td>Højde</td>
-                                            <td>Bredde</td>
-                                            <td>Tag</td>
-                                            <td>Redskabsskur</td>
-                                            <td>Redskabsskurtype</td>
-                                            <td>Status</td>
-                                            <td>Dato</td>
-                                            <td><button class="btn btn-sm btn-primary" type="button" name="orderid" value="0">Se Ordre</button></td>
-                                        </tr>
+                                                for (int i = listSize; i >= 0; i--) {
+                                                    out.print(
+                                                                    "<tr>" +
+                                                                    "<td>" + orderList.get(i).getOrder_id() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getCustomer_id() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getLength() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getHeight() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getWidth() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getRoof() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getShed() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getShedtype() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getOrder_status() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getDate() + "</td>\n" +
+                                                                    "<td><form method='post' action='FrontController' style='display:inline'><input type='hidden' name='source' value='searchorders' /><input type='hidden' name='type' value='single' /><button class=\"btn btn-sm btn-primary\" type=\"submit\" name=\"order_id\" value='" + orderList.get(i).getOrder_id() + "'>Se Ordre</button></form></td>" +
+                                                                    "</tr>"
+                                                    );
+                                                }
+                                            }
+                                        %>
                                         </tbody>
                                     </table>
                                 </div>

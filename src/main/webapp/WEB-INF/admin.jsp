@@ -1,5 +1,6 @@
 ﻿<%@ page import="Model.Customer" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="Model.Order" %>
 
 <%
 
@@ -104,6 +105,11 @@
         <div class="row">
 
             <!-- Ordre -->
+            <%
+                ArrayList<Order> orders = (ArrayList<Order>) request.getAttribute("orders");
+
+
+            %>
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -127,34 +133,53 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">97</th>
-                                <td>Jesper</td>
-                                <td><span class="badge badge-secondary" style="height:20px;">I gang</span></td>
-                                <td>13/5-2019</td>
-                                <td><button class="btn btn-dark btn-xs" type="button"><span style="font-size:12px;">Se Ordre</span></button></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">96</th>
-                                <td>Marcus</td>
-                                <td><span class="badge badge-secondary" style="height:20px;">I gang</span></td>
-                                <td>13/5-2019</td>
-                                <td><button class="btn btn-dark btn-xs" type="button"><span style="font-size:12px;">Se Ordre</span></button></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">95</th>
-                                <td>Per</td>
-                                <td><span class="badge badge-success" style="height:20px;">Godkendt</span></td>
-                                <td>13/5-2019</td>
-                                <td><button class="btn btn-dark btn-xs" type="button"><span style="font-size:12px;">Se Ordre</span></button></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">94</th>
-                                <td>Jon</td>
-                                <td><span class="badge badge-danger" style="height:20px;">Afvist</span></td>
-                                <td>13/5-2019</td>
-                                <td><button class="btn btn-dark btn-xs" type="button"><span style="font-size:12px;">Se Ordre</span></button></td>
-                            </tr>
+                            <%
+                                if (orders.size() > 0) {
+
+                                    int start = orders.size()-1;
+                                    int stop = orders.size()-4;
+
+                                    if (orders.size() < 4) {
+                                        stop = 0;
+                                    }
+
+                                    for (int i = start; i >= stop; i=i-1) {
+
+                                        // Check status
+                                        int status = orders.get(i).getOrder_status();
+                                        String statusPrint = "";
+
+                                        if (status == 0) {
+                                            // Afventer
+                                            statusPrint = "<span class='badge badge-secondary' style='height:20px;'>Afventer</span>";
+                                        } else if (status == 1) {
+                                            // Godkendt
+                                            statusPrint = "<span class='badge badge-success' style='height:20px;'>Godkendt</span>";
+                                        } else if (status == 2) {
+                                            // Afvist
+                                            statusPrint = "<span class='badge badge-danger' style='height:20px;'>Afvist</span>";
+                                        } else {
+                                            // Ukendt
+                                            statusPrint = "<span class='badge badge-warning' style='height:20px;'>Ukendt</span>";
+                                        }
+
+                                        // Parse date YYYY-mm-dd
+                                        String dateToParse = orders.get(i).getDate();
+                                        char[] dateCharArray = dateToParse.toCharArray();
+
+                                        String dateFormatted = "" + dateCharArray[0] + dateCharArray[1] + dateCharArray[2] + dateCharArray[3] + "-" + dateCharArray[4] + dateCharArray[5] + "-" + dateCharArray[6] + dateCharArray[7];
+
+                                        out.println("<tr>\n" +
+                                                "<th scope=\"row\"> " + orders.get(i).getOrder_id() + "</th>\n" +
+                                                "<td> " + orders.get(i).getCustomer_id() + "</td>\n" +
+                                                "<td> " + statusPrint + "</td>\n" +
+                                                "<td> " + dateFormatted + "</td>\n" +
+                                                "<td><form method='post' action='FrontController' style='display:inline'><input type='hidden' name='source' value='searchorders' /><input type='hidden' name='type' value='single' /><button class='btn btn-dark btn-xs' type='submit' name='order_id' value='" + orders.get(i).getOrder_id() + "'><span style='font-size:12px;'>Se Ordre</span></button></form></td>\n" +
+                                                "</tr>");
+                                    }
+                                } else {
+                                    out.print("<tr><td><h5>Ingen</h5></td><td><h5>eksisterende</h5></td><td><h5>kunder</h5></td></tr>");
+                                }%>
                             </tbody>
                         </table>
                     </div>
