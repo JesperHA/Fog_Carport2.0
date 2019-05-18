@@ -47,7 +47,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Din Carport</h4>
-                            <h6 class="text-muted card-subtitle mb-2">Her kan du se dit nuværende Carport projekt</h6><button class="btn btn-primary" type="button" style="margin-top: 10px;">Klik her</button></div>
+                            <h6 class="text-muted card-subtitle mb-2">Her kan du se dit nuværende Carport projekt</h6><button class="btn btn-primary" type="button" ahref="bygcarport.jsp" style="margin-top: 10px;">Klik her</button></div>
                     </div>
                 </div>
                 <div class="col-md-6">
