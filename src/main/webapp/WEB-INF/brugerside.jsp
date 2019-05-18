@@ -54,7 +54,12 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Dine ordrer</h4>
-                            <h6 class="text-muted card-subtitle mb-2">Her kan du se dine ordrer.</h6><button class="btn btn-primary" type="button" style="margin-top: 10px;">Klik her</button></div>
+                            <h6 class="text-muted card-subtitle mb-2">Her kan du se dine ordrer.</h6>
+                        <form method="post" action="FrontController" style="display:inline">
+                            <input type="hidden" name="source" value="searchorders">
+                            <input type="hidden" name="type" value="all">
+                            <button class="btn btn-primary" type="submit" style="margin-top: 10px;">Klik her</button>
+                        </form>
                     </div>
                 </div>
             </div>

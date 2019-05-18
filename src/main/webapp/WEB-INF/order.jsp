@@ -3,9 +3,10 @@
 
 <%
 
-    ArrayList<Customer> customer = (ArrayList<Customer>) session.getAttribute("login");
+    Customer customer = (Customer) session.getAttribute("login");
 
-    Customer foundCustomer = (Customer) request.getAttribute("foundCustomer");
+    Customer foundCustomer = null;
+    foundCustomer = (Customer) request.getAttribute("foundCustomer");
 
 %>
 

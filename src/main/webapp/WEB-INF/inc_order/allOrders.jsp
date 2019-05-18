@@ -7,6 +7,7 @@
 </main>
 <div>
     <div class="container" style="margin-bottom: 50px;">
+        <% if (login.getRole() == 1) { %>
         <div class="row">
             <div class="col-md-12" style="margin-bottom: 30px;">
                 <div class="card">
@@ -33,6 +34,7 @@
                 </div>
             </div>
         </div>
+        <% } %>
         <%
             String order_id = (String) request.getAttribute("deletedOrder_id");
             String success = (String) request.getAttribute("deletedOrder");
@@ -89,6 +91,22 @@
                                                                     "</tr>"
                                                     );
                                                 }
+                                            } else {
+                                                out.print(
+                                                        "<tr>" +
+                                                                "<td> Ingen </td>\n" +
+                                                                "<td> Ordre </td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>" +
+                                                                "</tr>"
+                                                );
                                             }
                                         %>
                                         </tbody>

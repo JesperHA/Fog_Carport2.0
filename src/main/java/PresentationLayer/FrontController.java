@@ -297,6 +297,29 @@ public class FrontController extends HttpServlet {
                         destination = "WEB-INF/order.jsp";
                     }
 
+                } else if(login != null && roleCheck == 0) {
+                    if (type.equals("single")) {
+                        String order_id = request.getParameter("order_id");
+                        Order order = null;
+                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
+
+                        if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
+                            Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+
+                            request.setAttribute("customerIQ", customerRelative);
+                            request.setAttribute("foundOrder", order);
+                            request.setAttribute("type", type);
+
+                            destination = "WEB-INF/order.jsp";
+                        }
+
+                    } else {
+                        ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+
+                        request.setAttribute("orderlist", customerOrders);
+                        request.setAttribute("type", type);
+                        destination = "WEB-INF/order.jsp";
+                    }
                 } else {
                     destination = "index.jsp";
                 }
