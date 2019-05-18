@@ -325,32 +325,50 @@ public class FrontController extends HttpServlet {
 
                         typeOf = "single";
 
-                        int updateOrder_id = Integer.parseInt(request.getParameter("updateOrder_id"));
-                        int updateCustomer_id = Integer.parseInt(request.getParameter("updateCustomer_id"));
-                        int updateLength = Integer.parseInt(request.getParameter("updateLength")); // length
-                        int updateHeight = Integer.parseInt(request.getParameter("updateHeight")); // height
-                        int updateWidth = Integer.parseInt(request.getParameter("updateWidth")); // width
-                        int updateRoof = Integer.parseInt(request.getParameter("updateRoof")); // roof
-                        int updateShed = Integer.parseInt(request.getParameter("updateShed")); // shed
-                        int updateShedtype = Integer.parseInt(request.getParameter("updateShedtype")); // shedtype
-                        int updateOrder_status = Integer.parseInt(request.getParameter("updateOrder_status")); // order_status
-                        String updateDate = request.getParameter("updateDate"); // date
+                        int updateOrder_id = Integer.parseInt(request.getParameter("order_id"));
+                        int updateCustomer_id = Integer.parseInt(request.getParameter("customer_id"));
+                        int updateLength = Integer.parseInt(request.getParameter("length")); // length
+                        int updateHeight = Integer.parseInt(request.getParameter("height")); // height
+                        int updateWidth = Integer.parseInt(request.getParameter("width")); // width
+                        int updateRoof = Integer.parseInt(request.getParameter("roof")); // roof
+                        int updateShed = Integer.parseInt(request.getParameter("shed")); // shed
+                        int updateShedtype = Integer.parseInt(request.getParameter("shedtype")); // shedtype
+                        int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
+                        String updateDate = request.getParameter("date"); // date
 
-                        Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, updateDate);
+                        String newDate = updateDate.replace("-", "");
+
+                        Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, newDate);
 
                         Order result = OrderFacade.changeOrder(updateOrder);
 
                         if (result != null) {
+
+                            Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
+
                             request.setAttribute("foundOrder", result);
-                            request.setAttribute("orderlist", orderList);
-                            request.setAttribute("type", typeOf);
-                            destination = "WEB-INF/order.jsp";
-                        } else {
-                            request.setAttribute("updateOrderStatus", "fail");
-                            request.setAttribute("updateOrderId", updateOrder_id);
+
+                            request.setAttribute("customerIQ", updatedCustomerIQ1);
 
                             request.setAttribute("orderlist", orderList);
                             request.setAttribute("type", typeOf);
+
+                            System.out.println("Passed here (Number 1)");
+                            System.out.println("Navn på Kunde: " + updatedCustomerIQ1.getName());
+                            destination = "WEB-INF/order.jsp";
+                        } else {
+                            Customer updatedCustomerIQ2 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
+
+                            request.setAttribute("updateOrderStatus", "fail");
+                            request.setAttribute("updateOrderId", updateOrder_id);
+
+                            request.setAttribute("customerIQ", updatedCustomerIQ2);
+
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+
+                            System.out.println("Passed here (Number 2)");
+
                             destination = "WEB-INF/order.jsp";
                         }
                     } else if (changeType.equals("status")){
@@ -363,6 +381,7 @@ public class FrontController extends HttpServlet {
 
                         if (success.equals("done")) {
                             Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
+                            request.setAttribute("customerIQ", KundeFacade.getCustomer("" + updatedOrder.getOrder_id(), "id"));
                             request.setAttribute("foundOrder", updatedOrder);
                             request.setAttribute("orderlist", orderList);
                             request.setAttribute("type", typeOf);

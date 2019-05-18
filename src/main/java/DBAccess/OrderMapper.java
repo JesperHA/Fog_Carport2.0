@@ -137,7 +137,7 @@ public class OrderMapper {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet resultSet = null;
-        String sqlQuery = "UPDATE orders SET customer_id = ?, length = ?, height = ?, width = ?, roof = ?, shed = ?, shedtype = ?, date = ? WHERE order_id = ?";
+        String sqlQuery = "UPDATE orders SET customer_id = ?, length = ?, height = ?, width = ?, roof = ?, shed = ?, shedtype = ?, order_status = ?, date = ? WHERE order_id = ?";
 
         try {
             connection = Connector.connection();
@@ -149,8 +149,10 @@ public class OrderMapper {
             ps.setInt(5, order.getRoof());
             ps.setInt(6, order.getShed());
             ps.setInt(7, order.getShedtype());
-            ps.setString(8, order.getDate());
-            ps.executeQuery();
+            ps.setInt(8, order.getOrder_status());
+            ps.setString(9, order.getDate());
+            ps.setInt(10, order.getOrder_id());
+            ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -10,6 +10,8 @@
 <div>
     <div class="container" style="margin-bottom: 50px;">
         <div class="row">
+
+            <!-- Søgning -->
             <div class="col-md-12" style="margin-bottom: 30px;">
                 <div class="card">
                     <div class="card-body">
@@ -33,104 +35,16 @@
                     </div>
                 </div>
             </div>
-        <div class="row">
 
-            <div class="col-md-12" style="margin-bottom: 30px;">
+            <!-- Tegning -->
+            <div class="col-md-6" style="margin-bottom: 30px;">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Alle ordre</h4>
-                        <h6 class="text-muted card-subtitle mb-2">Nedenunder ses en komplet ordreliste</h6>
+                        <h4 class="card-title">TEGNING</h4>
                         <hr>
                         <div class="row" style="margin-top:35px;">
-                            <div class="col mx-auto">
-                                <table id="myTable" class="table table-striped" >
-                                    <thead>
-                                    <tr>
-                                        <th>ENO</th>
-                                        <th>EMPName</th>
-                                        <th>Country</th>
-                                        <th>Salary</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>001</td>
-                                        <td>Anusha</td>
-                                        <td>India</td>
-                                        <td>10000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>002</td>
-                                        <td>Charles</td>
-                                        <td>United Kingdom</td>
-                                        <td>28000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>003</td>
-                                        <td>Sravani</td>
-                                        <td>Australia</td>
-                                        <td>7000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>004</td>
-                                        <td>Amar</td>
-                                        <td>India</td>
-                                        <td>18000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>005</td>
-                                        <td>Lakshmi</td>
-                                        <td>India</td>
-                                        <td>12000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>006</td>
-                                        <td>James</td>
-                                        <td>Canada</td>
-                                        <td>50000</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>007</td>
-                                        <td>Ronald</td>
-                                        <td>US</td>
-                                        <td>75000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>008</td>
-                                        <td>Mike</td>
-                                        <td>Belgium</td>
-                                        <td>100000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>009</td>
-                                        <td>Andrew</td>
-                                        <td>Argentina</td>
-                                        <td>45000</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>010</td>
-                                        <td>Stephen</td>
-                                        <td>Austria</td>
-                                        <td>30000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>011</td>
-                                        <td>Sara</td>
-                                        <td>China</td>
-                                        <td>750000</td>
-                                    </tr>
-                                    <tr>
-                                        <td>012</td>
-                                        <td>JonRoot</td>
-                                        <td>Argentina</td>
-                                        <td>65000</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
+                            <div class="col" style="text-align: center">
+                                <p>Vis Tegning Her</p>
                             </div>
 
                         </div>
@@ -138,54 +52,94 @@
                 </div>
             </div>
 
-            <!-- Kunder -->
+            <!-- Ordren Fundet -->
 
-
-            <div class="col-md-6">
+            <div class="col-md-6" style="margin-bottom: 30px;">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Nyeste kunder</h4>
-                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her er de nyeste kunder</h6><button class="btn btn-primary float-right" type="button" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
+                        <h4 class="card-title">ORDREN</h4>
+                        <hr>
+                        <div class="row" style="margin-top:35px;">
+                            <div class="col mx-auto">
+                                <form action="FrontController" method="post">
+                                    <input type="hidden" name="source" value="changeOrder" />
+                                    <input type="hidden" name="changetype" value="order" />
 
-                    <div id="table-in-card">
-                        <form action="FrontController" method="post">
-                            <table class="table">
-                                <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Kunde</th>
-                                    <th scope="col">Tlf</th>
-                                    <th scope="col">By</th>
-                                    <th scope="col">Handling</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <%
-/*
-                                    if (customerList.size() > 0) {
+                                    <div class="input-group">
+                                        <label class="form-control" for="order_id" style="max-width:150px">Order ID:</label>
+                                        <input type="text" class="form-control" name="order_id" id="order_id" value="<% out.print(order.getOrder_id()); %>" autocomplete="off" disabled>
+                                    </div> <br>
 
-                                        int start = customerList.size()-1;
-                                        int stop = customerList.size()-4;
+                                    <div class="input-group">
+                                        <label class="form-control" for="customer_id" style="max-width:150px">Kunde ID:</label>
+                                        <input type="text" class="form-control" name="customer_id" id="customer_id" value="<% out.print(order.getCustomer_id()); %>" autocomplete="off" disabled>
+                                    </div> <br>
 
-                                        for (int i = start; i >= stop; i=i-1) {
+                                    <div class="input-group">
+                                        <label class="form-control" for="length" style="max-width:150px">Længde:</label>
+                                        <input type="text" class="form-control" name="length" id="length" value="<% out.print(order.getLength()); %>" autocomplete="off" >
+                                    </div> <br>
 
-                                            out.println("<tr>\n" +
-                                                    "<th scope=\"row\"> " + customerList.get(i).getCustomer_id() + "</th>\n" +
-                                                    "<td> " + customerList.get(i).getName() + "</td>\n" +
-                                                    "<td> " + customerList.get(i).getPhone() + "</td>\n" +
-                                                    "<td> " + customerList.get(i).getCity() + "</td>\n" +
-                                                    "<td><button class=\"btn btn-dark btn-xs\" type=\"submit\" name='search' value='" + customerList.get(i).getCustomer_id() + "'><span style=\"font-size:12px;\">Se Kunde</span></button></td>\n" +
-                                                    "</tr>");
-                                        }
-                                    } */ %>
-                                </tbody>
-                            </table>
-                        </form>
+                                    <div class="input-group">
+                                        <label class="form-control" for="height" style="max-width:150px">Højde:</label>
+                                        <input type="text" class="form-control" name="height" id="height" value="<% out.print(order.getHeight()); %>" autocomplete="off" >
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="width" style="max-width:150px">Bredde:</label>
+                                        <input type="text" class="form-control" name="width" id="width" value="<% out.print(order.getWidth()); %>" autocomplete="off" >
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="roof" style="max-width:150px">Tag:</label>
+                                        <input type="text" class="form-control" name="roof" id="roof" value="<% out.print(order.getRoof()); %>" autocomplete="off" >
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="shed" style="max-width:150px">Redskabskur:</label>
+                                        <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="shedtype" style="max-width:150px">Skurtype:</label>
+                                        <input type="text" class="form-control" name="shedtype" id="shedtype" value="<% out.print(order.getShedtype()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="date" style="max-width:150px">Dato:</label>
+                                        <input type="text" class="form-control" name="date" id="date" value="<%
+                                         // Parse date YYYY-mm-dd
+                                        String dateToParse = order.getDate();
+                                        char[] dateCharArray = dateToParse.toCharArray();
+
+                                        String dateFormatted = "" + dateCharArray[0] + dateCharArray[1] + dateCharArray[2] + dateCharArray[3] + "-" + dateCharArray[4] + dateCharArray[5] + "-" + dateCharArray[6] + dateCharArray[7];
+                                        out.print(dateFormatted); %>" autocomplete="off" disabled>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="order_status" style="max-width:150px">Status:</label>
+                                        <select class="form-control" name="order_status" id="order_status">
+                                            <option value="0" <% if (order.getOrder_status() == 0) { out.print("selected"); } %>>Afventer</option>
+                                            <option value="1" <% if (order.getOrder_status() == 1) { out.print("selected"); } %>>Godkendt</option>
+                                            <option value="2" <% if (order.getOrder_status() == 2) { out.print("selected"); } %>>Afvist</option>
+                                            <option value="3" <% if (order.getOrder_status() == 3) { out.print("selected"); } %>>Ukendt</option>
+                                        </select>
+                                    </div>
+
+                                        <hr>
+
+                                    <div class="input-group-btn float-right">
+                                        <button class="btn btn-primary" type="button" onclick="document.getElementById('order_id').disabled=false;document.getElementById('customer_id').disabled=false;document.getElementById('shed').disabled=false;document.getElementById('shedtype').disabled=false;document.getElementById('date').disabled=false;document.getElementById('hiddenButton').click()">Gem Ændringer</button>
+                                        <button type="submit" id="hiddenButton"></button>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 </div>
 
 <script>
