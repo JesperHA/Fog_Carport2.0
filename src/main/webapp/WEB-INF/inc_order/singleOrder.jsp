@@ -3,6 +3,23 @@
 <%
     Customer customerInQuestion = (Customer) request.getAttribute("customerIQ");
     Order order = (Order) request.getAttribute("foundOrder");
+
+    int status = order.getOrder_status();
+    String statusPrint = "";
+
+    if (status == 0) {
+        // Afventer
+        statusPrint = "<span class='badge badge-secondary' style='height:20px;'>Afventer</span>";
+    } else if (status == 1) {
+        // Godkendt
+        statusPrint = "<span class='badge badge-success' style='height:20px;'>Godkendt</span>";
+    } else if (status == 2) {
+        // Afvist
+        statusPrint = "<span class='badge badge-danger' style='height:20px;'>Afvist</span>";
+    } else {
+        // Ukendt
+        statusPrint = "<span class='badge badge-warning' style='height:20px;'>Ukendt</span>";
+    }
 %>
 <main class="page pricing-table-page">
     <h1 style="margin-bottom: 50px;margin-top: 120px;">Ordren blev fundet afgivet af kunden <b><%out.print(customerInQuestion.getName());%></b></h1>
@@ -57,7 +74,9 @@
             <div class="col-md-6" style="margin-bottom: 30px;">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">ORDREN</h4>
+                        <h4 class="float-left">ORDREN</h4>
+                        <span class="float-right">Status: <% out.print(statusPrint); %></span>
+                        <br>
                         <hr>
                         <div class="row" style="margin-top:35px;">
                             <div class="col mx-auto">
@@ -96,7 +115,7 @@
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="shed" style="max-width:150px">Redskabskur:</label>
+                                        <label class="form-control" for="shed" style="max-width:150px">Redskabsskur:</label>
                                         <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
                                     </div> <br>
 
@@ -128,12 +147,27 @@
 
                                         <hr>
 
+                                    <div class="input-group-btn float-right" style="margin-left:-12px;">
+                                        <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#deleteModal">Slet</button>
+                                    </div>
                                     <div class="input-group-btn float-right">
                                         <button class="btn btn-primary" type="button" onclick="document.getElementById('order_id').disabled=false;document.getElementById('customer_id').disabled=false;document.getElementById('shed').disabled=false;document.getElementById('shedtype').disabled=false;document.getElementById('date').disabled=false;document.getElementById('hiddenButton').click()">Gem Ændringer</button>
-                                        <button type="submit" id="hiddenButton"></button>
+                                        <button type="submit" id="hiddenButton" style="visibility: hidden;"></button>
                                     </div>
-
                                 </form>
+
+                                <% if (order.getOrder_status() != 1) { %>
+
+                                <form action="FrontController" method="post">
+                                    <input type="hidden" name="source" value="changeOrder" />
+                                    <input type="hidden" name="changetype" value="status" />
+                                    <input type="hidden" name="order_id" value="<%out.print(order.getOrder_id());%>" />
+                                    <div class="input-group-btn float-left">
+                                        <button tyoe="submit" name="status" id="godkend-button" value="1">Godkend</button>
+                                    </div>
+                                </form>
+
+                                <% } %>
                             </div>
 
                         </div>
@@ -142,8 +176,34 @@
             </div>
 </div>
 
-<script>
-    $(document).ready(function(){
-        $('#myTable').dataTable();
-    });
-</script>
+
+        <!-- Slet Ordre Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">SLET ORDREN</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Du er i gang med at slette ordren, dette kan ikke gøres om og alt data der tilhører ordren vil også blive slettet!
+                        <br><br>
+                        Er du sikker på at du vil slette ordren?
+                    </div>
+                    <div class="modal-footer">
+
+                        <form action="FrontController" method="post">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fortryd</button>
+
+                            <input type="hidden" name="source" value="changeOrder" />
+                            <input type="hidden" name="changetype" value="delete" />
+
+                            <button type="submit" class="btn btn-danger" name="order_id" value="<% out.print(order.getOrder_id()); %>">Slet</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

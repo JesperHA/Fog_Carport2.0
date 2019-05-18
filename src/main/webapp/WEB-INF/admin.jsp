@@ -178,7 +178,7 @@
                                                 "</tr>");
                                     }
                                 } else {
-                                    out.print("<tr><td><h5>Ingen</h5></td><td><h5>eksisterende</h5></td><td><h5>kunder</h5></td></tr>");
+                                    out.print("<tr><td><h5>Ingen</h5></td><td><h5>eksisterende</h5></td><td><h5>ordre</h5></td></tr>");
                                 }%>
                             </tbody>
                         </table>

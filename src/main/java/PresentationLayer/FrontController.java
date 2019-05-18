@@ -210,11 +210,12 @@ public class FrontController extends HttpServlet {
                 String action;
                 Customer foundCustomer = null;
 
+                ArrayList<Order> orders = OrderFacade.getOrderList();
+                ArrayList<Customer> customers = KundeFacade.getKunderList();
+
                 request.setAttribute("searched", "searched");
 
                 if (login != null && roleCheck == 1) {
-
-                    ArrayList<Customer> customers = KundeFacade.getKunderList();
 
                     request.setAttribute("customers", customers);
 
@@ -254,15 +255,20 @@ public class FrontController extends HttpServlet {
                         }
 
                         if (foundCustomer == null || foundCustomer.equals(null)) {
+                            request.setAttribute("customers", customers);
+                            request.setAttribute("orders", orders);
                             destination = "/WEB-INF/admin.jsp";
                         } else {
-
+                            request.setAttribute("customers", customers);
+                            request.setAttribute("orders", orders);
                             request.setAttribute("foundCustomer", foundCustomer);
 
                             destination = "/WEB-INF/admin.jsp";
                         }
 
                     } else {
+                        request.setAttribute("customers", customers);
+                        request.setAttribute("orders", orders);
                         destination = "/WEB-INF/admin.jsp";
                     }
                 } else {
@@ -275,7 +281,7 @@ public class FrontController extends HttpServlet {
                 roleCheck = login.get(0).getRole();
 
                 String type = (String) request.getParameter("type");
-                ArrayList<Order> orders;
+                ArrayList<Order> orderArrayList;
 
                 if (login != null && roleCheck == 1) {
                     if (type.equals("single")) {
@@ -298,9 +304,9 @@ public class FrontController extends HttpServlet {
                     } else {
                         // send alle ordre
 
-                        orders = OrderFacade.getOrderList();
+                        orderArrayList = OrderFacade.getOrderList();
 
-                        request.setAttribute("orderlist", orders);
+                        request.setAttribute("orderlist", orderArrayList);
                         request.setAttribute("type", type);
 
                         destination = "WEB-INF/order.jsp";
@@ -353,8 +359,6 @@ public class FrontController extends HttpServlet {
                             request.setAttribute("orderlist", orderList);
                             request.setAttribute("type", typeOf);
 
-                            System.out.println("Passed here (Number 1)");
-                            System.out.println("Navn på Kunde: " + updatedCustomerIQ1.getName());
                             destination = "WEB-INF/order.jsp";
                         } else {
                             Customer updatedCustomerIQ2 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
@@ -367,21 +371,24 @@ public class FrontController extends HttpServlet {
                             request.setAttribute("orderlist", orderList);
                             request.setAttribute("type", typeOf);
 
-                            System.out.println("Passed here (Number 2)");
-
                             destination = "WEB-INF/order.jsp";
                         }
                     } else if (changeType.equals("status")){
                         typeOf = "single";
 
-                        String statusOrder_id = request.getParameter("statusOrder_id");
-                        int newStatus = Integer.parseInt(request.getParameter("newStatus"));
+                        String statusOrder_id = request.getParameter("order_id");
+                        int newStatus = Integer.parseInt(request.getParameter("status"));
 
                         String success = OrderFacade.changeStatus(statusOrder_id, newStatus);
 
                         if (success.equals("done")) {
                             Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
-                            request.setAttribute("customerIQ", KundeFacade.getCustomer("" + updatedOrder.getOrder_id(), "id"));
+
+                            Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
+
+                            System.out.println(foundCustomerIQ.getName());
+
+                            request.setAttribute("customerIQ", foundCustomerIQ);
                             request.setAttribute("foundOrder", updatedOrder);
                             request.setAttribute("orderlist", orderList);
                             request.setAttribute("type", typeOf);
@@ -389,6 +396,31 @@ public class FrontController extends HttpServlet {
                         } else if (success.equals("delete")) {
                             // To Be Done
                         }
+                    } else if (changeType.equals("delete")) {
+                        typeOf = "all";
+
+                        String order_id = request.getParameter("order_id");
+
+                        Order orderDelete = OrderFacade.getOrder(Integer.parseInt(order_id));
+
+                        if (orderDelete != null) {
+                            String success = OrderFacade.deleteOrder(orderDelete);
+
+                            orderList = OrderFacade.getOrderList();
+
+                            if (success.equals("success")) {
+
+                                request.setAttribute("deletedOrder_id", order_id);
+                                request.setAttribute("deletedOrder", success);
+                                request.setAttribute("orderlist", orderList);
+                                request.setAttribute("type", typeOf);
+
+                                destination = "WEB-INF/order.jsp";
+                            } else {
+
+                            }
+                        }
+
                     }
                 }
                 break;

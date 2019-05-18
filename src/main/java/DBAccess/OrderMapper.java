@@ -120,7 +120,7 @@ public class OrderMapper {
             ps = connection.prepareStatement(sqlQuery);
             ps.setInt(1, status);
             ps.setInt(2, Integer.parseInt(id));
-            ps.executeQuery();
+            ps.executeUpdate();
 
             System.out.println("Order status changed to " + status + ", for order id " + id);
 
@@ -158,5 +158,24 @@ public class OrderMapper {
             return null;
         }
         return order;
+    }
+
+    public static String deleteOrder(Order order) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        String sqlQuery = "DELETE FROM orders WHERE order_id = ?";
+
+        try {
+            connection = Connector.connection();
+            ps = connection.prepareStatement(sqlQuery);
+            ps.setInt(1, order.getOrder_id());
+            ps.executeUpdate();
+
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "fail";
+        }
     }
 }

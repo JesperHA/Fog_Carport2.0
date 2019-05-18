@@ -30,4 +30,10 @@ public class OrderFacade {
 
         return order;
     }
+
+    public static String deleteOrder(Order order) {
+        String success = OrderMapper.deleteOrder(order);
+
+        return success;
+    }
 }

@@ -24,9 +24,23 @@
         text-align: center;
     }
     #table-in-card {
-        margin:auto;
-        width:100%;
+        margin: auto;
+        width: 100%;
         padding: 20px;
+    }
+    #godkend-button {
+        background: none!important;
+        border: none!important;
+    }
+    #godkend-button:hover {
+        color: #4e555b;
+        text-decoration: underline;
+        transition: all 0.7s;
+    }
+    #godkend-button:after {
+        color: #000000;
+        text-decoration: none;
+        transition: all 0.7s;
     }
 </style>
     <%

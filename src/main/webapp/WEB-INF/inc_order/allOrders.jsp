@@ -32,6 +32,11 @@
                 </div>
             </div>
         </div>
+
+        <div class="row" style="text-align:center">
+            <h3 style="padding-left:100px">Ordren med ordre id <% String order_id = (String) request.getAttribute("deletedOrder_id"); out.print(order_id); %> blev <% String success = (String) request.getAttribute("deletedOrder"); if (success.equals("success")) { out.print("slettet."); } else { out.print("ikke slettet pga. en fejl."); }%></h3>
+        </div>
+
             <div class="row">
                 <div class="col-md-12" style="margin-bottom: 30px;">
                     <div class="card">
