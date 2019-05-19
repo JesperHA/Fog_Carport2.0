@@ -7,8 +7,11 @@ package PresentationLayer;
 
 import DBAccess.CustomerMapper;
 import Exceptions.LoginSampleException;
+import FacadeLayer.KundeFacade;
+import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
 import Model.Customer;
+import Model.Order;
 import Model.User;
 
 import java.io.IOException;
@@ -68,6 +71,8 @@ public class FrontController extends HttpServlet {
         String source = request.getParameter("source");
         HttpSession session = request.getSession();
 
+        Customer login = (Customer) session.getAttribute("login");
+        int role;
 
         switch(source){
 
@@ -81,12 +86,17 @@ public class FrontController extends HttpServlet {
                 destination = "/index.jsp";
                 break;
             case "admin":
-                int role = 0;
 
-                ArrayList<Customer> login = (ArrayList<Customer>) session.getAttribute("login");
-                role = login.get(0).getRole();
+                role = 0;
+                role = login.getRole();
 
                 if (login != null && role == 1) {
+                    ArrayList<Customer> customers = KundeFacade.getKunderList();
+                    ArrayList<Order> orders = OrderFacade.getOrderList();
+
+                    request.setAttribute("customers", customers);
+                    request.setAttribute("orders", orders);
+
                     destination = "/WEB-INF/admin.jsp";
                 } else {
                     destination = "index.jsp";
@@ -116,42 +126,27 @@ public class FrontController extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-
-        ArrayList<Customer> customer;
-        customer = (ArrayList<Customer>) session.getAttribute("login");
-        if(customer == null){
-            customer = new ArrayList<>();
-        }
-
+        Customer login;
+        login = (Customer) session.getAttribute("login");
+        int roleCheck;
 
         switch(source){
 
             case "login":
-
-                ArrayList<Customer> customerList = FacadeLayer.KundeFacade.getKunderList();
-
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
 
+                Customer customerCheck = KundeFacade.getCustomer(email, "mail");
 
-                for (int i = 0; i < customerList.size(); i++) {
-                    if(customerList.get(i).getEmail().equals(email) && customerList.get(i).getPassword().equals(password)){
+                if (customerCheck != null && customerCheck.getPassword().equals(password)) {
+                    // login
 
-                        System.out.println("Kommer ind i loop");
-
-                        int customer_id = customerList.get(i).getCustomer_id();
-                        String name = customerList.get(i).getName();
-                        String phone = customerList.get(i).getPhone();
-                        String address = customerList.get(i).getAdress();
-                        String zipcode = customerList.get(i).getZipcode();
-                        String city = customerList.get(i).getCity();
-                        int role = customerList.get(i).getRole();
-                        customer.add(new Customer(customer_id, name, email, password, phone, address, zipcode, city, role));
-                        session.setAttribute("login", customer);
-                    }
-
+                    session.setAttribute("login", customerCheck);
+                    destination = "/WEB-INF/brugerside.jsp";
+                } else {
+                    request.setAttribute("fail", "failed");
+                    destination = "login.jsp";
                 }
-                destination = "/WEB-INF/brugerside.jsp";
                 break;
 
             case "register":
@@ -191,11 +186,254 @@ public class FrontController extends HttpServlet {
             case "bygcarport":
                 destination = "bestilling.jsp";
                 break;
+            case "search":
+
+                roleCheck = 0;
+
+                roleCheck = login.getRole();
+
+                String action;
+                Customer foundCustomer = null;
+
+                ArrayList<Order> orders = OrderFacade.getOrderList();
+                ArrayList<Customer> customers = KundeFacade.getKunderList();
+
+                request.setAttribute("searched", "searched");
+
+                if (login != null && roleCheck == 1) {
+
+                    request.setAttribute("customers", customers);
+
+                    String kundeSearch = (String) request.getParameter("kunde");
+                    request.setAttribute("searchterm", kundeSearch);
+
+                    if (kundeSearch != null || !kundeSearch.isEmpty()) {
+
+                        if (kundeSearch.contains("@")) {
+                            // Extract full string as email
+
+                            String kundeSearchLower = kundeSearch.toLowerCase();
+
+                            action = "mail";
+                            foundCustomer = KundeFacade.getCustomer(kundeSearchLower, action);
+                        } else {
+                            // Extract all numbers to make sure it's only numbers.
+
+                            StringBuilder sb = new StringBuilder();
+                            boolean found = false;
+                            for (char c : kundeSearch.toCharArray()) {
+                                if (Character.isDigit(c)) {
+                                    sb.append(c);
+                                    found = true;
+                                } else if (found) {
+                                    // If we already found a digit before and this char is not a digit, stop looping
+                                    break;
+                                }
+                            }
+
+                            action = "id";
+                            foundCustomer = KundeFacade.getCustomer(sb.toString(), action);
+                        }
+
+                        if (foundCustomer == null || foundCustomer.equals(null)) {
+                            request.setAttribute("customers", customers);
+                            request.setAttribute("orders", orders);
+                            destination = "/WEB-INF/admin.jsp";
+                        } else {
+                            request.setAttribute("customers", customers);
+                            request.setAttribute("orders", orders);
+                            request.setAttribute("foundCustomer", foundCustomer);
+
+                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(foundCustomer.getCustomer_id());
+
+                            request.setAttribute("foundCustomerOrders", customerOrders);
+
+                            destination = "/WEB-INF/admin.jsp";
+                        }
+
+                    } else {
+                        request.setAttribute("customers", customers);
+                        request.setAttribute("orders", orders);
+                        destination = "/WEB-INF/admin.jsp";
+                    }
+                } else {
+                    destination = "index.jsp";
+                }
+                break;
+            case "searchorders":
+
+                roleCheck = 0;
+                roleCheck = login.getRole();
+
+                String type = (String) request.getParameter("type");
+                ArrayList<Order> orderArrayList;
+
+                if (login != null && roleCheck == 1) {
+                    if (type.equals("single")) {
+                        // find en enkelt ordre
+
+                        String order_id = (String) request.getParameter("order_id");
+
+                        Order order = null;
+                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
+                        if (order != null) {
+
+                            Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+
+                            request.setAttribute("customerIQ", customerRelative);
+                            request.setAttribute("foundOrder", order);
+                            request.setAttribute("type", type);
+
+                            destination = "WEB-INF/order.jsp";
+                        }
+                    } else {
+                        // send alle ordre
+
+                        orderArrayList = OrderFacade.getOrderList();
+
+                        request.setAttribute("orderlist", orderArrayList);
+                        request.setAttribute("type", type);
+
+                        destination = "WEB-INF/order.jsp";
+                    }
+
+                } else if(login != null && roleCheck == 0) {
+                    if (type.equals("single")) {
+                        String order_id = request.getParameter("order_id");
+                        Order order = null;
+                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
+
+                        if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
+                            Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+
+                            request.setAttribute("customerIQ", customerRelative);
+                            request.setAttribute("foundOrder", order);
+                            request.setAttribute("type", type);
+
+                            destination = "WEB-INF/order.jsp";
+                        }
+
+                    } else {
+                        ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+
+                        request.setAttribute("orderlist", customerOrders);
+                        request.setAttribute("type", type);
+                        destination = "WEB-INF/order.jsp";
+                    }
+                } else {
+                    destination = "index.jsp";
+                }
+                break;
+            case "changeOrder":
+                roleCheck = 0;
+                roleCheck = login.getRole();
+
+                if (login != null && roleCheck == 1) {
+
+                    String typeOf;
+
+                    ArrayList<Order> orderList = OrderFacade.getOrderList();
+                    String changeType = request.getParameter("changetype");
+
+                    if (changeType.equals("order")) {
+
+                        typeOf = "single";
+
+                        int updateOrder_id = Integer.parseInt(request.getParameter("order_id"));
+                        int updateCustomer_id = Integer.parseInt(request.getParameter("customer_id"));
+                        int updateLength = Integer.parseInt(request.getParameter("length")); // length
+                        int updateHeight = Integer.parseInt(request.getParameter("height")); // height
+                        int updateWidth = Integer.parseInt(request.getParameter("width")); // width
+                        int updateRoof = Integer.parseInt(request.getParameter("roof")); // roof
+                        int updateShed = Integer.parseInt(request.getParameter("shed")); // shed
+                        int updateShedtype = Integer.parseInt(request.getParameter("shedtype")); // shedtype
+                        int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
+                        String updateDate = request.getParameter("date"); // date
+
+                        String newDate = updateDate.replace("-", "");
+
+                        Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, newDate);
+
+                        Order result = OrderFacade.changeOrder(updateOrder);
+
+                        if (result != null) {
+
+                            Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
+
+                            request.setAttribute("foundOrder", result);
+
+                            request.setAttribute("customerIQ", updatedCustomerIQ1);
+
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+
+                            destination = "WEB-INF/order.jsp";
+                        } else {
+                            Customer updatedCustomerIQ2 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
+
+                            request.setAttribute("updateOrderStatus", "fail");
+                            request.setAttribute("updateOrderId", updateOrder_id);
+
+                            request.setAttribute("customerIQ", updatedCustomerIQ2);
+
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+
+                            destination = "WEB-INF/order.jsp";
+                        }
+                    } else if (changeType.equals("status")){
+                        typeOf = "single";
+
+                        String statusOrder_id = request.getParameter("order_id");
+                        int newStatus = Integer.parseInt(request.getParameter("status"));
+
+                        String success = OrderFacade.changeStatus(statusOrder_id, newStatus);
+
+                        if (success.equals("done")) {
+                            Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
+
+                            Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
+
+                            System.out.println(foundCustomerIQ.getName());
+
+                            request.setAttribute("customerIQ", foundCustomerIQ);
+                            request.setAttribute("foundOrder", updatedOrder);
+                            request.setAttribute("orderlist", orderList);
+                            request.setAttribute("type", typeOf);
+                            destination = "WEB-INF/order.jsp";
+                        } else if (success.equals("delete")) {
+                            // To Be Done
+                        }
+                    } else if (changeType.equals("delete")) {
+                        typeOf = "all";
+
+                        String order_id = request.getParameter("order_id");
+
+                        Order orderDelete = OrderFacade.getOrder(Integer.parseInt(order_id));
+
+                        if (orderDelete != null) {
+                            String success = OrderFacade.deleteOrder(orderDelete);
+
+                            orderList = OrderFacade.getOrderList();
+
+                            if (success.equals("success")) {
+
+                                request.setAttribute("deletedOrder_id", order_id);
+                                request.setAttribute("deletedOrder", success);
+                                request.setAttribute("orderlist", orderList);
+                                request.setAttribute("type", typeOf);
+
+                                destination = "WEB-INF/order.jsp";
+                            } else {
+
+                            }
+                        }
+
+                    }
+                }
+                break;
 
         }
-
-
-
 
         request.getRequestDispatcher(destination).forward(request,response);
 

@@ -20,16 +20,20 @@
         <%--<div class="card"></div>--%>
     <%--</section>--%>
 <%--</main>--%>
-<main class="page pricing-table-page">
-    <h1 style="margin-bottom: 50px;margin-top: 120px;">Din bestilling!</h1>
-</main>
-<div>
-    <div class="container" style="margin-bottom: 50px;">
+<main class="page login-page">
+    <section class="clean-block clean-form dark">
+        <div class="container" style="margin-top: 50px;">
+            <div class="block-heading">
+                <h2 class="text-info">Din bestilling</h2>
+                <p>Din bestilling blev gennemført!</p>
+            </div>
         <div class="row">
             <div class="col-md-12" style="margin-bottom: 30px;">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Her kan du se materialeliste samt en plantegning af din carport</h4>
+                        <h4 class="card-title">Din carport er næsten klar!</h4>
+                        <p>Vi har genereret en materialeliste og en plantegning til dig.</p>
+                        <p>Din materialeliste afventer i øjeblikket godkendelse. </p>
                     </div>
                 </div>
             </div>
@@ -38,7 +42,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Din Carport</h4>
+                        <h4 class="card-title">Plantegning</h4>
                         <h6 class="text-muted card-subtitle mb-2">Her kan du se tegning</h6>
 
                         <%
@@ -66,18 +70,31 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th>Column 1</th>
-                                    <th>Column 2</th>
+                                    <th>Varenr.</th>
+                                    <th>Produkt</th>
+                                    <th>Beskrivelse</th>
+                                    <th>Enhed</th>
+                                    <th>Antal</th>
+                                    <th>Pris</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <%
+                                    for (int i = 0; i < materials.size(); i++) {
+
+                                    %>
                                 <tr>
-                                    <td>Cell 1</td>
-                                    <td>Cell 2</td>
+                                    <td><% out.println(materials.get(i).getProduct_id()); %></td>
+                                    <td><% out.println(materials.get(i).getProduct_name()); %></td>
+                                    <td><% out.println(materials.get(i).getProduct_description()); %></td>
+                                    <td><% out.println(materials.get(i).getUnit());%></td>
+                                    <td><% out.println(materials.get(i).getAmount());%></td>
+                                    <td><% out.println(materials.get(i).getPrice());%></td>
                                 </tr>
+                                <%}%>
                                 <tr>
-                                    <td>Cell 3</td>
-                                    <td>Cell 4</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -89,6 +106,7 @@
             </div>
         </div>
     </div>
-</div>
+    </section>
+</main>
 
 <%@include file="include/footer.jsp"%>
