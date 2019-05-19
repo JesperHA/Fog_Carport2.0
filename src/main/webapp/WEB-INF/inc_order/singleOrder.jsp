@@ -46,7 +46,7 @@
                                     <input type="hidden" name="source" value="searchorders" />
                                     <input type="hidden" name="type" value="single" />
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="order_id" placeholder="ordrens id" autocomplete="off" required>
+                                        <input type="text" class="form-control" name="order_id" placeholder="Indtast ordrens id" autocomplete="off" required>
                                         <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button">Søg</button>
                                            </span>
@@ -125,7 +125,7 @@
 
                                     <div class="input-group">
                                         <label class="form-control" for="shed" style="max-width:150px">Redskabsskur:</label>
-                                        <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                        <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off">
                                     </div> <br>
 
                                     <div class="input-group">

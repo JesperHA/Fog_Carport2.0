@@ -62,9 +62,8 @@
                             <input class="form-control" type="hidden" name="rooftype" id="rooftype" value="0" />
 
                             <div class="tab-content" id="tabContent">
+
                                 <!-- Carport -->
-
-
                             <div class="card-body tab-pane fade show active" id="carport" role="tabpanel" aria-labelledby="carport-tab">
                                 <label><b>Angiv størrelse på carport</b></label>
                                 <div class="row" style="margin-bottom: 35px;">
