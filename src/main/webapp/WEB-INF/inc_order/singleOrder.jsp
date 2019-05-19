@@ -5,7 +5,7 @@
     Order order = (Order) request.getAttribute("foundOrder");
 
     int status = order.getOrder_status();
-    String statusPrint = "";
+    String statusPrint;
 
     if (status == 0) {
         // Afventer
@@ -30,6 +30,20 @@
 </main>
 <div>
     <div class="container" style="margin-bottom: 50px;">
+
+        <%
+            String failed = null;
+            failed = (String) request.getAttribute("failed");
+
+            if (failed != null && failed.equals("failed")) {
+        %>
+        <div style="text-align: center;margin: auto:">
+            <div class="alert alert-danger" role="alert">
+                <h5 style="margin-top: 4px;">Der skete en fejl og status er uændret, kontakt administrator.</h5>
+            </div>
+        </div>
+        <% } %>
+
         <div class="row">
 
             <% if (login != null && login.getRole() == 1) {%>
@@ -172,7 +186,7 @@
                                     <input type="hidden" name="changetype" value="status" />
                                     <input type="hidden" name="order_id" value="<%out.print(order.getOrder_id());%>" />
                                     <div class="input-group-btn float-left">
-                                        <button tyoe="submit" name="status" id="godkend-button" value="1">Godkend</button>
+                                        <button type="submit" name="status" id="godkend-button" value="1" style="margin-top: 5px;">Godkend</button>
                                     </div>
                                 </form>
 
@@ -308,3 +322,5 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>

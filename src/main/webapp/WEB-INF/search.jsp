@@ -10,11 +10,11 @@
                         <hr>
                     </div>
                     <div class="col-6" style="float: left;">
-                        <h4 class="card-title">Kundens Information</b></h4>
+                        <h4 class="card-title"><b>Kundens Information</b></h4>
                         <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her kan du se kundens informationer</h6>
                     </div>
                     <div class="col-6" style="float: right;">
-                        <h4 class="card-title">Alle ordre for kunden</b></h4>
+                        <h4 class="card-title"><b>Alle ordre for kunden</b></h4>
                         <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her kan du se kundens ordre</h6>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
 
                                     // Check status
                                     int status = customerOrders.get(i).getOrder_status();
-                                    String statusPrint = "";
+                                    String statusPrint;
 
                                     if (status == 0) {
                                         // Afventer

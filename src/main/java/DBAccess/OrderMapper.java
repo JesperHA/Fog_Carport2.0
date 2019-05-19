@@ -11,9 +11,9 @@ public class OrderMapper {
 
         ArrayList<Order> orderList = new ArrayList<>();
 
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
+        ResultSet resultSet;
         String sqlQuery = "SELECT * FROM orders";
 
         try {
@@ -47,9 +47,9 @@ public class OrderMapper {
 
         ArrayList<Order> orderList = new ArrayList<>();
 
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
+        ResultSet resultSet;
         String sqlQuery = "SELECT * FROM orders WHERE customer_id = ?";
 
         try {
@@ -110,9 +110,9 @@ public class OrderMapper {
 
         ArrayList<Order> orderList = new ArrayList<>();
 
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
+        ResultSet resultSet;
         String sqlQuery = "SELECT * FROM orders WHERE order_id = ?";
 
         try {
@@ -146,9 +146,8 @@ public class OrderMapper {
     }
 
     public static String changeStatus(String id, int status) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
         String sqlQuery = "UPDATE orders SET order_status = ? WHERE order_id = ?";
 
         try {
@@ -170,9 +169,8 @@ public class OrderMapper {
     }
 
     public static Order updateOrder(Order order) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
         String sqlQuery = "UPDATE orders SET customer_id = ?, length = ?, height = ?, width = ?, roof = ?, shed = ?, shedtype = ?, order_status = ?, date = ? WHERE order_id = ?";
 
         try {
@@ -197,9 +195,8 @@ public class OrderMapper {
     }
 
     public static String deleteOrder(Order order) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
         String sqlQuery = "DELETE FROM orders WHERE order_id = ?";
 
         try {

@@ -13,9 +13,9 @@ public class CustomerMapper {
 
         ArrayList<Customer> customerList = new ArrayList<>();
 
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
+        ResultSet resultSet;
         String sqlQuery = "SELECT * FROM customers";
 
         try {
@@ -37,7 +37,6 @@ public class CustomerMapper {
                 Customer customer = new Customer(customer_id, name, email, password, phone, address, zipcode, city, role);
                 customerList.add(customer);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,9 +97,7 @@ public class CustomerMapper {
     }
 
     public static Customer getCustomer( String search, String action ) {
-
         String SQL;
-
         if (action.equals("mail")) {
             SQL = "SELECT * FROM customers "
                     + "WHERE email=?";
@@ -108,7 +105,6 @@ public class CustomerMapper {
             SQL = "SELECT * FROM customers "
                     + "WHERE customer_id=?";
         }
-
         try {
             Connection con = Connector.connection();
             PreparedStatement ps = con.prepareStatement( SQL );

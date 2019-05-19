@@ -16,9 +16,9 @@ public class MaterialMapper {
 
         ArrayList<Material> materialList = new ArrayList<>();
 
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+        Connection connection;
+        PreparedStatement ps;
+        ResultSet resultSet;
         String sqlQuery = "SELECT * FROM inventory";
 
         try {

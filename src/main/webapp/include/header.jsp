@@ -24,7 +24,7 @@
 
 <body>
 <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
-    <div class="container"><img nav class="navbarlogo" src="assets/img/fog_logo.png" alt="FOG LOGO" style="padding-left: 0;padding-right: 15px;"><a class="navbar-brand logo" href="index.jsp">Fog Carport</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+    <div class="container"><img class="navbarlogo" src="assets/img/fog_logo.png" alt="FOG LOGO" style="padding-left: 0;padding-right: 15px;"><a class="navbar-brand logo" href="index.jsp">Fog Carport</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
         <div
                 class="collapse navbar-collapse" id="navcol-1">
             <ul class="nav navbar-nav ml-auto">

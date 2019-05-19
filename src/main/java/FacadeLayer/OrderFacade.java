@@ -7,38 +7,27 @@ import java.util.ArrayList;
 
 public class OrderFacade {
 
-    private static ArrayList<Order> orderList;
-
     public static ArrayList<Order> getOrderList() {
-        orderList = OrderMapper.getOrderList();
-        return orderList;
+        return OrderMapper.getOrderList();
     }
 
     public static ArrayList<Order> getOrderListForCustomer(int customer_id) {
-        orderList = OrderMapper.getOrderListForCustomer(customer_id);
-        return orderList;
+        return OrderMapper.getOrderListForCustomer(customer_id);
     }
 
     public static Order getOrder(int id) {
-        Order order = OrderMapper.getOrder(id);
-        return order;
+        return OrderMapper.getOrder(id);
     }
 
     public static String changeStatus(String order_id, int status) {
-        String success = OrderMapper.changeStatus(order_id, status);
-
-        return success;
+        return OrderMapper.changeStatus(order_id, status);
     }
 
     public static Order changeOrder(Order order) {
-        order = OrderMapper.updateOrder(order);
-
-        return order;
+        return OrderMapper.updateOrder(order);
     }
 
     public static String deleteOrder(Order order) {
-        String success = OrderMapper.deleteOrder(order);
-
-        return success;
+        return OrderMapper.deleteOrder(order);
     }
 }

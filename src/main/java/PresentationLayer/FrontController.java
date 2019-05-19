@@ -391,18 +391,23 @@ public class FrontController extends HttpServlet {
 
                         if (success.equals("done")) {
                             Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
-
                             Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
-
-                            System.out.println(foundCustomerIQ.getName());
 
                             request.setAttribute("customerIQ", foundCustomerIQ);
                             request.setAttribute("foundOrder", updatedOrder);
                             request.setAttribute("orderlist", orderList);
                             request.setAttribute("type", typeOf);
                             destination = "WEB-INF/order.jsp";
-                        } else if (success.equals("delete")) {
-                            // To Be Done
+
+                        } else if (success.equals("failed")) {
+                            Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
+                            Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
+
+                            request.setAttribute("failed", "failed");
+                            request.setAttribute("customerIQ", foundCustomerIQ);
+                            request.setAttribute("foundOrder", updatedOrder);
+                            request.setAttribute("type", typeOf);
+                            destination = "WEB-INF/order.jsp";
                         }
                     } else if (changeType.equals("delete")) {
                         typeOf = "all";
@@ -417,7 +422,6 @@ public class FrontController extends HttpServlet {
                             orderList = OrderFacade.getOrderList();
 
                             if (success.equals("success")) {
-
                                 request.setAttribute("deletedOrder_id", order_id);
                                 request.setAttribute("deletedOrder", success);
                                 request.setAttribute("orderlist", orderList);
@@ -425,7 +429,12 @@ public class FrontController extends HttpServlet {
 
                                 destination = "WEB-INF/order.jsp";
                             } else {
+                                request.setAttribute("deletedOrder_id", order_id);
+                                request.setAttribute("deletedOrder", success);
+                                request.setAttribute("orderlist", orderList);
+                                request.setAttribute("type", typeOf);
 
+                                destination = "WEB-INF/order.jsp";
                             }
                         }
 
