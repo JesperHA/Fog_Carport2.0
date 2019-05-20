@@ -6,17 +6,17 @@
 package PresentationLayer;
 
 import DBAccess.CustomerMapper;
+import Exceptions.LoginException;
 import Exceptions.LoginSampleException;
+import Exceptions.RegisterException;
 import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
 import Model.Customer;
 import Model.Order;
-import Model.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.activation.MimeType;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,44 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
-
- @author kasper
- */
 @WebServlet( name = "FrontController", urlPatterns = { "/FrontController" } )
 public class FrontController extends HttpServlet {
 
-
-    /**
-     Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     methods.
-
-     @param request servlet request
-     @param response servlet response
-     @throws ServletException if a servlet-specific error occurs
-     @throws IOException if an I/O error occurs
-     */
-    protected void processRequest( HttpServletRequest request, HttpServletResponse response )
-            throws ServletException, IOException {
-        try {
-            Command action = Command.from( request );
-            String view = action.execute( request, response );
-            request.getRequestDispatcher( "/WEB-INF/" + view + ".jsp" ).forward( request, response );
-        } catch ( LoginSampleException ex ) {
-            request.setAttribute( "error", ex.getMessage() );
-            request.getRequestDispatcher( "fejl.jsp" ).forward( request, response );
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     Handles the HTTP <code>GET</code> method.
-
-     @param request servlet request
-     @param response servlet response
-     @throws ServletException if a servlet-specific error occurs
-     @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
@@ -108,14 +73,7 @@ public class FrontController extends HttpServlet {
         request.getRequestDispatcher(destination).forward(request,response);
     }
 
-    /**
-     Handles the HTTP <code>POST</code> method.
 
-     @param request servlet request
-     @param response servlet response
-     @throws ServletException if a servlet-specific error occurs
-     @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
@@ -136,14 +94,14 @@ public class FrontController extends HttpServlet {
                 String email = request.getParameter("email");
                 String password = request.getParameter("password");
 
-                Customer customerCheck = KundeFacade.getCustomer(email, "mail");
-
-                if (customerCheck != null && customerCheck.getPassword().equals(password)) {
-                    // login
+                try {
+                    Customer customerCheck = KundeFacade.checkLogin(email, password);
 
                     session.setAttribute("login", customerCheck);
                     destination = "/WEB-INF/brugerside.jsp";
-                } else {
+                } catch (LoginException e) {
+                    e.printStackTrace();
+
                     request.setAttribute("fail", "failed");
                     destination = "login.jsp";
                 }
@@ -162,12 +120,22 @@ public class FrontController extends HttpServlet {
                 Customer createCustomer = new Customer(customer_name, customer_email, customer_password, customer_phone, customer_address, customer_zipcode, customer_city, 0);
 
                 try {
-                    CustomerMapper.createCustomer(createCustomer);
+                    KundeFacade.checkRegister(createCustomer);
 
                     destination = "/login.jsp";
-
-                } catch (LoginSampleException ex) {
+                } catch (RegisterException ex) {
                     ex.printStackTrace();
+
+                    request.setAttribute("name", customer_name);
+                    request.setAttribute("email", customer_email);
+                    request.setAttribute("password", customer_password);
+                    request.setAttribute("phone", customer_phone);
+                    request.setAttribute("address", customer_address);
+                    request.setAttribute("postnr", customer_zipcode);
+                    request.setAttribute("by", customer_city);
+
+                    request.setAttribute("fail", ex.getMessage());
+                    destination = "registration.jsp";
                 }
 
                 break;
@@ -186,6 +154,7 @@ public class FrontController extends HttpServlet {
             case "bygcarport":
                 destination = "bestilling.jsp";
                 break;
+
             case "search":
 
                 roleCheck = 0;
@@ -210,8 +179,6 @@ public class FrontController extends HttpServlet {
                     if (kundeSearch != null || !kundeSearch.isEmpty()) {
 
                         if (kundeSearch.contains("@")) {
-                            // Extract full string as email
-
                             String kundeSearchLower = kundeSearch.toLowerCase();
 
                             action = "mail";
@@ -260,6 +227,7 @@ public class FrontController extends HttpServlet {
                     destination = "index.jsp";
                 }
                 break;
+
             case "searchorders":
 
                 roleCheck = 0;
@@ -269,61 +237,66 @@ public class FrontController extends HttpServlet {
                 ArrayList<Order> orderArrayList;
 
                 if (login != null && roleCheck == 1) {
-                    if (type.equals("single")) {
-                        // find en enkelt ordre
 
-                        String order_id = (String) request.getParameter("order_id");
+                    switch (type) {
+                        case "single":
+                            String order_id = (String) request.getParameter("order_id");
 
-                        Order order = null;
-                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
-                        if (order != null) {
+                            Order order = null;
+                            order = OrderFacade.getOrder(Integer.parseInt(order_id));
+                            if (order != null) {
 
-                            Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+                                Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
 
-                            request.setAttribute("customerIQ", customerRelative);
-                            request.setAttribute("foundOrder", order);
+                                request.setAttribute("customerIQ", customerRelative);
+                                request.setAttribute("foundOrder", order);
+                                request.setAttribute("type", type);
+
+                                destination = "WEB-INF/order.jsp";
+                            }
+                            break;
+                        default:
+                            orderArrayList = OrderFacade.getOrderList();
+
+                            request.setAttribute("orderlist", orderArrayList);
                             request.setAttribute("type", type);
 
                             destination = "WEB-INF/order.jsp";
-                        }
-                    } else {
-                        // send alle ordre
-
-                        orderArrayList = OrderFacade.getOrderList();
-
-                        request.setAttribute("orderlist", orderArrayList);
-                        request.setAttribute("type", type);
-
-                        destination = "WEB-INF/order.jsp";
+                            break;
                     }
 
                 } else if(login != null && roleCheck == 0) {
-                    if (type.equals("single")) {
-                        String order_id = request.getParameter("order_id");
-                        Order order = null;
-                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
 
-                        if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
-                            Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+                    switch (type) {
+                        case "single":
+                            String order_id = request.getParameter("order_id");
+                            Order order = null;
+                            order = OrderFacade.getOrder(Integer.parseInt(order_id));
 
-                            request.setAttribute("customerIQ", customerRelative);
-                            request.setAttribute("foundOrder", order);
+                            if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
+                                Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+
+                                request.setAttribute("customerIQ", customerRelative);
+                                request.setAttribute("foundOrder", order);
+                                request.setAttribute("type", type);
+
+                                destination = "WEB-INF/order.jsp";
+                            }
+                            break;
+                        default:
+                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+
+                            request.setAttribute("orderlist", customerOrders);
                             request.setAttribute("type", type);
-
                             destination = "WEB-INF/order.jsp";
-                        }
-
-                    } else {
-                        ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
-
-                        request.setAttribute("orderlist", customerOrders);
-                        request.setAttribute("type", type);
-                        destination = "WEB-INF/order.jsp";
+                            break;
                     }
+
                 } else {
                     destination = "index.jsp";
                 }
                 break;
+
             case "changeOrder":
                 roleCheck = 0;
                 roleCheck = login.getRole();
@@ -335,112 +308,115 @@ public class FrontController extends HttpServlet {
                     ArrayList<Order> orderList = OrderFacade.getOrderList();
                     String changeType = request.getParameter("changetype");
 
-                    if (changeType.equals("order")) {
+                    switch (changeType) {
+                        case "order":
+                            typeOf = "single";
 
-                        typeOf = "single";
+                            int updateOrder_id = Integer.parseInt(request.getParameter("order_id"));
+                            int updateCustomer_id = Integer.parseInt(request.getParameter("customer_id"));
+                            int updateLength = Integer.parseInt(request.getParameter("length")); // length
+                            int updateHeight = Integer.parseInt(request.getParameter("height")); // height
+                            int updateWidth = Integer.parseInt(request.getParameter("width")); // width
+                            int updateRoof = Integer.parseInt(request.getParameter("roof")); // roof
+                            int updateShed = Integer.parseInt(request.getParameter("shed")); // shed
+                            int updateShedtype = Integer.parseInt(request.getParameter("shedtype")); // shedtype
+                            int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
+                            String updateDate = request.getParameter("date"); // date
 
-                        int updateOrder_id = Integer.parseInt(request.getParameter("order_id"));
-                        int updateCustomer_id = Integer.parseInt(request.getParameter("customer_id"));
-                        int updateLength = Integer.parseInt(request.getParameter("length")); // length
-                        int updateHeight = Integer.parseInt(request.getParameter("height")); // height
-                        int updateWidth = Integer.parseInt(request.getParameter("width")); // width
-                        int updateRoof = Integer.parseInt(request.getParameter("roof")); // roof
-                        int updateShed = Integer.parseInt(request.getParameter("shed")); // shed
-                        int updateShedtype = Integer.parseInt(request.getParameter("shedtype")); // shedtype
-                        int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
-                        String updateDate = request.getParameter("date"); // date
+                            String newDate = updateDate.replace("-", "");
 
-                        String newDate = updateDate.replace("-", "");
+                            Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, newDate);
 
-                        Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, newDate);
+                            Order result = OrderFacade.changeOrder(updateOrder);
 
-                        Order result = OrderFacade.changeOrder(updateOrder);
+                            if (result != null) {
 
-                        if (result != null) {
+                                Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
 
-                            Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
+                                request.setAttribute("foundOrder", result);
 
-                            request.setAttribute("foundOrder", result);
+                                request.setAttribute("customerIQ", updatedCustomerIQ1);
 
-                            request.setAttribute("customerIQ", updatedCustomerIQ1);
-
-                            request.setAttribute("orderlist", orderList);
-                            request.setAttribute("type", typeOf);
-
-                            destination = "WEB-INF/order.jsp";
-                        } else {
-                            Customer updatedCustomerIQ2 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
-
-                            request.setAttribute("updateOrderStatus", "fail");
-                            request.setAttribute("updateOrderId", updateOrder_id);
-
-                            request.setAttribute("customerIQ", updatedCustomerIQ2);
-
-                            request.setAttribute("orderlist", orderList);
-                            request.setAttribute("type", typeOf);
-
-                            destination = "WEB-INF/order.jsp";
-                        }
-                    } else if (changeType.equals("status")){
-                        typeOf = "single";
-
-                        String statusOrder_id = request.getParameter("order_id");
-                        int newStatus = Integer.parseInt(request.getParameter("status"));
-
-                        String success = OrderFacade.changeStatus(statusOrder_id, newStatus);
-
-                        if (success.equals("done")) {
-                            Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
-                            Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
-
-                            request.setAttribute("customerIQ", foundCustomerIQ);
-                            request.setAttribute("foundOrder", updatedOrder);
-                            request.setAttribute("orderlist", orderList);
-                            request.setAttribute("type", typeOf);
-                            destination = "WEB-INF/order.jsp";
-
-                        } else if (success.equals("failed")) {
-                            Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
-                            Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
-
-                            request.setAttribute("failed", "failed");
-                            request.setAttribute("customerIQ", foundCustomerIQ);
-                            request.setAttribute("foundOrder", updatedOrder);
-                            request.setAttribute("type", typeOf);
-                            destination = "WEB-INF/order.jsp";
-                        }
-                    } else if (changeType.equals("delete")) {
-                        typeOf = "all";
-
-                        String order_id = request.getParameter("order_id");
-
-                        Order orderDelete = OrderFacade.getOrder(Integer.parseInt(order_id));
-
-                        if (orderDelete != null) {
-                            String success = OrderFacade.deleteOrder(orderDelete);
-
-                            orderList = OrderFacade.getOrderList();
-
-                            if (success.equals("success")) {
-                                request.setAttribute("deletedOrder_id", order_id);
-                                request.setAttribute("deletedOrder", success);
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
                                 destination = "WEB-INF/order.jsp";
                             } else {
-                                request.setAttribute("deletedOrder_id", order_id);
-                                request.setAttribute("deletedOrder", success);
+                                Customer updatedCustomerIQ2 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
+
+                                request.setAttribute("updateOrderStatus", "fail");
+                                request.setAttribute("updateOrderId", updateOrder_id);
+
+                                request.setAttribute("customerIQ", updatedCustomerIQ2);
+
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
                                 destination = "WEB-INF/order.jsp";
                             }
-                        }
+                            break;
+                        case "status":
+                            typeOf = "single";
 
+                            String statusOrder_id = request.getParameter("order_id");
+                            int newStatus = Integer.parseInt(request.getParameter("status"));
+
+                            String success = OrderFacade.changeStatus(statusOrder_id, newStatus);
+
+                            if (success.equals("done")) {
+                                Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
+                                Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
+
+                                request.setAttribute("customerIQ", foundCustomerIQ);
+                                request.setAttribute("foundOrder", updatedOrder);
+                                request.setAttribute("orderlist", orderList);
+                                request.setAttribute("type", typeOf);
+                                destination = "WEB-INF/order.jsp";
+
+                            } else if (success.equals("failed")) {
+                                Order updatedOrder = OrderFacade.getOrder(Integer.parseInt(statusOrder_id));
+                                Customer foundCustomerIQ = KundeFacade.getCustomer("" + updatedOrder.getCustomer_id(), "id");
+
+                                request.setAttribute("failed", "failed");
+                                request.setAttribute("customerIQ", foundCustomerIQ);
+                                request.setAttribute("foundOrder", updatedOrder);
+                                request.setAttribute("type", typeOf);
+                                destination = "WEB-INF/order.jsp";
+                            }
+                            break;
+                        case "delete":
+                            typeOf = "all";
+
+                            String order_id = request.getParameter("order_id");
+
+                            Order orderDelete = OrderFacade.getOrder(Integer.parseInt(order_id));
+
+                            if (orderDelete != null) {
+                                String success2 = OrderFacade.deleteOrder(orderDelete);
+
+                                orderList = OrderFacade.getOrderList();
+
+                                if (success2.equals("success")) {
+                                    request.setAttribute("deletedOrder_id", order_id);
+                                    request.setAttribute("deletedOrder", success2);
+                                    request.setAttribute("orderlist", orderList);
+                                    request.setAttribute("type", typeOf);
+
+                                    destination = "WEB-INF/order.jsp";
+                                } else {
+                                    request.setAttribute("deletedOrder_id", order_id);
+                                    request.setAttribute("deletedOrder", success2);
+                                    request.setAttribute("orderlist", orderList);
+                                    request.setAttribute("type", typeOf);
+
+                                    destination = "WEB-INF/order.jsp";
+                                }
+                            }
+                            break;
                     }
                 }
                 break;
+
             case "allcustomers":
 
                 if (login != null && login.getRole() > 0) {

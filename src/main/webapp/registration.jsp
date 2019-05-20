@@ -1,4 +1,38 @@
 ﻿<%@include file="include/header.jsp"%>
+<%
+    String failed;
+    failed = (String) request.getAttribute("fail");
+
+    String customer_name = null;
+    String customer_email = null;
+    String customer_password = null;
+    String customer_phone = null;
+    String customer_address = null;
+    String customer_zipcode = null;
+    String customer_city = null;
+
+    if (failed != null) {
+        customer_name = request.getParameter("name");
+        customer_email = request.getParameter("email");
+        customer_password = request.getParameter("password");
+        customer_phone = request.getParameter("phone");
+        customer_address = request.getParameter("address");
+        customer_zipcode = request.getParameter("postnr");
+        customer_city = request.getParameter("by");
+    }
+%>
+
+<style>
+    .clean-block.clean-form-danger form{
+        border-top:2px solid #f35e5e !important;
+        background-color:#fff !important;
+        max-width:500px !important;
+        margin:auto !important;
+        padding:20px !important;
+        box-shadow:0 2px 10px rgba(0,0,0,.075);
+    }
+</style>
+
     <main class="page login-page">
         <section class="clean-block clean-form dark">
             <div class="container" style="margin-top: 50px;">
@@ -6,28 +40,41 @@
                     <h2 class="text-info">Opret kunde</h2>
                     <p>Velkommen til kundeportalen</p>
                 </div>
+                <%
+                    if (failed != null) { %>
+                <br>
+                <section class="clean-block clean-form-danger dark" style="margin-top:-35px;margin-bottom:-60px;text-align:center;">
+                    <div class="container">
+                        <form>
+                            <h7><%out.print(failed);%></h7><br>
+                            <small>Prøv igen!</small>
+                        </form>
+                    </div>
+                </section>
+                <%   }
+                %>
                 <form action="FrontController" method="post">
                     <input type="hidden" name="source" value="register"/>
                     <div class="form-group"><label for="name">Navn</label>
-                        <input class="form-control item" type="text" name="name" id="name">
+                        <input class="form-control item" type="text" name="name" id="name" <% if (failed != null) { out.print("value='" + customer_name + "'"); }%> required>
                     </div>
                     <div class="form-group"><label for="email">Email</label>
-                        <input class="form-control item" type="email" name="email" id="email">
+                        <input class="form-control item" type="email" name="email" id="email" <% if (failed != null) { out.print("value='" + customer_email + "'"); }%> required>
                     </div>
                     <div class="form-group"><label for="password">Adgangskode</label>
-                        <input class="form-control" type="password" name="password" id="password">
+                        <input class="form-control" type="password" name="password" id="password" <% if (failed != null) { out.print("value='" + customer_password + "'"); }%> required>
                     </div>
-                    <div class="form-group"><label for="phone">Phone</label>
-                        <input class="form-control item" type="text" name="phone" id="phone">
+                    <div class="form-group"><label for="phone">Telefon</label>
+                        <input class="form-control item" type="text" name="phone" id="phone" <% if (failed != null) { out.print("value='" + customer_phone + "'"); }%> required>
                     </div>
                     <div class="form-group"><label for="address">Adresse</label>
-                        <input class="form-control item" type="text" name="address" id="address">
+                        <input class="form-control item" type="text" name="address" id="address" <% if (failed != null) { out.print("value='" + customer_address + "'"); }%> required>
                     </div>
                     <div class="form-group"><label for="postnr">Post nr.</label>
-                        <input class="form-control item" type="text" name="postnr" id="postnr">
+                        <input class="form-control item" type="text" name="postnr" id="postnr" <% if (failed != null) { out.print("value='" + customer_zipcode + "'"); }%> required>
                     </div>
                     <div class="form-group"><label for="by">By</label>
-                        <input class="form-control item" type="text" name="by" id="by" readonly>
+                        <input class="form-control item" type="text" name="by" id="by" <% if (failed != null) { out.print("value='" + customer_city + "'"); }%> readonly required>
                     </div>
                     <button class="btn btn-primary btn-block" name="register" type="submit">Registrér</button>
 

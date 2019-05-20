@@ -1,8 +1,10 @@
 package DBAccess;
 
+import Exceptions.LoginException;
 import Exceptions.LoginSampleException;
+import Exceptions.RegisterException;
+import FacadeLayer.KundeFacade;
 import Model.Customer;
-import Model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ public class CustomerMapper {
 
     }
 
-    public static void createCustomer( Customer customer ) throws LoginSampleException {
+    public static void createCustomer( Customer customer ) {
         try {
             Connection con = Connector.connection();
             String SQL = "INSERT INTO customers (name, email, password, phone, address, zipcode, city, employee) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -58,17 +60,17 @@ public class CustomerMapper {
             ps.setString(6, customer.getZipcode() );
             ps.setString(7, customer.getCity() );
             ps.setInt(8, 0 );
-                    ps.executeUpdate();
+            ps.executeUpdate();
             ResultSet ids = ps.getGeneratedKeys();
             ids.next();
             int id = ids.getInt( 1 );
             customer.setId( id );
         } catch ( SQLException | ClassNotFoundException ex ) {
-            throw new LoginSampleException( ex.getMessage() );
+            ex.printStackTrace();
         }
     }
 
-    public static Customer login( String email, String password ) throws LoginSampleException {
+    public static Customer login( String email, String password ) throws LoginException {
         try {
             Connection con = Connector.connection();
             String SQL = "SELECT * FROM customers "
@@ -89,10 +91,10 @@ public class CustomerMapper {
                 customer.setId( customer_id );
                 return customer;
             } else {
-                throw new LoginSampleException( "Could not validate user" );
+                throw new LoginException(email, password, "Login exception, user does not exist ");
             }
         } catch ( ClassNotFoundException | SQLException ex ) {
-            throw new LoginSampleException(ex.getMessage());
+            throw new LoginException(email, password, ex.getMessage());
         }
     }
 
@@ -123,7 +125,7 @@ public class CustomerMapper {
                 Customer customer = new Customer(customer_id, name, email, password, phone, address, zipcode, city, role);
                 return customer;
             } else {
-                throw new LoginSampleException( "Could not validate user" );
+                throw new LoginException(search, "n/a", "Login exception, user does not exist ");
             }
         } catch (Exception e) {
         e.printStackTrace();
