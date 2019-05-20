@@ -89,28 +89,6 @@ public class MaterialCalculator extends HttpServlet {
                 int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
                 int rooftype = Integer.parseInt(request.getParameter("rooftype"));
 
-                // Sletter session variabler for at kunne gemme sin konfiguration
-                session.removeAttribute("sessionSize");
-                session.removeAttribute("sessionShed");
-                session.removeAttribute("sessionShedtype");
-                session.removeAttribute("sessionLength");
-                session.removeAttribute("sessionWidth");
-                session.removeAttribute("sessionHeight");
-                session.removeAttribute("sessionShedlength");
-                session.removeAttribute("sessionShedwidth");
-                session.removeAttribute("sessionRooftype");
-
-                // Sætter session variabler for at kunne gemme sin konfiguration i en session og kan komme tilbage til den!
-                session.setAttribute("sessionSize", size);
-                session.setAttribute("sessionShed", shed);
-                session.setAttribute("sessionShedtype", shedtype);
-                session.setAttribute("sessionLength", length);
-                session.setAttribute("sessionWidth", width);
-                session.setAttribute("sessionHeight", height);
-                session.setAttribute("sessionShedlength", shedLength);
-                session.setAttribute("sessionShedwidth", shedWidth);
-                session.setAttribute("sessionRooftype", rooftype);
-
                 //sætter længden på enhederne her:
 
                 int nedgravningICm = 100;

@@ -27,6 +27,7 @@
         margin:auto;
         width:100%;
         padding: 20px;
+        max-width: 538px;
     }
     #table-customers {
         margin:auto;
@@ -67,10 +68,10 @@
                                     </div>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -196,7 +197,12 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Nyeste kunder</h4>
-                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her er de nyeste kunder</h6><button class="btn btn-primary float-right" type="button" style="display:inline-block;margin-top: 10px;">Se alle</button></div>
+                        <h6 class="text-muted card-subtitle mb-2 my-auto" style="display:inline-block">Her er de nyeste kunder</h6>
+                        <form method="post" action="FrontController" style="display:inline">
+                            <input type="hidden" name="source" value="allcustomers">
+                            <button class="btn btn-primary float-right" type="submit" style="display:inline-block;margin-top: 10px;">Se alle</button>
+                        </form>
+                    </div>
 
                     <div id="table-customers">
                         <form action="FrontController" method="post">

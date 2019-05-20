@@ -441,6 +441,17 @@ public class FrontController extends HttpServlet {
                     }
                 }
                 break;
+            case "allcustomers":
+
+                if (login != null && login.getRole() > 0) {
+                    ArrayList<Customer> customerlist = KundeFacade.getKunderList();
+
+                    request.setAttribute("customerlist", customerlist);
+
+                    destination = "/WEB-INF/allCustomers.jsp";
+                }
+
+                break;
 
         }
 
