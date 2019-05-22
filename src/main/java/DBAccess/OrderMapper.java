@@ -36,7 +36,6 @@ public class OrderMapper {
                 Order order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
                 orderList.add(order);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -72,7 +71,6 @@ public class OrderMapper {
                 Order order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
                 orderList.add(order);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,8 +106,6 @@ public class OrderMapper {
         Order order = null;
         String idString = "" + id;
 
-        ArrayList<Order> orderList = new ArrayList<>();
-
         Connection connection;
         PreparedStatement ps;
         ResultSet resultSet;
@@ -118,9 +114,7 @@ public class OrderMapper {
         try {
             connection = Connector.connection();
             ps = connection.prepareStatement(sqlQuery);
-
             ps.setString(1, idString);
-
             resultSet = ps.executeQuery();
 
             if (resultSet.next()) {
@@ -138,7 +132,6 @@ public class OrderMapper {
                 order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
                 return order;
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -164,7 +157,6 @@ public class OrderMapper {
 
             return "failed";
         }
-
         return "done";
     }
 

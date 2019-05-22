@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PresentationLayer;
 
 import Exceptions.LoginException;
@@ -22,11 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet( name = "FrontController", urlPatterns = { "/FrontController" } )
+@WebServlet(name = "FrontController", urlPatterns = {"/FrontController"})
 public class FrontController extends HttpServlet {
 
     @Override
-    protected void doGet( HttpServletRequest request, HttpServletResponse response )
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String destination = "index.jsp";
@@ -41,14 +36,12 @@ public class FrontController extends HttpServlet {
             role = login.getRole();
         }
 
-        switch(source){
+        switch (source) {
             case "profil":
                 destination = "/WEB-INF/brugerside.jsp";
                 break;
-
             case "logout":
                 session.removeAttribute("login");
-
                 destination = "/index.jsp";
                 break;
             case "admin":
@@ -64,17 +57,14 @@ public class FrontController extends HttpServlet {
                     destination = "index.jsp";
                 }
                 break;
-
         }
-
-        request.getRequestDispatcher(destination).forward(request,response);
+        request.getRequestDispatcher(destination).forward(request, response);
     }
 
 
     @Override
-    protected void doPost( HttpServletRequest request, HttpServletResponse response )
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
 
         String destination = "index.jsp";
         String source = request.getParameter("source");
@@ -89,7 +79,7 @@ public class FrontController extends HttpServlet {
             roleCheck = login.getRole();
         }
 
-        switch(source){
+        switch (source) {
 
             case "login":
                 String email = request.getParameter("email");
@@ -109,7 +99,6 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "register":
-
                 String customer_name = request.getParameter("name");
                 String customer_email = request.getParameter("email");
                 String customer_password = request.getParameter("password");
@@ -122,7 +111,6 @@ public class FrontController extends HttpServlet {
 
                 try {
                     KundeFacade.checkRegister(createCustomer);
-
                     destination = "/login.jsp";
                 } catch (RegisterException ex) {
                     ex.printStackTrace();
@@ -147,8 +135,7 @@ public class FrontController extends HttpServlet {
                 int length = Integer.parseInt(request.getParameter("length"));
                 SVG svg = new SVG();
 
-                session.setAttribute("svg", svg.createSVG(width,length));
-
+                session.setAttribute("svg", svg.createSVG(width, length));
                 destination = "printDrawing.jsp";
                 break;
 
@@ -180,8 +167,6 @@ public class FrontController extends HttpServlet {
                             action = "mail";
                             foundCustomer = KundeFacade.getCustomer(kundeSearchLower, action);
                         } else {
-                            // Extract all numbers to make sure it's only numbers.
-
                             StringBuilder sb = new StringBuilder();
                             boolean found = false;
                             for (char c : kundeSearch.toCharArray()) {
@@ -189,7 +174,6 @@ public class FrontController extends HttpServlet {
                                     sb.append(c);
                                     found = true;
                                 } else if (found) {
-                                    // If we already found a digit before and this char is not a digit, stop looping
                                     break;
                                 }
                             }
@@ -226,73 +210,64 @@ public class FrontController extends HttpServlet {
                 String type = request.getParameter("type");
                 ArrayList<Order> orderArrayList;
 
-                if (roleCheck == 1) {
+                switch (type) {
+                    case "single":
 
-                    switch (type) {
-                        case "single":
-                            String order_id = request.getParameter("order_id");
+                        String order_id = request.getParameter("order_id");
+                        Order order;
+                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
+                        Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
 
-                            Order order;
-                            order = OrderFacade.getOrder(Integer.parseInt(order_id));
-                            if (order != null) {
-
-                                Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+                        if (order != null) {
+                            if (roleCheck == 1) {
 
                                 request.setAttribute("customerIQ", customerRelative);
                                 request.setAttribute("foundOrder", order);
                                 request.setAttribute("type", type);
 
-                                destination = "WEB-INF/order.jsp";
-                            }
-                            break;
-                        case "personal":
-                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+                            } else if (roleCheck == 0) {
+                                if (order.getCustomer_id() == login.getCustomer_id()) {
 
-                            request.setAttribute("orderlist", customerOrders);
-                            request.setAttribute("type", type);
+                                    request.setAttribute("customerIQ", customerRelative);
+                                    request.setAttribute("foundOrder", order);
+                                    request.setAttribute("type", type);
+                                } else {
+                                    destination = "index.jsp";
+                                    break;
+                                }
+                            }
                             destination = "WEB-INF/order.jsp";
-                            break;
-                        default:
+                        } else {
+                            destination = "index.jsp";
+                        }
+                        break;
+                    case "personal":
+                        ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+
+                        request.setAttribute("orderlist", customerOrders);
+                        request.setAttribute("type", type);
+                        destination = "WEB-INF/order.jsp";
+                        break;
+                    case "all":
+                        if (roleCheck == 1) {
                             orderArrayList = OrderFacade.getOrderList();
 
                             request.setAttribute("orderlist", orderArrayList);
                             request.setAttribute("type", type);
 
                             destination = "WEB-INF/order.jsp";
-                            break;
-                    }
-
-                } else if (roleCheck == 0) {
-
-                    switch (type) {
-                        case "single":
-                            String order_id = request.getParameter("order_id");
-                            Order order;
-                            order = OrderFacade.getOrder(Integer.parseInt(order_id));
-
-                            if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
-                                Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
-
-                                request.setAttribute("customerIQ", customerRelative);
-                                request.setAttribute("foundOrder", order);
-                                request.setAttribute("type", type);
-
-                                destination = "WEB-INF/order.jsp";
-                            }
-                            break;
-                        case "all":
-                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
-
-                            request.setAttribute("orderlist", customerOrders);
-                            request.setAttribute("type", type);
-                            destination = "WEB-INF/order.jsp";
-                            break;
-                        default:
+                        } else {
                             destination = "index.jsp";
-                    }
+                        }
+                        break;
+                    default:
+                        orderArrayList = OrderFacade.getOrderList();
 
-                } else {
-                    destination = "index.jsp";
+                        request.setAttribute("orderlist", orderArrayList);
+                        request.setAttribute("type", type);
+
+                        destination = "WEB-INF/order.jsp";
+                        break;
                 }
                 break;
 
@@ -392,21 +367,12 @@ public class FrontController extends HttpServlet {
 
                                 orderList = OrderFacade.getOrderList();
 
-                                if (success2.equals("success")) {
-                                    request.setAttribute("deletedOrder_id", order_id);
-                                    request.setAttribute("deletedOrder", success2);
-                                    request.setAttribute("orderlist", orderList);
-                                    request.setAttribute("type", typeOf);
+                                request.setAttribute("deletedOrder_id", order_id);
+                                request.setAttribute("deletedOrder", success2);
+                                request.setAttribute("orderlist", orderList);
+                                request.setAttribute("type", typeOf);
 
-                                    destination = "WEB-INF/order.jsp";
-                                } else {
-                                    request.setAttribute("deletedOrder_id", order_id);
-                                    request.setAttribute("deletedOrder", success2);
-                                    request.setAttribute("orderlist", orderList);
-                                    request.setAttribute("type", typeOf);
-
-                                    destination = "WEB-INF/order.jsp";
-                                }
+                                destination = "WEB-INF/order.jsp";
                             }
                             break;
                     }
@@ -418,28 +384,15 @@ public class FrontController extends HttpServlet {
                     ArrayList<Customer> customerlist = KundeFacade.getKunderList();
 
                     request.setAttribute("customerlist", customerlist);
-
                     destination = "/WEB-INF/allCustomers.jsp";
                 }
-
                 break;
 
         }
 
-        request.getRequestDispatcher(destination).forward(request,response);
+        request.getRequestDispatcher(destination).
 
-//        processRequest( request, response );
+                forward(request, response);
 
     }
-
-    /**
-     Returns a short description of the servlet.
-
-     @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

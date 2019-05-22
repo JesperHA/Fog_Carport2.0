@@ -12,7 +12,6 @@ public class Order {
     private int order_status;
     private String date;
 
-    // Med order_id til at hente ordre?
     public Order(int order_id, int customer_id, int length, int height, int width, int roof, int shed, int shedtype, int order_status, String date) {
         this.order_id = order_id;
         this.customer_id = customer_id;
@@ -26,7 +25,6 @@ public class Order {
         this.date = date;
     }
 
-    // Uden order_id for at kunne oprette ordre?
     public Order(int customer_id, int length, int height, int width, int roof, int shed, int shedtype, int order_status, String date) {
         this.customer_id = customer_id;
         this.length = length;
