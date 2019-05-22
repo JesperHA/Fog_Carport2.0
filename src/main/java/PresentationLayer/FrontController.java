@@ -5,9 +5,7 @@
  */
 package PresentationLayer;
 
-import DBAccess.CustomerMapper;
 import Exceptions.LoginException;
-import Exceptions.LoginSampleException;
 import Exceptions.RegisterException;
 import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
@@ -37,10 +35,13 @@ public class FrontController extends HttpServlet {
         HttpSession session = request.getSession();
 
         Customer login = (Customer) session.getAttribute("login");
-        int role;
+        int role = 0;
+
+        if (login != null) {
+            role = login.getRole();
+        }
 
         switch(source){
-
             case "profil":
                 destination = "/WEB-INF/brugerside.jsp";
                 break;
@@ -51,11 +52,7 @@ public class FrontController extends HttpServlet {
                 destination = "/index.jsp";
                 break;
             case "admin":
-
-                role = 0;
-                role = login.getRole();
-
-                if (login != null && role == 1) {
+                if (role == 1) {
                     ArrayList<Customer> customers = KundeFacade.getKunderList();
                     ArrayList<Order> orders = OrderFacade.getOrderList();
 
@@ -86,7 +83,11 @@ public class FrontController extends HttpServlet {
 
         Customer login;
         login = (Customer) session.getAttribute("login");
-        int roleCheck;
+        int roleCheck = 0;
+
+        if (login != null) {
+            roleCheck = login.getRole();
+        }
 
         switch(source){
 
@@ -156,27 +157,22 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "search":
-
-                roleCheck = 0;
-
-                roleCheck = login.getRole();
-
                 String action;
-                Customer foundCustomer = null;
+                Customer foundCustomer;
 
                 ArrayList<Order> orders = OrderFacade.getOrderList();
                 ArrayList<Customer> customers = KundeFacade.getKunderList();
 
                 request.setAttribute("searched", "searched");
 
-                if (login != null && roleCheck == 1) {
+                if (roleCheck == 1) {
 
                     request.setAttribute("customers", customers);
 
-                    String kundeSearch = (String) request.getParameter("kunde");
+                    String kundeSearch = request.getParameter("kunde");
                     request.setAttribute("searchterm", kundeSearch);
 
-                    if (kundeSearch != null || !kundeSearch.isEmpty()) {
+                    if (kundeSearch != null) {
 
                         if (kundeSearch.contains("@")) {
                             String kundeSearchLower = kundeSearch.toLowerCase();
@@ -197,12 +193,11 @@ public class FrontController extends HttpServlet {
                                     break;
                                 }
                             }
-
                             action = "id";
                             foundCustomer = KundeFacade.getCustomer(sb.toString(), action);
                         }
 
-                        if (foundCustomer == null || foundCustomer.equals(null)) {
+                        if (foundCustomer == null) {
                             request.setAttribute("customers", customers);
                             request.setAttribute("orders", orders);
                             destination = "/WEB-INF/admin.jsp";
@@ -217,7 +212,6 @@ public class FrontController extends HttpServlet {
 
                             destination = "/WEB-INF/admin.jsp";
                         }
-
                     } else {
                         request.setAttribute("customers", customers);
                         request.setAttribute("orders", orders);
@@ -229,20 +223,16 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "searchorders":
-
-                roleCheck = 0;
-                roleCheck = login.getRole();
-
-                String type = (String) request.getParameter("type");
+                String type = request.getParameter("type");
                 ArrayList<Order> orderArrayList;
 
-                if (login != null && roleCheck == 1) {
+                if (roleCheck == 1) {
 
                     switch (type) {
                         case "single":
-                            String order_id = (String) request.getParameter("order_id");
+                            String order_id = request.getParameter("order_id");
 
-                            Order order = null;
+                            Order order;
                             order = OrderFacade.getOrder(Integer.parseInt(order_id));
                             if (order != null) {
 
@@ -255,6 +245,13 @@ public class FrontController extends HttpServlet {
                                 destination = "WEB-INF/order.jsp";
                             }
                             break;
+                        case "personal":
+                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+
+                            request.setAttribute("orderlist", customerOrders);
+                            request.setAttribute("type", type);
+                            destination = "WEB-INF/order.jsp";
+                            break;
                         default:
                             orderArrayList = OrderFacade.getOrderList();
 
@@ -265,12 +262,12 @@ public class FrontController extends HttpServlet {
                             break;
                     }
 
-                } else if(login != null && roleCheck == 0) {
+                } else if (roleCheck == 0) {
 
                     switch (type) {
                         case "single":
                             String order_id = request.getParameter("order_id");
-                            Order order = null;
+                            Order order;
                             order = OrderFacade.getOrder(Integer.parseInt(order_id));
 
                             if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
@@ -283,13 +280,15 @@ public class FrontController extends HttpServlet {
                                 destination = "WEB-INF/order.jsp";
                             }
                             break;
-                        default:
+                        case "all":
                             ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
 
                             request.setAttribute("orderlist", customerOrders);
                             request.setAttribute("type", type);
                             destination = "WEB-INF/order.jsp";
                             break;
+                        default:
+                            destination = "index.jsp";
                     }
 
                 } else {
@@ -298,10 +297,7 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "changeOrder":
-                roleCheck = 0;
-                roleCheck = login.getRole();
-
-                if (login != null && roleCheck == 1) {
+                if (roleCheck == 1) {
 
                     String typeOf;
 
@@ -418,7 +414,6 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "allcustomers":
-
                 if (login != null && login.getRole() > 0) {
                     ArrayList<Customer> customerlist = KundeFacade.getKunderList();
 

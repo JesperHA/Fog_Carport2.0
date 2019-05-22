@@ -57,7 +57,7 @@
                             <h6 class="text-muted card-subtitle mb-2">Her kan du se dine ordrer.</h6>
                         <form method="post" action="FrontController" style="display:inline">
                             <input type="hidden" name="source" value="searchorders">
-                            <input type="hidden" name="type" value="all">
+                            <input type="hidden" name="type" value="personal">
                             <button class="btn btn-primary" type="submit" style="margin-top: 10px;">Klik her</button>
                         </form>
                     </div>

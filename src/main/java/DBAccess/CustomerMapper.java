@@ -1,9 +1,6 @@
 package DBAccess;
 
 import Exceptions.LoginException;
-import Exceptions.LoginSampleException;
-import Exceptions.RegisterException;
-import FacadeLayer.KundeFacade;
 import Model.Customer;
 
 import java.sql.*;
@@ -122,8 +119,7 @@ public class CustomerMapper {
                 String zipcode = rs.getString("zipcode");
                 String city = rs.getString("city");
                 int role = rs.getInt( "employee" );
-                Customer customer = new Customer(customer_id, name, email, password, phone, address, zipcode, city, role);
-                return customer;
+                return (new Customer(customer_id, name, email, password, phone, address, zipcode, city, role));
             } else {
                 throw new LoginException(search, "n/a", "Login exception, user does not exist ");
             }

@@ -1,6 +1,6 @@
 package DBAccess;
 
-import Exceptions.LoginSampleException;
+import Exceptions.OrderException;
 import Model.Order;
 
 import java.sql.*;
@@ -79,7 +79,7 @@ public class OrderMapper {
         return orderList;
     }
 
-    public static void createOrder( Order order ) throws LoginSampleException {
+    public static void createOrder( Order order ) throws OrderException {
         try {
             Connection con = Connector.connection();
             String SQL = "INSERT INTO orders (customer_id, length, height, width, roof, shed, shedtype, order_status, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -99,7 +99,7 @@ public class OrderMapper {
             int id = ids.getInt( 1 );
             order.setOrder_id(id);
         } catch ( SQLException | ClassNotFoundException ex ) {
-            throw new LoginSampleException( ex.getMessage() );
+            throw new OrderException( ex.getMessage() );
         }
     }
 

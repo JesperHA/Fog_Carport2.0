@@ -1,11 +1,6 @@
 package DBAccess;
 
-import Exceptions.LoginSampleException;
-
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 //import org.junit.Test;
 //import static org.junit.Assert.*;
 //import org.junit.Before;
