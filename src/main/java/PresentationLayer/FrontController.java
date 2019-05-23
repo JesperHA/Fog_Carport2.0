@@ -188,8 +188,6 @@ public class FrontController extends HttpServlet {
 
                 session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal));
 
-                // Marcus er ultra gay
-
 
                 destination = "bestilling.jsp";
                 break;
