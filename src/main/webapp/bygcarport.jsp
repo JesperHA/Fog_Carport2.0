@@ -140,6 +140,18 @@
                                         <button class="btn btn-primary" id="udenrejsning" onclick="udenRejsning()" type="button"  style="min-width: 100%;">u/Rejsning</button>
                                     </div>
                                 </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-12">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" style="width: 100%; text-align: left;" data-toggle="dropdown" aria-expanded="false" type="button">Tag typer </button>
+                                        <div class="dropdown-menu" role="menu" id="dropDown">
+                                            <a class="dropdown-item" name="roofsort" value="1" role="presentation">Trapezplader</a>
+                                            <a class="dropdown-item" name="roofsort" value="2" role="presentation">Eternit</a>
+                                            <a class="dropdown-item" name="roofsort" value="3" role="presentation">Tagpap</a>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('carport-tab').click()">Tilbage</button>
                                 <button class="btn btn-primary" type="button" style="float: right;" onclick="getElementById('afslut-tab').click()">Næste</button>
                                 <br>
