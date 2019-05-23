@@ -44,6 +44,8 @@ public class MaterialCalculator {
             Material vindskede = materialList.get(15);
             Material klinkbeklædning = materialList.get(16);
             Material bræt = materialList.get(17);
+            Material taglægte = new Material(materialList.get(18).getProduct_id(),materialList.get(18).getProduct_name(),materialList.get(18).getProduct_description(), materialList.get(18).getPrice(), materialList.get(18).getUnit(), materialList.get(18).getAmount());
+            Material taglægte2 = new Material(materialList.get(18).getProduct_id(),materialList.get(18).getProduct_name(),materialList.get(18).getProduct_description(), materialList.get(18).getPrice(), materialList.get(18).getUnit(), materialList.get(18).getAmount());
 
             // henter parametre her
 //            int size = Integer.parseInt(request.getParameter("size"));
@@ -66,6 +68,8 @@ public class MaterialCalculator {
             int maxSpærafstand = 90;
             int ekstraSpær = 1;
             int størrelseM2 = (width * length) / 10000;
+            int maxLægteafstand = 100;
+            int ekstraLægte = 1;
 
             stolper.setUnit(height + nedgravningICm);
             stolper2.setUnit(height + nedgravningICm);
@@ -80,11 +84,15 @@ public class MaterialCalculator {
             vinkel.setUnit(1);
             beslagskruer.setUnit(1);
             vindtrækbånd.setUnit(1);
+            taglægte.setUnit(length);
+            taglægte2.setUnit(length);
+
 
             // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
             double stolpeAntal = stolper.getUnit() / maxLængde;
             double remAntal = remme.getUnit() / maxLængde;
             double spærLængder = spærtræ.getUnit() / maxLængde;
+            double tagLægterAntal = taglægte.getUnit() / maxLængde;
 
 
             // tilføjer ekstra stolper hvis rem spændvidden er for lang
@@ -107,6 +115,9 @@ public class MaterialCalculator {
             vinkel.setAmount(vinkelBeregner(size, rooftype, spærtræ.getAmount(), stolper.getAmount()));
             beslagskruer.setAmount(skrueBeregner(size, rooftype,størrelseM2));
             vindtrækbånd.setAmount(vindtrækbåndBeregner(størrelseM2));
+            double antalLægter = Math.ceil((double)width / maxLægteafstand);
+            taglægte.setAmount((mængdeUdregner(size, tagLægterAntal, 0, 0)) + (int)antalLægter + ekstraLægte);
+
 
 //            if(size == 0){
 //                stolper.setAmount(4);
@@ -127,6 +138,7 @@ public class MaterialCalculator {
             stolper.setUnit(længdeUdregning(stolper.getUnit()));
             remme.setUnit(længdeUdregning(remme.getUnit()));
             spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
+            taglægte.setUnit(længdeUdregning(taglægte.getUnit()));
 
 
             // udregner priser på materialer
@@ -137,6 +149,7 @@ public class MaterialCalculator {
             double vinkelPrisIalt = ((vinkel.getPrice() * vinkel.getUnit()) * vinkel.getAmount());
             double beslagsSkruerPrisIalt = ((beslagskruer.getPrice() * beslagskruer.getUnit()) * beslagskruer.getAmount());
             double vindtrækbåndPrisIalt = ((vindtrækbånd.getPrice() * vindtrækbånd.getUnit()) * vindtrækbånd.getAmount());
+            double taglægtePrisIalt = prisUdregner(taglægte.getPrice(), taglægte.getAmount(), taglægte.getUnit());
 
 
             //indsætter priser på materialer
@@ -147,6 +160,7 @@ public class MaterialCalculator {
             vinkel.setPrice(vinkelPrisIalt);
             beslagskruer.setPrice(beslagsSkruerPrisIalt);
             vindtrækbånd.setPrice(vindtrækbåndPrisIalt);
+            taglægte.setPrice(taglægtePrisIalt);
 
 
             // sætter materialerne ind i session
@@ -165,6 +179,10 @@ public class MaterialCalculator {
             materialBeregning.add(beslagskruer);
             // vindtrækbånd:
             materialBeregning.add(vindtrækbånd);
+            // taglægter:
+            materialBeregning.add(taglægte);
+            ekstraEnhedUdregner(materialBeregning, taglægte2, size, maxLængde, tagLægterAntal, (int)antalLægter + ekstraLægte, (int)antalLægter + ekstraLægte);
+
 
 
 
