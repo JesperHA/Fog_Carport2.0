@@ -2,13 +2,13 @@ package FunctionLayer;
 
 public class SVG {
 
-    public String createSVG (int width, int length) {
+    public String createSVG (int width, int length, double spær_antal, int rejsning, double stolpe_antal) {
 
         //Length er X akse
         //Width er Y akse
 
-        int viewBox_width = width + 50;
-        int viewBox_length = length + 50;
+        double viewBox_width = width * 1.2;
+        double viewBox_length = length * 1.2;
 
         String start_SVG = "<?xml version='1.0'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>\n" +
                 "\n" +
@@ -19,6 +19,10 @@ public class SVG {
         int start_rem = 35;
         double end_rem = width - 39.5;
         int vindkryds_y = width - 35;
+        //Spær beregning
+        if(rejsning == 1){
+            spær_antal = spær_antal / 2;
+        }
 
         String body_SVG = "<!-- Ramme -->\n" +
                 "\n" +
@@ -36,25 +40,22 @@ public class SVG {
                 "    <line x1='550' y1='"+start_rem+"' x2='55' y2='"+vindkryds_y+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
                 "    <line x1='545' y1='"+start_rem+"' x2='50' y2='"+vindkryds_y+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
                 "\n" +
-                "\n" +
-                "    <!-- Spær -->\n" +
-                "    <rect x='0' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='55' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='110' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='165' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='220' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='275' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='330' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='385' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='440' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='495' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='550' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='605' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='660' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='715' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='770' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/></svg>";
+                "\n" ;
 
-        int width_middle_text = viewBox_length / 2;
+        String svg_spær = "";
+
+        int betweenSpær = 55;
+        for (int i = 0; i < spær_antal; i++) {
+            betweenSpær = betweenSpær + betweenSpær;
+            if(i == 0){
+                svg_spær = "<rect x='0' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n";
+            }else{
+                svg_spær = "<rect x='"+betweenSpær+"' y='0' width='4.5' height='"+width+"' style='stroke:black; fill: white;'/>\n";
+            }
+        }
+        String SVG_end = "</svg>";
+
+        int width_middle_text = length / 2;
         int height_middle_text = width + 40;
 
 
@@ -100,7 +101,7 @@ public class SVG {
                 "\n" +
                 "</svg>\n";
 
-        String return_SVG = start_SVG + body_SVG + function_SVG;
+        String return_SVG = start_SVG + body_SVG + svg_spær + function_SVG +SVG_end;
         return return_SVG;
     }
 }

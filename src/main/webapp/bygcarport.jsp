@@ -53,7 +53,7 @@
                         </div>
 
 
-                        <form action="MaterialCalculator" method="post">
+                        <form action="FrontController" method="post">
                             <input type="hidden" name="source" value="bygcarport"/>
 
                             <input class="form-control" type="hidden" name="size" id="size" value="0" />

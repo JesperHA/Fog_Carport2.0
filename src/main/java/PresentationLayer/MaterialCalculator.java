@@ -20,7 +20,7 @@ public class MaterialCalculator extends HttpServlet {
 
 
 
-    protected void doPost( HttpServletRequest request, HttpServletResponse response )
+    protected void doPost(HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException {
 
         String destination = "index.jsp";
@@ -66,8 +66,8 @@ public class MaterialCalculator extends HttpServlet {
                 Material beslagskruer = new Material(materialList.get(4).getProduct_id(),materialList.get(4).getProduct_name(),materialList.get(4).getProduct_description(), materialList.get(4).getPrice(), materialList.get(4).getUnit(), materialList.get(4).getAmount());
                 Material Skruer80mm = materialList.get(5);
                 Material skruer50mm = materialList.get(6);
-                Material vindtrækbånd = materialList.get(7);
-                Material trapezplade = materialList.get(8);
+                Material vindtrækbånd = new Material(materialList.get(7).getProduct_id(),materialList.get(7).getProduct_name(),materialList.get(7).getProduct_description(), materialList.get(7).getPrice(), materialList.get(7).getUnit(), materialList.get(7).getAmount());
+                Material trapezplade = new Material(materialList.get(8).getProduct_id(),materialList.get(8).getProduct_name(),materialList.get(8).getProduct_description(), materialList.get(8).getPrice(), materialList.get(8).getUnit(), materialList.get(8).getAmount());
                 Material bundskrue = materialList.get(9);
                 Material eternit = materialList.get(10);
                 Material eternitskrue = materialList.get(11);
@@ -98,6 +98,7 @@ public class MaterialCalculator extends HttpServlet {
                 int maxSpændvidde = 300;
                 int maxSpærafstand = 90;
                 int ekstraSpær = 1;
+                int størrelseM2 = (width * length) / 10000;
 
                 stolper.setUnit(height + nedgravningICm);
                 stolper2.setUnit(height + nedgravningICm);
@@ -111,6 +112,7 @@ public class MaterialCalculator extends HttpServlet {
                 }
                 vinkel.setUnit(1);
                 beslagskruer.setUnit(1);
+                vindtrækbånd.setUnit(1);
 
                 // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
                 double stolpeAntal = stolper.getUnit() / maxLængde;
@@ -136,7 +138,8 @@ public class MaterialCalculator extends HttpServlet {
                 }
                 spærtræ.setAmount((int)antalSpær + ekstraSpær);
                 vinkel.setAmount(vinkelBeregner(size, rooftype, spærtræ.getAmount(), stolper.getAmount()));
-                beslagskruer.setAmount(skrueBeregner(size, rooftype, width, length));
+                beslagskruer.setAmount(skrueBeregner(size, rooftype, width, length, størrelseM2));
+                vindtrækbånd.setAmount(vindtrækbåndBeregner(width, length, størrelseM2));
 
 //            if(size == 0){
 //                stolper.setAmount(4);
@@ -166,6 +169,7 @@ public class MaterialCalculator extends HttpServlet {
             double spærPrisIalt = prisUdregner(spærtræ.getPrice(), spærtræ.getAmount(), spærtræ.getUnit());
             double vinkelPrisIalt = ((vinkel.getPrice() * vinkel.getUnit()) * vinkel.getAmount());
             double beslagsSkruerPrisIalt = ((beslagskruer.getPrice() * beslagskruer.getUnit()) * beslagskruer.getAmount());
+            double vindtrækbåndPrisIalt = ((vindtrækbånd.getPrice() * vindtrækbånd.getUnit()) * vindtrækbånd.getAmount());
 
 
             //indsætter priser på materialer
@@ -175,6 +179,7 @@ public class MaterialCalculator extends HttpServlet {
             spærtræ.setPrice(spærPrisIalt);
             vinkel.setPrice(vinkelPrisIalt);
             beslagskruer.setPrice(beslagsSkruerPrisIalt);
+            vindtrækbånd.setPrice(vindtrækbåndPrisIalt);
 
 
             // sætter materialerne ind i session
@@ -191,6 +196,8 @@ public class MaterialCalculator extends HttpServlet {
             materialBeregning.add(vinkel);
             // beslagsskruer:
             materialBeregning.add(beslagskruer);
+            // vindtrækbånd:
+            materialBeregning.add(vindtrækbånd);
 
 
 
@@ -210,31 +217,38 @@ public class MaterialCalculator extends HttpServlet {
 
             // SVG
 
-            SVG svg = new SVG();
-
-            session.setAttribute("svg", svg.createSVG(width,length));
-
-            destination = "bestilling.jsp";
-
-            break;
+//            SVG svg = new SVG();
+//
+//            session.setAttribute("svg", svg.createSVG(width,length));
+//
+//            destination = "bestilling.jsp";
+//
+//            break;
         }
 
         request.getRequestDispatcher(destination).forward(request,response);
     }
 
-    private int skrueBeregner(int size, int rooftype, int width, int length){
+    private int vindtrækbåndBeregner(int width, int length, int størrelseM2){
+
+        double antalVindtrækbånd = 0;
+
+
+        antalVindtrækbånd = Math.ceil((double)størrelseM2 / 80);
+
+        return (int)antalVindtrækbånd;
+    }
+
+    private int skrueBeregner(int size, int rooftype, int width, int length, int størrelseM2){
 
         double antalSkruer = 0;
-        int widthIMeter = width / 100;
-        int lengthIMeter = length / 100;
-        int størrelseM2 = widthIMeter * lengthIMeter;
 
         if (size == 0 && rooftype == 0) {
             antalSkruer = Math.ceil((double)størrelseM2 / 15);
+            System.out.println(størrelseM2);
             System.out.println(antalSkruer);
         } else if (size == 1 || rooftype == 1) {
             antalSkruer = Math.ceil((double)størrelseM2 / 10);
-            System.out.println(antalSkruer);
 
         }
         return (int)antalSkruer;

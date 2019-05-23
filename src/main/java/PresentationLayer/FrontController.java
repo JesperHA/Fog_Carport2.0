@@ -6,6 +6,7 @@ import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
 import Model.Customer;
+import Model.Material;
 import Model.Order;
 
 import java.io.IOException;
@@ -75,6 +76,22 @@ public class FrontController extends HttpServlet {
         login = (Customer) session.getAttribute("login");
         int roleCheck = 0;
 
+        session.removeAttribute("specs");
+
+        ArrayList<String> specs;
+        specs = (ArrayList<String>) session.getAttribute("specs");
+        if(specs == null){
+            specs = new ArrayList<>();
+        }
+
+        session.removeAttribute("materials");
+
+        ArrayList<Material> materialBeregning;
+        materialBeregning = (ArrayList<Material>) session.getAttribute("materials");
+        if(materialBeregning == null){
+            materialBeregning = new ArrayList<>();
+        }
+
         if (login != null) {
             roleCheck = login.getRole();
         }
@@ -131,15 +148,47 @@ public class FrontController extends HttpServlet {
 
             case "generate_SVG":
 
-                int width = Integer.parseInt(request.getParameter("width"));
-                int length = Integer.parseInt(request.getParameter("length"));
-                SVG svg = new SVG();
-
-                session.setAttribute("svg", svg.createSVG(width, length));
-                destination = "printDrawing.jsp";
-                break;
+//                int width = Integer.parseInt(request.getParameter("width"));
+//                int length = Integer.parseInt(request.getParameter("length"));
+//                SVG svg = new SVG();
+//
+//                session.setAttribute("svg", svg.createSVG(width, length));
+//                destination = "printDrawing.jsp";
+//                break;
 
             case "bygcarport":
+
+                ArrayList<Material> materials = new ArrayList<>();
+
+                int size = Integer.parseInt(request.getParameter("size"));
+                int shed = Integer.parseInt(request.getParameter("shed"));
+                int shedtype = Integer.parseInt(request.getParameter("shedtype"));
+                int length = Integer.parseInt(request.getParameter("length"));
+                int width = Integer.parseInt(request.getParameter("width"));
+                int height = Integer.parseInt(request.getParameter("height"));
+                int shedLength = Integer.parseInt(request.getParameter("shed_length"));
+                int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
+                int rooftype = Integer.parseInt(request.getParameter("rooftype"));
+
+
+                materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype);
+
+                session.setAttribute("materials", materials);
+
+                int spær_antal = 0;
+                int stolperAntal = materials.get(0).getAmount();
+                for (int i = 0; i < materials.size(); i++) {
+                    if(materials.get(i).getProduct_name().equals("spærtræ")){
+                        spær_antal = materials.get(i).getAmount();
+                    }
+
+                }
+
+                SVG svg = new SVG();
+
+                session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal));
+
+
                 destination = "bestilling.jsp";
                 break;
 
