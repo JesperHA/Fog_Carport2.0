@@ -142,14 +142,12 @@
                                 </div>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-12">
-                                    <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" style="width: 100%; text-align: left;" data-toggle="dropdown" aria-expanded="false" type="button">Tag typer </button>
-                                        <div class="dropdown-menu" role="menu" id="dropDown">
-                                            <a class="dropdown-item" name="roofsort" value="1" role="presentation">Trapezplader</a>
-                                            <a class="dropdown-item" name="roofsort" value="2" role="presentation">Eternit</a>
-                                            <a class="dropdown-item" name="roofsort" value="3" role="presentation">Tagpap</a>
-                                        </div>
-                                    </div>
+                                        <select name="roofsort" id="roofsort" class="form-control">
+                                            <option selected disabled>Vælg tagtype</option>
+                                            <option value="1">Trapezplader</option>
+                                            <option value="2">Eternit</option>
+                                            <option value="3">Tagpap</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('carport-tab').click()">Tilbage</button>
@@ -192,6 +190,10 @@
                                 <label><b>Carport Tag</b></label>
                                 <div class="row" style="margin-bottom: 15px;">
                                     <div class="col"><label>Rejsning: &nbsp;</label><label id="getTaget"> </label>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col"><label>Tagtype: &nbsp;</label><label id="getRoofsort"></label>
                                     </div>
                                 </div>
 
@@ -358,7 +360,12 @@
         document.getElementById("getWidth").innerHTML = document.getElementById("width").value;
         document.getElementById("getHeight").innerHTML = document.getElementById("height").value;
         document.getElementById("getLength").innerHTML = document.getElementById("length").value;
+
+        var getDropdown = document.getElementById("roofsort");
+        var getDropdown_value = getDropdown.options[getDropdown.selectedIndex].innerHTML;
+        document.getElementById("getRoofsort").innerHTML = getDropdown_value;
     }
+
 
 </script>
 
