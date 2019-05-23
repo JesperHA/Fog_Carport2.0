@@ -63,7 +63,7 @@ public class MaterialCalculator extends HttpServlet {
                 Material remme = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material remme2 = new Material(materialList.get(2).getProduct_id(),materialList.get(2).getProduct_name(),materialList.get(2).getProduct_description(), materialList.get(2).getPrice(), materialList.get(2).getUnit(), materialList.get(2).getAmount());
                 Material vinkel = new Material(materialList.get(3).getProduct_id(),materialList.get(3).getProduct_name(),materialList.get(3).getProduct_description(), materialList.get(3).getPrice(), materialList.get(3).getUnit(), materialList.get(3).getAmount());
-                Material beslagskruer = materialList.get(4);
+                Material beslagskruer = new Material(materialList.get(4).getProduct_id(),materialList.get(4).getProduct_name(),materialList.get(4).getProduct_description(), materialList.get(4).getPrice(), materialList.get(4).getUnit(), materialList.get(4).getAmount());
                 Material Skruer80mm = materialList.get(5);
                 Material skruer50mm = materialList.get(6);
                 Material vindtrækbånd = materialList.get(7);
@@ -110,6 +110,7 @@ public class MaterialCalculator extends HttpServlet {
                     spærtræ2.setUnit(width / 2);
                 }
                 vinkel.setUnit(1);
+                beslagskruer.setUnit(1);
 
                 // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
                 double stolpeAntal = stolper.getUnit() / maxLængde;
@@ -135,6 +136,7 @@ public class MaterialCalculator extends HttpServlet {
                 }
                 spærtræ.setAmount((int)antalSpær + ekstraSpær);
                 vinkel.setAmount(vinkelBeregner(size, rooftype, spærtræ.getAmount(), stolper.getAmount()));
+                beslagskruer.setAmount(skrueBeregner(size, rooftype, width, length));
 
 //            if(size == 0){
 //                stolper.setAmount(4);
@@ -163,6 +165,7 @@ public class MaterialCalculator extends HttpServlet {
             double remPrisIalt = prisUdregner(remme.getPrice(), remme.getAmount(), remme.getUnit());
             double spærPrisIalt = prisUdregner(spærtræ.getPrice(), spærtræ.getAmount(), spærtræ.getUnit());
             double vinkelPrisIalt = ((vinkel.getPrice() * vinkel.getUnit()) * vinkel.getAmount());
+            double beslagsSkruerPrisIalt = ((beslagskruer.getPrice() * beslagskruer.getUnit()) * beslagskruer.getAmount());
 
 
             //indsætter priser på materialer
@@ -171,6 +174,7 @@ public class MaterialCalculator extends HttpServlet {
             remme.setPrice(remPrisIalt);
             spærtræ.setPrice(spærPrisIalt);
             vinkel.setPrice(vinkelPrisIalt);
+            beslagskruer.setPrice(beslagsSkruerPrisIalt);
 
 
             // sætter materialerne ind i session
@@ -184,7 +188,9 @@ public class MaterialCalculator extends HttpServlet {
             materialBeregning.add(spærtræ);
             ekstraEnhedUdregner(materialBeregning, spærtræ2, size, maxLængde, spærLængder, (int)antalSpær + ekstraSpær, (int)antalSpær + ekstraSpær);
             // vinkler:
-                materialBeregning.add(vinkel);
+            materialBeregning.add(vinkel);
+            // beslagsskruer:
+            materialBeregning.add(beslagskruer);
 
 
 
@@ -214,6 +220,24 @@ public class MaterialCalculator extends HttpServlet {
         }
 
         request.getRequestDispatcher(destination).forward(request,response);
+    }
+
+    private int skrueBeregner(int size, int rooftype, int width, int length){
+
+        double antalSkruer = 0;
+        int widthIMeter = width / 100;
+        int lengthIMeter = length / 100;
+        int størrelseM2 = widthIMeter * lengthIMeter;
+
+        if (size == 0 && rooftype == 0) {
+            antalSkruer = Math.ceil((double)størrelseM2 / 15);
+            System.out.println(antalSkruer);
+        } else if (size == 1 || rooftype == 1) {
+            antalSkruer = Math.ceil((double)størrelseM2 / 10);
+            System.out.println(antalSkruer);
+
+        }
+        return (int)antalSkruer;
     }
 
     private int vinkelBeregner(int size, int rooftype, int spær, int antalStolper){
