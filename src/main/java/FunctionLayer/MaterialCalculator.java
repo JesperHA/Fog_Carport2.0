@@ -35,6 +35,7 @@ public class MaterialCalculator {
             Material skruer50mm = materialList.get(6);
             Material vindtrækbånd = new Material(materialList.get(7).getProduct_id(),materialList.get(7).getProduct_name(),materialList.get(7).getProduct_description(), materialList.get(7).getPrice(), materialList.get(7).getUnit(), materialList.get(7).getAmount());
             Material trapezplade = new Material(materialList.get(8).getProduct_id(),materialList.get(8).getProduct_name(),materialList.get(8).getProduct_description(), materialList.get(8).getPrice(), materialList.get(8).getUnit(), materialList.get(8).getAmount());
+            Material trapezplade2 = new Material(materialList.get(8).getProduct_id(),materialList.get(8).getProduct_name(),materialList.get(8).getProduct_description(), materialList.get(8).getPrice(), materialList.get(8).getUnit(), materialList.get(8).getAmount());
             Material bundskrue = materialList.get(9);
             Material eternit = materialList.get(10);
             Material eternitskrue = materialList.get(11);
@@ -86,6 +87,12 @@ public class MaterialCalculator {
             vindtrækbånd.setUnit(1);
             taglægte.setUnit(length);
             taglægte2.setUnit(length);
+            trapezplade.setUnit(width);
+            trapezplade2.setUnit(width);
+            if(rooftype == 1){
+                trapezplade.setUnit(width / 2);
+                trapezplade2.setUnit(width / 2);
+            }
 
 
             // checker for længder længere end maxLængde, og beregner hvor mange ekstra længder der skal til.
@@ -93,6 +100,7 @@ public class MaterialCalculator {
             double remAntal = remme.getUnit() / maxLængde;
             double spærLængder = spærtræ.getUnit() / maxLængde;
             double tagLægterAntal = taglægte.getUnit() / maxLængde;
+            double trapezpladeLængder = trapezplade.getUnit() / maxLængde;
 
 
             // tilføjer ekstra stolper hvis rem spændvidden er for lang
@@ -105,7 +113,6 @@ public class MaterialCalculator {
 
             stolper.setAmount(mængdeUdregner(size, stolpeAntal, 4, 6) + ekstraStolper);
             remme.setAmount(mængdeUdregner(size, remAntal, 2, 3));
-
             double antalSpær = Math.ceil((double)length / maxSpærafstand);
             if(rooftype == 1){
                 antalSpær = antalSpær * 2;
@@ -117,6 +124,11 @@ public class MaterialCalculator {
             vindtrækbånd.setAmount(vindtrækbåndBeregner(størrelseM2));
             double antalLægter = Math.ceil((double)width / maxLægteafstand);
             taglægte.setAmount((mængdeUdregner(size, tagLægterAntal, 0, 0)) + (int)antalLægter + ekstraLægte);
+            double antalTrapezplader = Math.ceil((double)length / 100);
+            if(rooftype == 1){
+                antalTrapezplader = antalTrapezplader * 2;
+            }
+            trapezplade.setAmount((int)antalTrapezplader);
 
 
 //            if(size == 0){
@@ -139,6 +151,7 @@ public class MaterialCalculator {
             remme.setUnit(længdeUdregning(remme.getUnit()));
             spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
             taglægte.setUnit(længdeUdregning(taglægte.getUnit()));
+            trapezplade.setUnit(længdeUdregning(trapezplade.getUnit()));
 
 
             // udregner priser på materialer
@@ -150,6 +163,7 @@ public class MaterialCalculator {
             double beslagsSkruerPrisIalt = ((beslagskruer.getPrice() * beslagskruer.getUnit()) * beslagskruer.getAmount());
             double vindtrækbåndPrisIalt = ((vindtrækbånd.getPrice() * vindtrækbånd.getUnit()) * vindtrækbånd.getAmount());
             double taglægtePrisIalt = prisUdregner(taglægte.getPrice(), taglægte.getAmount(), taglægte.getUnit());
+            double trapezpladePrisIalt = prisUdregner(trapezplade.getPrice(), trapezplade.getAmount(), trapezplade.getUnit());
 
 
             //indsætter priser på materialer
@@ -161,7 +175,7 @@ public class MaterialCalculator {
             beslagskruer.setPrice(beslagsSkruerPrisIalt);
             vindtrækbånd.setPrice(vindtrækbåndPrisIalt);
             taglægte.setPrice(taglægtePrisIalt);
-
+            trapezplade.setPrice(trapezpladePrisIalt);
 
             // sætter materialerne ind i session
             // stolper:
@@ -182,9 +196,9 @@ public class MaterialCalculator {
             // taglægter:
             materialBeregning.add(taglægte);
             ekstraEnhedUdregner(materialBeregning, taglægte2, size, maxLængde, tagLægterAntal, (int)antalLægter + ekstraLægte, (int)antalLægter + ekstraLægte);
-
-
-
+            //trapezplader
+            materialBeregning.add(trapezplade);
+            ekstraEnhedUdregner(materialBeregning, trapezplade2, size, maxLængde, trapezpladeLængder, (int)antalTrapezplader, (int)antalTrapezplader);
 
 //            session.setAttribute("materials", materialBeregning);
 
