@@ -38,12 +38,12 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row" id="fullscreen" style="display:none;margin-bottom:50px;">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Plantegning</h4>
-                        <h6 class="text-muted card-subtitle mb-2">Her kan du se tegning</h6>
+                        <h6 class="text-muted card-subtitle mb-2">Fuldstørrelse</h6>
 
                         <%
                             String svgString = "0";
@@ -54,13 +54,37 @@
                                 out.println(svgString);
                             }
                         %>
-
-
+                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'none'; document.getElementById('SVGAREA').setAttribute('viewbox','0 0 1000 1500');" style="float:right;">Luk plantegning </button>
 
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Plantegning</h4>
+                        <h6 class="text-muted card-subtitle mb-2">Her kan du se tegning</h6>
+                        <div class="box" style="margin-bottom:40px;">
+                            <div class="ribbon ribbon-top-right"><span>Eksempel</span></div>
+                                <div style="opacity: 0.2;">
+                                <%
+
+                                    svgString = (String) session.getAttribute("svg");
+
+                                    if (!svgString.equals("0")) {
+                                        out.println(svgString);
+                                    }
+                                %>
+                                </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'block'" style="float:right;">Se plantegning </button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Materialeliste</h4>
@@ -108,5 +132,4 @@
     </div>
     </section>
 </main>
-
 <%@include file="include/footer.jsp"%>

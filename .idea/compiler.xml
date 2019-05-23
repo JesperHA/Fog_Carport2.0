@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="LogInSample" options="-endorseddirs C:\Users\GuniP\Desktop\Fog_Carport2.0\target/endorsed" />
+      <module name="LogInSample" options="" />
     </option>
   </component>
 </project>

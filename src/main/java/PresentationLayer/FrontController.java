@@ -177,6 +177,7 @@ public class FrontController extends HttpServlet {
 
                 int spær_antal = 0;
                 int stolperAntal = materials.get(0).getAmount();
+
                 for (int i = 0; i < materials.size(); i++) {
                     if(materials.get(i).getProduct_name().equals("spærtræ")){
                         spær_antal = materials.get(i).getAmount();
@@ -186,7 +187,7 @@ public class FrontController extends HttpServlet {
 
                 SVG svg = new SVG();
 
-                session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal));
+                session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal, size));
 
 
                 destination = "bestilling.jsp";
