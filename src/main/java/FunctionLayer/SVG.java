@@ -7,18 +7,20 @@ public class SVG {
         //Length er X akse
         //Width er Y akse
 
-        double viewBox_width = width * 1.2;
-        double viewBox_length = length * 1.2;
+        double viewBox_width = width * 2;
+        double viewBox_length = length * 2;
+
+        int fixLength = length + 1;
 
         String start_SVG = "<?xml version='1.0'?><!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>\n" +
                 "\n" +
-                "<svg version='1.1' id='SVGAREA' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='100%' viewBox=' 0 0 "+viewBox_length+" "+viewBox_width+"' preserveAspectRatio='xMinYMin'>\n" +
+                "<svg version='1.1' id='SVGAREA' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='100%' height='100%' viewBox=' 0 0 "+viewBox_length+" "+viewBox_width+"' preserveAspectRatio='xMinYMin' style='margin-top:40px;'>\n" +
                 "\n" +
-                "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='60' width='"+length+"' height='"+width+"' viewBox=' 0 0 "+length+" "+width+"' preserveAspectRatio='xMinYMin'>";
+                "<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='60' width='"+fixLength+"' height='"+width+"' viewBox=' 0 0 "+length+" "+width+"' preserveAspectRatio='xMinYMin'>";
 
         int start_rem = 35;
         double end_rem = width - 39.5;
-        int vindkryds_y = width - 35;
+
 
         String body_SVG = "<!-- Ramme -->\n" +
                 "\n" +
@@ -26,34 +28,46 @@ public class SVG {
                 "\n" +
                 "    <!-- Remme -->\n" +
                 "    <rect x='0' y='"+start_rem+"' width='"+length+"' height='4.5' style='stroke:black; fill: white;'/>\n" +
-                "    <rect x='0' y='"+end_rem+"' width='"+length+"' height='4.5' style='stroke:black; fill: white;'/>\n" +
-                "\n" +
-                "    <!-- vindkryds -->\n" +
-                "\n" +
-                "    <line x1='55' y1='"+start_rem+"' x2='550' y2='"+vindkryds_y+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
-                "    <line x1='50' y1='"+start_rem+"' x2='545' y2='"+vindkryds_y+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
-                "    \n" +
-                "    <line x1='550' y1='"+start_rem+"' x2='55' y2='"+vindkryds_y+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
-                "    <line x1='545' y1='"+start_rem+"' x2='50' y2='"+vindkryds_y+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
-                "\n" +
-                "\n" ;
+                "    <rect x='0' y='"+end_rem+"' width='"+length+"' height='4.5' style='stroke:black; fill: white;'/>\n";
 
-        //TestValues
-        //size = 0;
-        //stolpe_antal = 8;
-
-
-
+        //Vindkryds & Spær
 
         String svg_spær = "";
-        int betweenSpær = 0;
-
         int fixSpær = (int) spær_antal;
         int fixStolpe = (int) stolpe_antal;
 
+        int betweenSpær = width / fixSpær;;
+        int betweenSpærCount = 0;
+        double SpaceSpær = (betweenSpær + 4.5) / fixSpær;
+        int fixSpaceSpær = (int) SpaceSpær;
+
+
+
+        int vindkryds_y = width - 35;
+        int vindkryds_end = ((betweenSpær * fixSpær) - betweenSpær) + fixSpaceSpær;
+        int vindkryds_start = betweenSpær;
+
+        int vindkryds_start_plus = vindkryds_start + 5;
+
+        int vindkryds_start_bottom = width / betweenSpær;
+
+        int vindkryds_y_plus = vindkryds_y + 5;
+        int vindkryds_end_plus = vindkryds_end + 5;
+
+        String vindkryds_SVG =
+                "  <!-- vindkryds -->\n" +
+                "\n" +
+                "    <line x1='"+vindkryds_start_plus+"' y1='"+vindkryds_start+"' x2='"+vindkryds_y_plus+"' y2='"+vindkryds_end+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
+                "    <line x1='"+vindkryds_start+"' y1='"+vindkryds_start+"' x2='"+vindkryds_y+"' y2='"+vindkryds_end+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
+                "    \n" +
+                "    <line x1='"+vindkryds_end_plus+"' y1='"+vindkryds_start+"' x2='55' y2='"+vindkryds_end+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
+                "    <line x1='"+vindkryds_end+"' y1='"+vindkryds_start+"' x2='50' y2='"+vindkryds_end+"' style='stroke:black; fill white; stroke-dasharray: 10 10;'/>\n" +
+                "\n" +
+                "\n" ;
+
         for (int i = 0; i < fixSpær; i++) {
-            svg_spær = svg_spær + "<rect x='" + betweenSpær + "' y='0' width='4.5' height='" + width + "' style='stroke:black; fill: white;'/>\n";
-            betweenSpær = betweenSpær + 2;
+            svg_spær = svg_spær + "<rect x='" + betweenSpærCount + "' y='0' width='4.5' height='" + width + "' style='stroke:black; fill: white;'/>\n";
+            betweenSpærCount = betweenSpærCount + betweenSpær + fixSpaceSpær;
 
         }
 
@@ -67,7 +81,7 @@ public class SVG {
         String SVG_Stolper = "";
 
         //Stolper
-        int Halvstolper = fixStolpe / 2;
+        int Halvstolper = (fixStolpe / 2) - 1;
         int thirdstolper = fixStolpe / 3;
 
         int placementStolper_halv = length / Halvstolper;
@@ -77,7 +91,7 @@ public class SVG {
             //Top
             int top_stolpe_third = placementStolper_third;
             for (int i = 0; i < thirdstolper; i++) {
-                SVG_Stolper = SVG_Stolper + "<circle cx='"+top_stolpe_third+"' cy='0' r='5' stroke='black' stroke-width='2' />";
+                SVG_Stolper = SVG_Stolper + "<circle cx='"+top_stolpe_third+"' cy='"+start_rem+"' r='5' stroke='black' stroke-width='2' />";
                 top_stolpe_third = top_stolpe_third + top_stolpe_third;
             }
             //Middle
@@ -89,22 +103,36 @@ public class SVG {
             //Bottom
             int bottom_stolpe_third = placementStolper_third;
             for (int i = 0; i < thirdstolper; i++) {
-                SVG_Stolper = SVG_Stolper + "<circle cx='"+bottom_stolpe_third+"' cy='"+width+"' r='5' stroke='black' stroke-width='2' />";
+                SVG_Stolper = SVG_Stolper + "<circle cx='"+bottom_stolpe_third+"' cy='"+end_rem+"' r='5' stroke='black' stroke-width='2' />";
                 bottom_stolpe_third = bottom_stolpe_third + bottom_stolpe_third;
             }
         }else{
             //Top
-            int top_stolpe_halv = placementStolper_halv;
+
+            int top_stolpe_halv = 0;
             for (int i = 0; i <= Halvstolper; i++) {
-                SVG_Stolper = SVG_Stolper + "<circle cx='"+top_stolpe_halv+"' cy='0' r='5' stroke='black' stroke-width='2' />";
-                top_stolpe_halv = top_stolpe_halv + top_stolpe_halv;
+                if(i == 0){
+                    top_stolpe_halv = 0;
+                }
+                if(i == 1){
+                    top_stolpe_halv = placementStolper_halv;
+                }
+                SVG_Stolper = SVG_Stolper + "<rect x='"+top_stolpe_halv+"' y='"+start_rem+"' width='4.5' height='4.5' style='fill: black;'/>";
+                top_stolpe_halv = top_stolpe_halv + placementStolper_halv;
             }
             //Bottom
-            int bottom_stolpe_halv = placementStolper_halv;
+            int bottom_stolpe_halv = 0;
             for (int i = 0; i <= Halvstolper; i++) {
-                SVG_Stolper = SVG_Stolper + "<circle cx='"+bottom_stolpe_halv+"' cy='"+width+"' r='5' stroke='black' stroke-width='2' />";
-                bottom_stolpe_halv = bottom_stolpe_halv + bottom_stolpe_halv;
+                if(i == 0){
+                    bottom_stolpe_halv = 0;
+                if(i == 1)
+                    bottom_stolpe_halv = placementStolper_halv;
+                }
+                SVG_Stolper = SVG_Stolper + "<rect x='"+bottom_stolpe_halv+"' y='"+end_rem+"' width='4.5' height='4.5' style='fill: black;' />";
+                bottom_stolpe_halv = bottom_stolpe_halv + placementStolper_halv;
             }
+
+
         }
 
         //Console Helper
@@ -167,7 +195,7 @@ public class SVG {
                 "\n" +
                 "</svg>\n";
 
-        String return_SVG = start_SVG + body_SVG + svg_spær + SVG_rejsning + SVG_Stolper + SVG_end + function_SVG;
+        String return_SVG = start_SVG + body_SVG + vindkryds_SVG + svg_spær + SVG_rejsning + SVG_Stolper + SVG_end + function_SVG;
         return return_SVG;
     }
 }

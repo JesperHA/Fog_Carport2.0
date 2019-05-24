@@ -40,7 +40,7 @@
         </div>
         <div class="row" id="fullscreen" style="display:none;margin-bottom:50px;">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card niceBackground">
                     <div class="card-body">
                         <h4 class="card-title">Plantegning</h4>
                         <h6 class="text-muted card-subtitle mb-2">Fuldstørrelse</h6>
@@ -54,19 +54,19 @@
                                 out.println(svgString);
                             }
                         %>
-                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'none'; document.getElementById('SVGAREA').setAttribute('viewbox','0 0 1000 1500');" style="float:right;">Luk plantegning </button>
+                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'none';document.getElementById('planogmat').style.display = 'flex'" style="float:right;">Luk plantegning </button>
 
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="planogmat">
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Plantegning</h4>
                         <h6 class="text-muted card-subtitle mb-2">Her kan du se tegning</h6>
-                        <div class="box" style="margin-bottom:40px;">
+                        <div class="box niceBackground" style="margin-top:30px;margin-bottom:40px;max-height: 300px;">
                             <div class="ribbon ribbon-top-right"><span>Eksempel</span></div>
                                 <div style="opacity: 0.2;">
                                 <%
@@ -79,7 +79,7 @@
                                 %>
                                 </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'block'" style="float:right;">Se plantegning </button>
+                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'block';document.getElementById('planogmat').style.display = 'none'" style="float:right;">Se plantegning </button>
 
                     </div>
                 </div>
