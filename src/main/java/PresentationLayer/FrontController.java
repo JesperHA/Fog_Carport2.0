@@ -146,16 +146,6 @@ public class FrontController extends HttpServlet {
 
                 break;
 
-            case "generate_SVG":
-
-//                int width = Integer.parseInt(request.getParameter("width"));
-//                int length = Integer.parseInt(request.getParameter("length"));
-//                SVG svg = new SVG();
-//
-//                session.setAttribute("svg", svg.createSVG(width, length));
-//                destination = "printDrawing.jsp";
-//                break;
-
             case "bygcarport":
 
                 ArrayList<Material> materials = new ArrayList<>();
@@ -169,9 +159,10 @@ public class FrontController extends HttpServlet {
                 int shedLength = Integer.parseInt(request.getParameter("shed_length"));
                 int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
                 int rooftype = Integer.parseInt(request.getParameter("rooftype"));
+                int roofsort = Integer.parseInt(request.getParameter("roofsort"));
 
 
-                materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype);
+                materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort);
 
                 session.setAttribute("materials", materials);
 
@@ -182,7 +173,6 @@ public class FrontController extends HttpServlet {
                     if(materials.get(i).getProduct_name().equals("spærtræ")){
                         spær_antal = materials.get(i).getAmount();
                     }
-
                 }
 
                 SVG svg = new SVG();

@@ -112,12 +112,12 @@
                                     <label><b>Angiv mål på skur</b></label>
                                     <div class="row">
                                         <div class="col"><label>Længde (cm):</label>
-                                            <input class="form-control" name="shed_length" type="text" style="min-width: 100%;margin-bottom: 15px;">
+                                            <input class="form-control" name="shed_length" value="0" type="text" style="min-width: 100%;margin-bottom: 15px;">
                                         </div>
                                     </div>
                                     <div class="row" style="margin-bottom: 15px;">
                                         <div class="col"><label>Bredde (cm):</label>
-                                            <input class="form-control" name="shed_width" type="text" style="min-width: 100%;">
+                                            <input class="form-control" name="shed_width" value="0" type="text" style="min-width: 100%;">
                                         </div>
                                     </div>
                                 </div>
