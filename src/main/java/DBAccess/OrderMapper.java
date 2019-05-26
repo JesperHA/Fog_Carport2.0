@@ -24,16 +24,20 @@ public class OrderMapper {
             while (resultSet.next()) {
                 int order_id = resultSet.getInt("order_id");
                 int customer_id = resultSet.getInt("customer_id");
+                int size = resultSet.getInt("size");
                 int length = resultSet.getInt("length");
-                int height = resultSet.getInt("height");
                 int width = resultSet.getInt("width");
-                int roof = resultSet.getInt("roof");
+                int height = resultSet.getInt("height");
+                int roof_type = resultSet.getInt("roof_type");
+                int roof_sort = resultSet.getInt("roof_sort");
                 int shed = resultSet.getInt("shed");
                 int shedtype = resultSet.getInt("shedtype");
+                int shed_length = resultSet.getInt("shed_length");
+                int shed_width = resultSet.getInt("shed_width");
                 int order_status = resultSet.getInt("order_status");
                 String date = resultSet.getString("date");
 
-                Order order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
+                Order order = new Order(order_id, customer_id, size, length, width, height, roof_type, roof_sort, shed ,shedtype, shed_length, shed_width, order_status, date);
                 orderList.add(order);
             }
         } catch (Exception e) {
@@ -59,16 +63,20 @@ public class OrderMapper {
 
             while (resultSet.next()) {
                 int order_id = resultSet.getInt("order_id");
+                int size = resultSet.getInt("size");
                 int length = resultSet.getInt("length");
-                int height = resultSet.getInt("height");
                 int width = resultSet.getInt("width");
-                int roof = resultSet.getInt("roof");
+                int height = resultSet.getInt("height");
+                int roof_type = resultSet.getInt("roof_type");
+                int roof_sort = resultSet.getInt("roof_sort");
                 int shed = resultSet.getInt("shed");
                 int shedtype = resultSet.getInt("shedtype");
+                int shed_length = resultSet.getInt("shed_length");
+                int shed_width = resultSet.getInt("shed_width");
                 int order_status = resultSet.getInt("order_status");
                 String date = resultSet.getString("date");
 
-                Order order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
+                Order order = new Order(order_id, customer_id, size, length, width, height, roof_type, roof_sort, shed ,shedtype, shed_length, shed_width, order_status, date);
                 orderList.add(order);
             }
         } catch (Exception e) {
@@ -80,17 +88,21 @@ public class OrderMapper {
     public static void createOrder( Order order ) throws OrderException {
         try {
             Connection con = Connector.connection();
-            String SQL = "INSERT INTO orders (customer_id, length, height, width, roof, shed, shedtype, order_status, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String SQL = "INSERT INTO orders (customer_id, size, length, width, height, roof_type, roof_sort, shed, shedtype, shed_length, shed_width, order_status, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = con.prepareStatement( SQL, Statement.RETURN_GENERATED_KEYS );
             ps.setInt( 1, order.getCustomer_id());
-            ps.setInt( 2, order.getLength());
-            ps.setInt( 3, order.getHeight());
+            ps.setInt( 2, order.getSize());
+            ps.setInt( 3, order.getLength());
             ps.setInt( 4, order.getWidth());
-            ps.setInt( 5, order.getRoof());
-            ps.setInt(6, order.getShed());
-            ps.setInt(7, order.getShedtype() );
-            ps.setInt(8, order.getOrder_status());
-            ps.setString(9, order.getDate());
+            ps.setInt( 5, order.getHeight());
+            ps.setInt(6, order.getRoof_type());
+            ps.setInt(7, order.getRoof_sort() );
+            ps.setInt(8, order.getShed());
+            ps.setInt(9, order.getShedtype());
+            ps.setInt(10, order.getShed_length());
+            ps.setInt(11, order.getShed_width());
+            ps.setInt(12, order.getOrder_status());
+            ps.setString(13, order.getDate());
             ps.executeUpdate();
             ResultSet ids = ps.getGeneratedKeys();
             ids.next();
@@ -120,16 +132,20 @@ public class OrderMapper {
             if (resultSet.next()) {
                 int order_id = resultSet.getInt("order_id");
                 int customer_id = resultSet.getInt("customer_id");
+                int size = resultSet.getInt("size");
                 int length = resultSet.getInt("length");
-                int height = resultSet.getInt("height");
                 int width = resultSet.getInt("width");
-                int roof = resultSet.getInt("roof");
+                int height = resultSet.getInt("height");
+                int roof_type = resultSet.getInt("roof_type");
+                int roof_sort = resultSet.getInt("roof_sort");
                 int shed = resultSet.getInt("shed");
                 int shedtype = resultSet.getInt("shedtype");
+                int shed_length = resultSet.getInt("shed_length");
+                int shed_width = resultSet.getInt("shed_width");
                 int order_status = resultSet.getInt("order_status");
                 String date = resultSet.getString("date");
 
-                order = new Order(order_id, customer_id, length, height, width, roof, shed ,shedtype, order_status, date);
+                order = new Order(order_id, customer_id, size, length, width, height, roof_type, roof_sort, shed ,shedtype, shed_length, shed_width, order_status, date);
                 return order;
             }
         } catch (Exception e) {
@@ -160,21 +176,25 @@ public class OrderMapper {
     public static Order updateOrder(Order order) {
         Connection connection;
         PreparedStatement ps;
-        String sqlQuery = "UPDATE orders SET customer_id = ?, length = ?, height = ?, width = ?, roof = ?, shed = ?, shedtype = ?, order_status = ?, date = ? WHERE order_id = ?";
+        String sqlQuery = "UPDATE orders SET customer_id = ?, size = ?, length = ?, width = ?, length = ?, roof_type = ?, roof_sort = ?, shed = ?, shedtype = ?, shed_length = ?, shed_width = ?, order_status = ?, date = ? WHERE order_id = ?";
 
         try {
             connection = Connector.connection();
             ps = connection.prepareStatement(sqlQuery);
             ps.setInt(1, order.getCustomer_id());
-            ps.setInt(2, order.getLength());
-            ps.setInt(3, order.getHeight());
+            ps.setInt(2, order.getSize());
+            ps.setInt(3, order.getLength());
             ps.setInt(4, order.getWidth());
-            ps.setInt(5, order.getRoof());
-            ps.setInt(6, order.getShed());
-            ps.setInt(7, order.getShedtype());
-            ps.setInt(8, order.getOrder_status());
-            ps.setString(9, order.getDate());
-            ps.setInt(10, order.getOrder_id());
+            ps.setInt(5, order.getHeight());
+            ps.setInt(6, order.getRoof_type());
+            ps.setInt(7, order.getRoof_sort());
+            ps.setInt(8, order.getShed());
+            ps.setInt(9, order.getShedtype());
+            ps.setInt(10, order.getShed_length());
+            ps.setInt(11, order.getShed_width());
+            ps.setInt(12, order.getOrder_status());
+            ps.setString(13, order.getDate());
+            ps.setInt(14, order.getOrder_id());
             ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

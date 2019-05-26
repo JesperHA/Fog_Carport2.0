@@ -1,6 +1,7 @@
 package PresentationLayer;
 
 import Exceptions.LoginException;
+import Exceptions.OrderException;
 import Exceptions.RegisterException;
 import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
@@ -10,7 +11,10 @@ import Model.Material;
 import Model.Order;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -78,8 +82,8 @@ public class FrontController extends HttpServlet {
 
         session.removeAttribute("specs");
 
-        ArrayList<String> specs;
-        specs = (ArrayList<String>) session.getAttribute("specs");
+        ArrayList<Integer> specs;
+        specs = (ArrayList<Integer>) session.getAttribute("specs");
         if(specs == null){
             specs = new ArrayList<>();
         }
@@ -95,6 +99,8 @@ public class FrontController extends HttpServlet {
         if (login != null) {
             roleCheck = login.getRole();
         }
+
+
 
         switch (source) {
 
@@ -148,7 +154,7 @@ public class FrontController extends HttpServlet {
 
             case "bygcarport":
 
-                ArrayList<Material> materials = new ArrayList<>();
+                ArrayList<Material> materials;
 
                 int size = Integer.parseInt(request.getParameter("size"));
                 int shed = Integer.parseInt(request.getParameter("shed"));
@@ -161,10 +167,24 @@ public class FrontController extends HttpServlet {
                 int rooftype = Integer.parseInt(request.getParameter("rooftype"));
                 int roofsort = Integer.parseInt(request.getParameter("roofsort"));
 
+                session.setAttribute("size", size);
+                session.setAttribute("shed", shed);
+                session.setAttribute("shedtype", shedtype);
+                session.setAttribute("length", length);
+                session.setAttribute("width", width);
+                session.setAttribute("height", height);
+                session.setAttribute("shedLength", shedLength);
+                session.setAttribute("shedWidth", shedWidth);
+                session.setAttribute("rooftype", rooftype);
+                session.setAttribute("roofsort", roofsort);
+
 
                 materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort);
 
                 session.setAttribute("materials", materials);
+
+
+
 
                 int spær_antal = 0;
                 int stolperAntal = materials.get(0).getAmount();
@@ -325,18 +345,23 @@ public class FrontController extends HttpServlet {
 
                             int updateOrder_id = Integer.parseInt(request.getParameter("order_id"));
                             int updateCustomer_id = Integer.parseInt(request.getParameter("customer_id"));
-                            int updateLength = Integer.parseInt(request.getParameter("length")); // length
-                            int updateHeight = Integer.parseInt(request.getParameter("height")); // height
-                            int updateWidth = Integer.parseInt(request.getParameter("width")); // width
-                            int updateRoof = Integer.parseInt(request.getParameter("roof")); // roof
-                            int updateShed = Integer.parseInt(request.getParameter("shed")); // shed
-                            int updateShedtype = Integer.parseInt(request.getParameter("shedtype")); // shedtype
+                            int updateSize = Integer.parseInt(request.getParameter("size"));
+                            int updateLength = Integer.parseInt(request.getParameter("length"));
+                            int updateWidth = Integer.parseInt(request.getParameter("width"));
+                            int updateHeight = Integer.parseInt(request.getParameter("height"));
+                            int updateRooftype = Integer.parseInt(request.getParameter("rooftype"));
+                            int updateRoofsort = Integer.parseInt(request.getParameter("roofsort"));
+                            int updateShed = Integer.parseInt(request.getParameter("shed"));
+                            int updateShedtype = Integer.parseInt(request.getParameter("shedtype"));
+                            int updateShedLength = Integer.parseInt(request.getParameter("shed_length"));
+                            int updateShedWidth = Integer.parseInt(request.getParameter("shed_width"));
                             int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
                             String updateDate = request.getParameter("date"); // date
 
+
                             String newDate = updateDate.replace("-", "");
 
-                            Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, newDate);
+                            Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateSize, updateLength, updateWidth, updateHeight, updateRooftype, updateRoofsort, updateShed, updateShedtype, updateShedLength, updateShedWidth, updateOrder_status, newDate);
 
                             Order result = OrderFacade.changeOrder(updateOrder);
 
@@ -426,6 +451,38 @@ public class FrontController extends HttpServlet {
                     request.setAttribute("customerlist", customerlist);
                     destination = "/WEB-INF/allCustomers.jsp";
                 }
+                break;
+
+            case "complete":
+                System.out.println("kommer til \"complete\" ");
+
+                size = (int)session.getAttribute("size");
+                length = (int)session.getAttribute("length");
+                width = (int)session.getAttribute("width");
+                height = (int)session.getAttribute("height");
+                rooftype = (int)session.getAttribute("rooftype");
+                roofsort = (int)session.getAttribute("roofsort");
+                shed = (int)session.getAttribute("shed");
+                shedtype = (int)session.getAttribute("shedtype");
+                shedLength = (int)session.getAttribute("shedLength");
+                shedWidth = (int)session.getAttribute("shedWidth");
+
+                DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+                Date date = new Date();
+                String dato = dateFormat.format(date);
+
+
+                 Order order = new Order(1, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
+
+
+                try {
+                    OrderFacade.createOrder(order);
+                } catch (OrderException e) {
+                    System.out.println("der skete en fejl i oprettelse af ordre i databasen");
+                    e.printStackTrace();
+                }
+
+                destination = "index.jsp";
                 break;
 
         }

@@ -455,12 +455,10 @@ public class MaterialCalculator {
             double passendeLængde = divideretLængde * 30;
             længde = passendeLængde;
         }
-
         if(længde < minLængde){
             længde = minLængde;
         }else if(længde > maxLængde){
             længde = maxLængde;
-            System.out.println("Længden sendt til længdeberegneren er større end maxlængden!!");
         }
         return længde;
     }

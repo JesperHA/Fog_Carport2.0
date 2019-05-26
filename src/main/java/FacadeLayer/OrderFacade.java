@@ -1,6 +1,7 @@
 package FacadeLayer;
 
 import DBAccess.OrderMapper;
+import Exceptions.OrderException;
 import Model.Order;
 
 import java.util.ArrayList;
@@ -30,4 +31,8 @@ public class OrderFacade {
     public static String deleteOrder(Order order) {
         return OrderMapper.deleteOrder(order);
     }
+
+   public static void createOrder (Order order) throws OrderException {
+        OrderMapper.createOrder(order);
+   }
 }
