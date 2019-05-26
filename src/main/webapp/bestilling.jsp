@@ -1,4 +1,5 @@
-<%@ page import="Model.Material" %><%--
+<%@ page import="Model.Material" %>
+<%@ page import="FunctionLayer.MaterialCalculator" %><%--
   Created by IntelliJ IDEA.
   User: Jesper
   Date: 13-05-2019
@@ -111,6 +112,8 @@
                                 </thead>
                                 <tbody>
                                 <%
+                                    double prisIalt = 0;
+
                                     for (int i = 0; i < materials.size(); i++) {
 
                                     %>
@@ -122,10 +125,15 @@
                                     <td><% out.println(materials.get(i).getAmount());%></td>
                                     <td><% out.println(materials.get(i).getPrice());%></td>
                                 </tr>
-                                <%}%>
+                                <% prisIalt = prisIalt + materials.get(i).getPrice();
+                                    }%>
                                 <tr>
                                     <td></td>
                                     <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><b>Ialt: <%out.println(MaterialCalculator.round(prisIalt, 2));%>kr.</b></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -141,4 +149,5 @@
     </section>
     </form>
 </main>
+
 <%@include file="include/footer.jsp"%>

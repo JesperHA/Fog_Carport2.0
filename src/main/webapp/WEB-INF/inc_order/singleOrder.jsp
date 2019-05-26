@@ -118,8 +118,8 @@
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="customer_id" style="max-width:150px">Enkelt eller dobbelt:</label>
-                                        <input type="text" class="form-control" name="size" id="size" value="<% out.print(order.getSize()); %>" autocomplete="off" disabled>
+                                        <label class="form-control" for="size" style="max-width:150px">Enkelt eller dobbelt:</label>
+                                        <input type="text" class="form-control" name="size" id="size" value="<% out.print(order.getSize()); %>" autocomplete="off" >
                                     </div> <br>
 
                                     <div class="input-group">
@@ -246,7 +246,7 @@
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="customer_id" style="max-width:150px">Enkelt eller dobbelt:</label>
+                                        <label class="form-control" for="size" style="max-width:150px">Enkelt eller dobbelt:</label>
                                         <input type="text" class="form-control" name="size" id="size" value="<% out.print(order.getSize()); %>" autocomplete="off" disabled>
                                     </div> <br>
 
