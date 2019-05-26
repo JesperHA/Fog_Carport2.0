@@ -149,9 +149,6 @@ public class OrderMapper {
             ps.setInt(1, status);
             ps.setInt(2, Integer.parseInt(id));
             ps.executeUpdate();
-
-            System.out.println("Order status changed to " + status + ", for order id " + id);
-
         } catch (Exception e) {
             e.printStackTrace();
 
