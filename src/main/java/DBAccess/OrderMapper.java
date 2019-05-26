@@ -145,7 +145,7 @@ public class OrderMapper {
                 int order_status = resultSet.getInt("order_status");
                 String date = resultSet.getString("date");
 
-                order = new Order(order_id, customer_id, size, length, width, height, roof_type, roof_sort, shed ,shedtype, shed_length, shed_width, order_status, date);
+                order = new Order(order_id, customer_id, size, length, width, height, roof_type, roof_sort, shed, shedtype, shed_length, shed_width, order_status, date);
                 return order;
             }
         } catch (Exception e) {

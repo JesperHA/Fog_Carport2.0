@@ -13,6 +13,8 @@ import Model.Order;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.servlet.ServletException;
@@ -349,8 +351,8 @@ public class FrontController extends HttpServlet {
                             int updateLength = Integer.parseInt(request.getParameter("length"));
                             int updateWidth = Integer.parseInt(request.getParameter("width"));
                             int updateHeight = Integer.parseInt(request.getParameter("height"));
-                            int updateRooftype = Integer.parseInt(request.getParameter("rooftype"));
-                            int updateRoofsort = Integer.parseInt(request.getParameter("roofsort"));
+                            int updateRooftype = Integer.parseInt(request.getParameter("roof_type"));
+                            int updateRoofsort = Integer.parseInt(request.getParameter("roof_sort"));
                             int updateShed = Integer.parseInt(request.getParameter("shed"));
                             int updateShedtype = Integer.parseInt(request.getParameter("shedtype"));
                             int updateShedLength = Integer.parseInt(request.getParameter("shed_length"));
@@ -358,21 +360,23 @@ public class FrontController extends HttpServlet {
                             int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
                             String updateDate = request.getParameter("date"); // date
 
-
                             String newDate = updateDate.replace("-", "");
+
+                            if (updateShed == 0) {
+                                updateShedtype = 0;
+                                updateShedLength = 0;
+                                updateShedWidth = 0;
+                            }
 
                             Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateSize, updateLength, updateWidth, updateHeight, updateRooftype, updateRoofsort, updateShed, updateShedtype, updateShedLength, updateShedWidth, updateOrder_status, newDate);
 
                             Order result = OrderFacade.changeOrder(updateOrder);
 
                             if (result != null) {
-
                                 Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
 
                                 request.setAttribute("foundOrder", result);
-
                                 request.setAttribute("customerIQ", updatedCustomerIQ1);
-
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
@@ -382,9 +386,7 @@ public class FrontController extends HttpServlet {
 
                                 request.setAttribute("updateOrderStatus", "fail");
                                 request.setAttribute("updateOrderId", updateOrder_id);
-
                                 request.setAttribute("customerIQ", updatedCustomerIQ2);
-
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
@@ -467,10 +469,11 @@ public class FrontController extends HttpServlet {
                 shedLength = (int)session.getAttribute("shedLength");
                 shedWidth = (int)session.getAttribute("shedWidth");
 
-                DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
-                Date date = new Date();
-                String dato = dateFormat.format(date);
+                LocalDateTime localDateTime;
+                localDateTime = LocalDateTime.now();
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String dato = formatter.format(localDateTime);
 
                  Order order = new Order(1, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
 
