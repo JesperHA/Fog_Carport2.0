@@ -21,6 +21,10 @@
     <%--</section>--%>
 <%--</main>--%>
 <main class="page login-page">
+
+    <form action="FrontController" method="post">
+        <input type="hidden" name="source" value="complete"/>
+
     <section class="clean-block clean-form dark">
         <div class="container" style="margin-top: 50px;">
             <div class="block-heading">
@@ -84,6 +88,9 @@
                     </div>
                 </div>
             </div>
+
+
+
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
@@ -122,6 +129,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <button style="float: right" class="btn btn-success" name="complete" type="submit">Fuldfør bestilling</button>
                         </div>
 
 
@@ -131,5 +139,6 @@
         </div>
     </div>
     </section>
+    </form>
 </main>
 <%@include file="include/footer.jsp"%>

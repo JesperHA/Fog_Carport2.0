@@ -79,12 +79,16 @@
                                                                     "<tr>" +
                                                                     "<td>" + orderList.get(i).getOrder_id() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getCustomer_id() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getSize() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getLength() + "</td>\n" +
-                                                                    "<td>" + orderList.get(i).getHeight() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getWidth() + "</td>\n" +
-                                                                    "<td>" + orderList.get(i).getRoof() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getHeight() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getRoof_type() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getRoof_sort() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getShed() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getShedtype() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getShed_length() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getShed_width() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getOrder_status() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getDate() + "</td>\n" +
                                                                     "<td><form method='post' action='FrontController' style='display:inline'><input type='hidden' name='source' value='searchorders' /><input type='hidden' name='type' value='single' /><button class=\"btn btn-sm btn-primary\" type=\"submit\" name=\"order_id\" value='" + orderList.get(i).getOrder_id() + "'>Se Ordre</button></form></td>" +

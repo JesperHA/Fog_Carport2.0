@@ -198,7 +198,7 @@
                                 </div>
 
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('taget-tab').click()">Tilbage</button>
-                                <button class="btn btn-success" type="submit" style="float: right;">Bestil</button>
+                                <button class="btn btn-success" name="" type="submit" style="float: right;">Bestil</button>
                                 <br>
                             </div>
 
