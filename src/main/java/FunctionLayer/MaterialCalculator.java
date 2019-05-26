@@ -409,13 +409,11 @@ public class MaterialCalculator {
                 material.setAmount(i2);
             }
 
-
             double prisIalt = prisUdregner(material.getPrice(), material.getAmount(), material.getUnit());
             material.setPrice(prisIalt);
 
 
             materialBeregning.add(material);
-
         }
     }
 
@@ -425,6 +423,7 @@ public class MaterialCalculator {
 
         return prisIalt;
     }
+
     private static int mængdeUdregner(int size, double Antal, int min, int max) {
 
         int amount = 0;
@@ -463,7 +462,6 @@ public class MaterialCalculator {
             længde = maxLængde;
             System.out.println("Længden sendt til længdeberegneren er større end maxlængden!!");
         }
-
         return længde;
     }
 
