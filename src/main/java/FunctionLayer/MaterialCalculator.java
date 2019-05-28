@@ -132,7 +132,7 @@ public class MaterialCalculator {
             // tilføjer ekstra stolper hvis rem spændvidden er for lang
 
             if(length > maxSpændvidde) {
-                ekstraStolper = ekstraStolpeUdregner(length, size);
+                ekstraStolper = ekstraStolpeUdregner(length, size, maxSpændvidde);
             }
             if(width > maxSpændvidde){
                 ekstraReglar = ekstraReglarUdregner(width);
@@ -380,20 +380,16 @@ public class MaterialCalculator {
             return ekstraLængder;
     }
 
-    private static int ekstraStolpeUdregner(int length, int size){
+    private static int ekstraStolpeUdregner(int length, int size, int maxSpændvidde){
 
         int ekstraLængder = 0;
 
         if (size == 0) {
-
-            int temp = length / 300;
+            int temp = length / maxSpændvidde;
             ekstraLængder = temp * 2;
-
         }else if(size == 1){
-
-            int temp = length / 300;
+            int temp = length / maxSpændvidde;
             ekstraLængder = temp * 3;
-
         }
         return ekstraLængder;
     }
