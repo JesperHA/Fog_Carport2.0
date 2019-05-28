@@ -59,7 +59,7 @@
                                 out.println(svgString);
                             }
                         %>
-                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'none';document.getElementById('planogmat').style.display = 'flex'" style="float:right;">Luk plantegning </button>
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('fullscreen').style.display = 'none';document.getElementById('planogmat').style.display = 'flex'" style="float:right;">Luk plantegning </button>
 
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                                 %>
                                 </div>
                         </div>
-                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'block';document.getElementById('planogmat').style.display = 'none'" style="float:right;">Se plantegning </button>
+                        <button class="btn btn-primary" type="button" onclick="document.getElementById('fullscreen').style.display = 'block';document.getElementById('planogmat').style.display = 'none'" style="float:right;">Se plantegning </button>
 
                     </div>
                 </div>

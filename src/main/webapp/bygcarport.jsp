@@ -112,12 +112,12 @@
                                     <label><b>Angiv mål på skur</b></label>
                                     <div class="row">
                                         <div class="col"><label>Længde (cm):</label>
-                                            <input class="form-control" name="shed_length" value="0" type="text" style="min-width: 100%;margin-bottom: 15px;">
+                                            <input class="form-control" name="shed_length" type="text" style="min-width: 100%;margin-bottom: 15px;">
                                         </div>
                                     </div>
                                     <div class="row" style="margin-bottom: 15px;">
                                         <div class="col"><label>Bredde (cm):</label>
-                                            <input class="form-control" name="shed_width" value="0" type="text" style="min-width: 100%;">
+                                            <input class="form-control" name="shed_width" id="shed_width" type="text" style="min-width: 100%;">
                                         </div>
                                     </div>
                                 </div>
@@ -168,6 +168,18 @@
                                         </div>
                                 </div>
 
+                                <div id="displaySkurStatus" style="margin-bottom: 35px;display:none">
+                                    <label style="color:red" id="getSkurStatus"></label>
+
+                                        <div class="row">
+                                            <div class="col-xl-6" style="min-height: 50px;">
+                                                <button class="btn btn-primary" type="button"  style="min-width: 100%;">Højre side</button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="btn btn-primary" type="button"  style="min-width: 100%;">Venstre side</button>
+                                            </div>
+                                        </div>
+                                </div>
 
                                 <label><b>Carport Mål</b></label>
                                 <div class="row" style="margin-bottom: 15px;">
@@ -187,6 +199,8 @@
                                 </div>
 
 
+
+
                                 <label><b>Carport Tag</b></label>
                                 <div class="row" style="margin-bottom: 15px;">
                                     <div class="col"><label>Rejsning: &nbsp;</label><label id="getTaget"> </label>
@@ -198,7 +212,7 @@
                                 </div>
 
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('taget-tab').click()">Tilbage</button>
-                                <button class="btn btn-success" name="" type="submit" style="float: right;">Bestil</button>
+                                <button class="btn btn-success" type="submit" style="float: right;">Bestil</button>
                                 <br>
                             </div>
 
@@ -347,10 +361,22 @@
         }
 
         if(variableSkur == 1){
+
+            var getSkurWidth = document.getElementById("shed_width").value;
+            var getCarportWidth = document.getElementById("width").value;
+
+            if(getSkurWidth < getCarportWidth){
+                document.getElementById("getSkurStatus").innerHTML = "Dit skur er mindre end din Carport. Vælg venligst side.";
+                document.getElementById("displaySkurStatus").style.display = "block";
+            }
+
             document.getElementById("getSkur").innerHTML = "Ja";
+
         }else{
             document.getElementById("getSkur").innerHTML = "Nej";
         }
+
+
 
         if(variableMedrejsning == 1){
             document.getElementById("getTaget").innerHTML = "Ja";

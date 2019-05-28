@@ -10,17 +10,17 @@ import Model.Customer;
 import Model.Material;
 import Model.Order;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/FrontController"})
 public class FrontController extends HttpServlet {
@@ -152,6 +152,16 @@ public class FrontController extends HttpServlet {
 
                 break;
 
+            case "generate_SVG":
+
+//                int width = Integer.parseInt(request.getParameter("width"));
+//                int length = Integer.parseInt(request.getParameter("length"));
+//                SVG svg = new SVG();
+//
+//                session.setAttribute("svg", svg.createSVG(width, length));
+//                destination = "printDrawing.jsp";
+//                break;
+
             case "bygcarport":
 
                 ArrayList<Material> materials;
@@ -193,11 +203,12 @@ public class FrontController extends HttpServlet {
                     if(materials.get(i).getProduct_name().equals("spærtræ")){
                         spær_antal = materials.get(i).getAmount();
                     }
+
                 }
 
                 SVG svg = new SVG();
 
-                session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal, size));
+                session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal, size,shed, shedLength, shedWidth, shedtype));
 
 
                 destination = "bestilling.jsp";

@@ -334,6 +334,6 @@ html, body {
 }
 
 .niceBackground {
-    /* https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/grid.png */
-    background-image: url('../img/BLUEPRINT.png');
+    /* ../img/BLUEPRINT.png */
+    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/grid.png');
 }
