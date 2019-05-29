@@ -323,7 +323,7 @@ public class MaterialCalculator {
         return (double) tmp / factor;
     }
 
-    private static int pladeBeregner(int width, int length, double unit){
+    public static int pladeBeregner(int width, int length, double unit){
             double oprundetAntal = 0;
             double m2 = ((double)width * (double)length) / 10000;
         System.out.println(m2);
@@ -380,7 +380,7 @@ public class MaterialCalculator {
             return ekstraLængder;
     }
 
-    private static int ekstraStolpeUdregner(int length, int size, int maxSpændvidde){
+    public static int ekstraStolpeUdregner(int length, int size, int maxSpændvidde){
 
         int ekstraLængder = 0;
 

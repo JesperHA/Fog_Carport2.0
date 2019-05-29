@@ -482,8 +482,14 @@ public class FrontController extends HttpServlet {
                 Date date = new Date();
                 String dato = dateFormat.format(date);
 
+                int customer_id = 1;
 
-                 Order order = new Order(1, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
+                Customer loggedIn = (Customer) session.getAttribute("login");
+                if (loggedIn != null) {
+                    customer_id = loggedIn.getCustomer_id();
+                }
+
+                 Order order = new Order(customer_id, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
 
 
                 try {
