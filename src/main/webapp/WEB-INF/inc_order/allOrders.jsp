@@ -1,5 +1,4 @@
-﻿
-<%
+﻿<%
     ArrayList<Order> orderList = (ArrayList<Order>) request.getAttribute("orderlist");
 %>
 <main class="page pricing-table-page">

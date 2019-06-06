@@ -98,13 +98,13 @@
 
                                 <label><b>Angiv mål på carport</b></label>
                                 <div class="row">
-                                    <div class="col"><label>Længde (cm):</label><input class="form-control" name="length" id="length" type="text" style="min-width: 100%;margin-bottom: 15px;"></div>
+                                    <div class="col"><label>Længde (cm):</label><input class="form-control" name="length" id="length" type="text" style="min-width: 100%;margin-bottom: 15px;" required/></div>
                                 </div>
                                 <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" name="width" id="width" type="text" style="min-width: 100%;"></div>
+                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" name="width" id="width" type="text" style="min-width: 100%;" required/></div>
                                 </div>
                                 <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Højde (cm):</label><input class="form-control" name="height" id="height" type="text" style="min-width: 100%;"></div>
+                                    <div class="col"><label>Højde (cm):</label><input class="form-control" name="height" id="height" type="text" style="min-width: 100%;" required/></div>
                                 </div>
 
 
