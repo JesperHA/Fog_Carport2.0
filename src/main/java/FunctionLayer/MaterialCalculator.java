@@ -178,9 +178,6 @@ public class MaterialCalculator {
             klinkbeklædning.setAmount((int)antalKlink);
             klinkbeklædning3.setAmount((int)antalKlink);
 
-
-
-
             stolper.setUnit(længdeUdregning(stolper.getUnit()));
             remme.setUnit(længdeUdregning(remme.getUnit()));
             spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
@@ -192,8 +189,6 @@ public class MaterialCalculator {
             enPåTo.setUnit(længdeUdregning(enPåTo.getUnit()));
             klinkbeklædning.setUnit(længdeUdregning(klinkbeklædning.getUnit()));
             klinkbeklædning3.setUnit(længdeUdregning(klinkbeklædning3.getUnit()));
-
-
 
             // udregner priser på materialer
 

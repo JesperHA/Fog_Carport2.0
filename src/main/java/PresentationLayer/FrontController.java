@@ -6,17 +6,15 @@ import Exceptions.RegisterException;
 import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
+import Logging.LogMapper;
 import Model.Customer;
 import Model.Material;
 import Model.Order;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +24,8 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/FrontController"})
 public class FrontController extends HttpServlet {
+
+    final public static LogMapper LOGGER = new LogMapper();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -169,17 +169,9 @@ public class FrontController extends HttpServlet {
                 int rooftype = Integer.parseInt(request.getParameter("rooftype"));
                 int roofsort = Integer.parseInt(request.getParameter("roofsort"));
 
-                session.setAttribute("size", size);
-                session.setAttribute("shed", shed);
-                session.setAttribute("shedtype", shedtype);
-                session.setAttribute("length", length);
-                session.setAttribute("width", width);
-                session.setAttribute("height", height);
-                session.setAttribute("shedLength", shedLength);
-                session.setAttribute("shedWidth", shedWidth);
-                session.setAttribute("rooftype", rooftype);
-                session.setAttribute("roofsort", roofsort);
+                int[] carportSettings = {size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort};
 
+                session.setAttribute("carportSettings", carportSettings);
 
                 materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort);
 
