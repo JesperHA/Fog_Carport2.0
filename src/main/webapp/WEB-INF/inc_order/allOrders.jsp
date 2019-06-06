@@ -5,7 +5,7 @@
     <h1 style="margin-bottom: 50px;margin-top: 120px;">Velkommen til admin panelet</h1>
 </main>
 <div>
-    <div class="container" style="margin-bottom: 50px;">
+    <div class="container" style="margin-bottom: 50px;width: 100%;">
         <% if (login.getRole() == 1) { %>
         <div class="row">
             <div class="col-md-12" style="margin-bottom: 30px;">
@@ -24,7 +24,7 @@
                                         <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button">Søg</button>
                                            </span>
-                                    </div>
+                                    </div> 
                                 </form>
                             </div>
 
@@ -45,7 +45,7 @@
         </div>
         <% } %>
             <div class="row">
-                <div class="col-md-12" style="margin-bottom: 30px;">
+                <div class="col-lg-12" style="margin-bottom: 30px;">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Alle ordre</h4>
@@ -57,14 +57,18 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Kunde ID</th>
+                                            <th>Størrelse</th>
                                             <th>Længde</th>
-                                            <th>Højde</th>
                                             <th>Bredde</th>
-                                            <th>Tag</th>
+                                            <th>Højde</th>
+                                            <th>Tagtype</th>
+                                            <th>Tagmateriale</th>
                                             <th>Redskabsskur</th>
-                                            <th>Redskabsskurtype</th>
-                                            <th>Status</th>
+                                            <th>Skurtype</th>
+                                            <th>Skurlængde</th>
+                                            <th>Skurbredde</th>
                                             <th>Dato</th>
+                                            <th>Status</th>
                                             <th>Handling</th>
                                         </tr>
                                         </thead>
@@ -74,16 +78,59 @@
                                                 int listSize = orderList.size() - 1;
 
                                                 for (int i = listSize; i >= 0; i--) {
+                                                    String stringSize;
+                                                    if (orderList.get(i).getSize() == 0) {
+                                                        stringSize = "Enkelt";
+                                                    } else {
+                                                        stringSize = "Dobbelt";
+                                                    }
+
+                                                    String stringRooftype;
+                                                    if (orderList.get(i).getRoof_type() == 0) {
+                                                        stringRooftype = "Uden Rejsning";
+                                                    } else {
+                                                        stringRooftype = "Med Rejsning";
+                                                    }
+
+                                                    String stringRoofsort;
+                                                    if (orderList.get(i).getRoof_sort() == 0) {
+                                                        stringRoofsort = "Trapez";
+                                                    } else if (orderList.get(i).getRoof_sort() == 1) {
+                                                        stringRoofsort = "Eternit";
+                                                    } else {
+                                                        stringRoofsort = "Tagpap";
+                                                    }
+
+                                                    String stringShed;
+                                                    if (orderList.get(i).getShed() == 0) {
+                                                        stringShed = "Uden Redskabsskur";
+                                                    } else {
+                                                        stringShed = "Med Redskabsskur";
+                                                    }
+
+                                                    String stringShedtype;
+                                                    if (orderList.get(i).getShedtype() == 0) {
+                                                        stringShedtype = "Ingen";
+                                                    } else if (orderList.get(i).getShedtype() == 1) {
+                                                        stringShedtype = "En-på-to beklædning";
+                                                    } else {
+                                                        stringShedtype = "Klinkbeklædning";
+                                                    }
+
                                                     out.print(
                                                                     "<tr>" +
                                                                     "<td>" + orderList.get(i).getOrder_id() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getCustomer_id() + "</td>\n" +
+                                                                    "<td>" + stringSize + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getLength() + "</td>\n" +
-                                                                    "<td>" + orderList.get(i).getHeight() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getWidth() + "</td>\n" +
-                                                                    "<td>" + orderList.get(i).getRoof() + "</td>\n" +
-                                                                    "<td>" + orderList.get(i).getShed() + "</td>\n" +
-                                                                    "<td>" + orderList.get(i).getShedtype() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getHeight() + "</td>\n" +
+                                                                    "<td>" + stringRooftype + "</td>\n" +
+                                                                    "<td>" + stringRoofsort + "</td>\n" +
+                                                                    "<td>" + stringShed + "</td>\n" +
+                                                                    "<td>" + stringShedtype + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getShed_length() + "</td>\n" +
+                                                                    "<td>" + orderList.get(i).getShed_width() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getOrder_status() + "</td>\n" +
                                                                     "<td>" + orderList.get(i).getDate() + "</td>\n" +
                                                                     "<td><form method='post' action='FrontController' style='display:inline'><input type='hidden' name='source' value='searchorders' /><input type='hidden' name='type' value='single' /><button class=\"btn btn-sm btn-primary\" type=\"submit\" name=\"order_id\" value='" + orderList.get(i).getOrder_id() + "'>Se Ordre</button></form></td>" +
@@ -95,6 +142,10 @@
                                                         "<tr>" +
                                                                 "<td> Ingen </td>\n" +
                                                                 "<td> Ordre </td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
+                                                                "<td></td>\n" +
                                                                 "<td></td>\n" +
                                                                 "<td></td>\n" +
                                                                 "<td></td>\n" +

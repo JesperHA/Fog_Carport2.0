@@ -12,7 +12,6 @@ public class MaterialMapper {
 
     public static ArrayList<Material> getMaterialList() {
 
-        System.out.println("Kommer til mapperen");
 
         ArrayList<Material> materialList = new ArrayList<>();
 
@@ -37,7 +36,6 @@ public class MaterialMapper {
                 Material material = new Material(product_id, product_name, product_description, price, unit, amount);
                 materialList.add(material);
 
-                System.out.println("Fuldføre mapperen");
             }
 
         } catch (Exception e) {

@@ -1,34 +1,30 @@
-﻿<%@include file="include/header.jsp"%>
+﻿<%@ page import="Model.Material" %>
+<%@include file="include/header.jsp"%>
 
 <%
-    // Dette er så vi kan gemme en person's carport konfiguration i session, så hvis han går væk fra den midt i at lave den kan han gå tilbage og stadig lave videre på den.
-    // Kriteriet er at han har trykket på bestil og har været på bestillings siden, tænker at bestillingssiden skal være den sidste man trykker på før man trykker på "Aflæg bestilling" - agtig.
+    // Hvis man har bygget en carport men ikke har færdiggjort bestillingen så kan den have gemt oplysningerne.
 
-    boolean sessionTrue = false;
+    int size = 0, shed = 0, shedtype = 0, length = 0, width = 0, height = 0, shedLength = 0, shedWidth = 0, rooftype = 0, roofsort = 0;
 
-    String sessionSize;
-    String sessionShed;
-    String sessionShedtype;
-    String sessionLength;
-    String sessionWidth;
-    String sessionHeight;
-    String sessionShedlength;
-    String sessionShedwidth;
-    String sessionRooftype;
+    int[] carportSettings;
+    carportSettings = (int[]) session.getAttribute("carportSettings");
 
-    sessionSize = (String) session.getAttribute("sessionSize");
-    sessionShed = (String) session.getAttribute("sessionShed");
-    sessionShedtype = (String) session.getAttribute("sessionShedtype");
-    sessionLength = (String) session.getAttribute("sessionLength");
-    sessionWidth = (String) session.getAttribute("sessionWidth");
-    sessionHeight = (String) session.getAttribute("sessionHeight");
-    sessionShedlength = (String) session.getAttribute("sessionShedlength");
-    sessionShedwidth = (String) session.getAttribute("sessionShedwidth");
-    sessionRooftype = (String) session.getAttribute("sessionRooftype");
+    if (carportSettings != null) {
+        size = carportSettings[0];
+        shed = carportSettings[1];
+        shedtype = carportSettings[2];
+        length = carportSettings[3];
+        width = carportSettings[4];
+        height = carportSettings[5];
+        shedLength = carportSettings[6];
+        shedWidth = carportSettings[7];
+        rooftype = carportSettings[8];
+        roofsort = carportSettings[9];
 
-    if (sessionSize != null && sessionShed != null && sessionShedtype != null  && sessionLength != null  && sessionWidth != null  && sessionHeight != null  && sessionShedlength != null  && sessionShedwidth != null  && sessionRooftype != null) {
-        sessionTrue = true;
+        System.out.println(size + " " + shed + " " + shedtype + " " + length + " " + width + " " + height + " " + shedLength + " " + shedWidth + " " + rooftype + " " + roofsort);
     }
+
+
 %>
 
     <main class="page contact-us-page"></main>
@@ -53,7 +49,7 @@
                         </div>
 
 
-                        <form action="MaterialCalculator" method="post">
+                        <form action="FrontController" method="post">
                             <input type="hidden" name="source" value="bygcarport"/>
 
                             <input class="form-control" type="hidden" name="size" id="size" value="0" />
@@ -98,13 +94,13 @@
 
                                 <label><b>Angiv mål på carport</b></label>
                                 <div class="row">
-                                    <div class="col"><label>Længde (cm):</label><input class="form-control" name="length" id="length" type="text" style="min-width: 100%;margin-bottom: 15px;" required/></div>
+                                    <div class="col"><label>Længde (cm):</label><input class="form-control" name="length" id="length" type="text" style="min-width: 100%;margin-bottom: 15px;" value="<% if (length != 0) { out.print(length); } %>"></div>
                                 </div>
                                 <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" name="width" id="width" type="text" style="min-width: 100%;" required/></div>
+                                    <div class="col"><label>Bredde (cm):</label><input class="form-control" name="width" id="width" type="text" style="min-width: 100%;" value="<% if (width != 0) { out.print(width); } %>"></div>
                                 </div>
                                 <div class="row" style="margin-bottom: 15px;">
-                                    <div class="col"><label>Højde (cm):</label><input class="form-control" name="height" id="height" type="text" style="min-width: 100%;" required/></div>
+                                    <div class="col"><label>Højde (cm):</label><input class="form-control" name="height" id="height" type="text" style="min-width: 100%;" value="<% if (height != 0) { out.print(height); } %>"></div>
                                 </div>
 
 
@@ -112,12 +108,12 @@
                                     <label><b>Angiv mål på skur</b></label>
                                     <div class="row">
                                         <div class="col"><label>Længde (cm):</label>
-                                            <input class="form-control" name="shed_length" type="text" style="min-width: 100%;margin-bottom: 15px;">
+                                            <input class="form-control" name="shed_length" value="0" type="text" style="min-width: 100%;margin-bottom: 15px;">
                                         </div>
                                     </div>
                                     <div class="row" style="margin-bottom: 15px;">
                                         <div class="col"><label>Bredde (cm):</label>
-                                            <input class="form-control" name="shed_width" type="text" style="min-width: 100%;">
+                                            <input class="form-control" name="shed_width" value="0" type="text" style="min-width: 100%;">
                                         </div>
                                     </div>
                                 </div>
@@ -138,6 +134,16 @@
                                     </div>
                                     <div class="col">
                                         <button class="btn btn-primary" id="udenrejsning" onclick="udenRejsning()" type="button"  style="min-width: 100%;">u/Rejsning</button>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 20px">
+                                    <div class="col-md-12">
+                                        <select name="roofsort" id="roofsort" class="form-control">
+                                            <option selected disabled>Vælg tagtype</option>
+                                            <option value="1">Trapezplader</option>
+                                            <option value="2">Eternit</option>
+                                            <option value="3">Tagpap</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('carport-tab').click()">Tilbage</button>
@@ -182,9 +188,13 @@
                                     <div class="col"><label>Rejsning: &nbsp;</label><label id="getTaget"> </label>
                                     </div>
                                 </div>
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col"><label>Tagtype: &nbsp;</label><label id="getRoofsort"></label>
+                                    </div>
+                                </div>
 
                                 <button class="btn btn-light" type="button" style="float: left;" onclick="getElementById('taget-tab').click()">Tilbage</button>
-                                <button class="btn btn-success" type="submit" style="float: right;">Bestil</button>
+                                <button class="btn btn-success" name="" type="submit" style="float: right;">Bestil</button>
                                 <br>
                             </div>
 
@@ -346,7 +356,12 @@
         document.getElementById("getWidth").innerHTML = document.getElementById("width").value;
         document.getElementById("getHeight").innerHTML = document.getElementById("height").value;
         document.getElementById("getLength").innerHTML = document.getElementById("length").value;
+
+        var getDropdown = document.getElementById("roofsort");
+        var getDropdown_value = getDropdown.options[getDropdown.selectedIndex].innerHTML;
+        document.getElementById("getRoofsort").innerHTML = getDropdown_value;
     }
+
 
 </script>
 

@@ -118,13 +118,16 @@
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="length" style="max-width:150px">Længde:</label>
-                                        <input type="text" class="form-control" name="length" id="length" value="<% out.print(order.getLength()); %>" autocomplete="off" >
+                                        <label class="form-control" for="size" style="max-width:150px">Størrelse:</label>
+                                        <select class="form-control" name="size" id="size">
+                                            <option value="0" <% if (order.getSize() == 0) { out.print("selected"); } %>>Enkelt</option>
+                                            <option value="1" <% if (order.getSize() == 1) { out.print("selected"); } %>>Dobbelt</option>
+                                        </select>
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="height" style="max-width:150px">Højde:</label>
-                                        <input type="text" class="form-control" name="height" id="height" value="<% out.print(order.getHeight()); %>" autocomplete="off" >
+                                        <label class="form-control" for="length" style="max-width:150px">Længde:</label>
+                                        <input type="text" class="form-control" name="length" id="length" value="<% out.print(order.getLength()); %>" autocomplete="off" >
                                     </div> <br>
 
                                     <div class="input-group">
@@ -133,18 +136,52 @@
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="roof" style="max-width:150px">Tag:</label>
-                                        <input type="text" class="form-control" name="roof" id="roof" value="<% out.print(order.getRoof()); %>" autocomplete="off" >
+                                        <label class="form-control" for="height" style="max-width:150px">Højde:</label>
+                                        <input type="text" class="form-control" name="height" id="height" value="<% out.print(order.getHeight()); %>" autocomplete="off" >
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="roof_type" style="max-width:150px">Tag type:</label>
+                                        <select class="form-control" name="roof_type" id="roof_type">
+                                            <option value="0" <% if (order.getRoof_type() == 0) { out.print("selected"); } %>>Uden Rejsning</option>
+                                            <option value="1" <% if (order.getRoof_type() == 1) { out.print("selected"); } %>>Med Rejsning</option>
+                                        </select>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="roof_sort" style="max-width:150px">Tag materiale:</label>
+                                        <select class="form-control" name="roof_sort" id="roof_sort">
+                                            <option value="0" <% if (order.getRoof_sort() == 0) { out.print("selected"); } %>>Trapez</option>
+                                            <option value="1" <% if (order.getRoof_sort() == 1) { out.print("selected"); } %>>Eternit</option>
+                                            <option value="2" <% if (order.getRoof_sort() == 2) { out.print("selected"); } %>>Tagpap</option>
+                                        </select>
                                     </div> <br>
 
                                     <div class="input-group">
                                         <label class="form-control" for="shed" style="max-width:150px">Redskabsskur:</label>
-                                        <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off">
+                                        <select class="form-control" name="shed" id="shed">
+                                            <option value="0" <% if (order.getShed() == 0) { out.print("selected"); } %>>Uden Redskabsskur</option>
+                                            <option value="1" <% if (order.getShed() == 1) { out.print("selected"); } %>>Med Redskabsskur</option>
+                                        </select>
                                     </div> <br>
 
                                     <div class="input-group">
                                         <label class="form-control" for="shedtype" style="max-width:150px">Skurtype:</label>
-                                        <input type="text" class="form-control" name="shedtype" id="shedtype" value="<% out.print(order.getShedtype()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                        <select class="form-control" name="shedtype" id="shedtype" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                            <option value="0" <% if (order.getShedtype() == 0) { out.print("selected"); } %>>Ingen</option>
+                                            <option value="1" <% if (order.getShedtype() == 1) { out.print("selected"); } %>>En-på-to beklædning</option>
+                                            <option value="2" <% if (order.getShedtype() == 1) { out.print("selected"); } %>>Klinkbeklædning</option>
+                                        </select>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="shed_length" style="max-width:150px">Skurlængde:</label>
+                                        <input type="text" class="form-control" name="shed_length" id="shed_length" value="<% out.print(order.getShed_length()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="shed_width" style="max-width:150px">Skurbredde:</label>
+                                        <input type="text" class="form-control" name="shed_width" id="shed_width" value="<% out.print(order.getShed_width()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
                                     </div> <br>
 
                                     <div class="input-group">
@@ -174,7 +211,7 @@
                                         <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#deleteModal">Slet</button>
                                     </div>
                                     <div class="input-group-btn float-right">
-                                        <button class="btn btn-primary" type="button" onclick="document.getElementById('order_id').disabled=false;document.getElementById('customer_id').disabled=false;document.getElementById('shed').disabled=false;document.getElementById('shedtype').disabled=false;document.getElementById('date').disabled=false;document.getElementById('hiddenButton').click()">Gem Ændringer</button>
+                                        <button class="btn btn-primary" type="button" onclick="document.getElementById('order_id').disabled=false;document.getElementById('customer_id').disabled=false;document.getElementById('shed').disabled=false;document.getElementById('shedtype').disabled=false;document.getElementById('date').disabled=false;document.getElementById('shed_length').disabled=false;document.getElementById('shed_width').disabled=false;document.getElementById('hiddenButton').click()">Gem Ændringer</button>
                                         <button type="submit" id="hiddenButton" style="visibility: hidden;"></button>
                                     </div>
                                 </form>
@@ -226,33 +263,53 @@
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="length" style="max-width:150px">Længde:</label>
-                                        <input type="text" class="form-control" name="length" id="length" value="<% out.print(order.getLength()); %>" autocomplete="off" disabled>
+                                        <label class="form-control" for="size" style="max-width:150px">Enkelt eller dobbelt:</label>
+                                        <input type="text" class="form-control" name="size" id="size" value="<% out.print(order.getSize()); %>" autocomplete="off" disabled>
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="height" style="max-width:150px">Højde:</label>
-                                        <input type="text" class="form-control" name="height" id="height" value="<% out.print(order.getHeight()); %>" autocomplete="off" disabled>
+                                        <label class="form-control" for="length" style="max-width:150px">Længde:</label>
+                                        <input type="text" class="form-control" name="length" id="length" value="<% out.print(order.getLength()); %>" autocomplete="off" >
                                     </div> <br>
 
                                     <div class="input-group">
                                         <label class="form-control" for="width" style="max-width:150px">Bredde:</label>
-                                        <input type="text" class="form-control" name="width" id="width" value="<% out.print(order.getWidth()); %>" autocomplete="off" disabled>
+                                        <input type="text" class="form-control" name="width" id="width" value="<% out.print(order.getWidth()); %>" autocomplete="off" >
                                     </div> <br>
 
                                     <div class="input-group">
-                                        <label class="form-control" for="roof" style="max-width:150px">Tag:</label>
-                                        <input type="text" class="form-control" name="roof" id="roof" value="<% out.print(order.getRoof()); %>" autocomplete="off" disabled>
+                                        <label class="form-control" for="height" style="max-width:150px">Højde:</label>
+                                        <input type="text" class="form-control" name="height" id="height" value="<% out.print(order.getHeight()); %>" autocomplete="off" >
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="roof_type" style="max-width:150px">Taghældning:</label>
+                                        <input type="text" class="form-control" name="roof_type" id="roof_type" value="<% out.print(order.getRoof_type()); %>" autocomplete="off" >
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="roof_sort" style="max-width:150px">Tag materiale:</label>
+                                        <input type="text" class="form-control" name="roof_sort" id="roof_sort" value="<% out.print(order.getRoof_sort()); %>" autocomplete="off" >
                                     </div> <br>
 
                                     <div class="input-group">
                                         <label class="form-control" for="shed" style="max-width:150px">Redskabsskur:</label>
-                                        <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off" disabled>
+                                        <input type="text" class="form-control" name="shed" id="shed" value="<% out.print(order.getShed()); %>" autocomplete="off">
                                     </div> <br>
 
                                     <div class="input-group">
                                         <label class="form-control" for="shedtype" style="max-width:150px">Skurtype:</label>
-                                        <input type="text" class="form-control" name="shedtype" id="shedtype" value="<% out.print(order.getShedtype()); %>" autocomplete="off" disabled>
+                                        <input type="text" class="form-control" name="shedtype" id="shedtype" value="<% out.print(order.getShedtype()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="shed_length" style="max-width:150px">Skurtype:</label>
+                                        <input type="text" class="form-control" name="shed_length" id="shed_length" value="<% out.print(order.getShed_length()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
+                                    </div> <br>
+
+                                    <div class="input-group">
+                                        <label class="form-control" for="shed_width" style="max-width:150px">Skurtype:</label>
+                                        <input type="text" class="form-control" name="shed_width" id="shed_width" value="<% out.print(order.getShed_width()); %>" autocomplete="off" <% if (order.getShed() == 0) { out.print("disabled"); } %>>
                                     </div> <br>
 
                                     <div class="input-group">

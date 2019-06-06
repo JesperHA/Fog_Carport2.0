@@ -53,4 +53,16 @@ public class Material {
     }
 
     public int getAmount() {return amount;}
+
+    public String printInformation() {
+        String message = "----- Material Information for " + product_name + " -----" + "\n" +
+                "Produkt ID: " + product_id + "\n" +
+                "Produkt Navn: " + product_name + "\n" +
+                "Produkt Beskrivelse: " + product_description + "\n" +
+                "Pris: " + price + "\n" +
+                "Enhed: " + unit + "\n" +
+                "Mængde: " + amount + "\n" +
+                "--------------------------------";
+        return message;
+    }
 }

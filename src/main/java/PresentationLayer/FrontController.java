@@ -1,19 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package PresentationLayer;
 
 import Exceptions.LoginException;
+import Exceptions.OrderException;
 import Exceptions.RegisterException;
 import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
+import Logging.LogMapper;
 import Model.Customer;
+import Model.Material;
 import Model.Order;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,11 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet( name = "FrontController", urlPatterns = { "/FrontController" } )
+@WebServlet(name = "FrontController", urlPatterns = {"/FrontController"})
 public class FrontController extends HttpServlet {
 
+    final public static LogMapper LOGGER = new LogMapper();
+
     @Override
-    protected void doGet( HttpServletRequest request, HttpServletResponse response )
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String destination = "index.jsp";
@@ -41,14 +43,12 @@ public class FrontController extends HttpServlet {
             role = login.getRole();
         }
 
-        switch(source){
+        switch (source) {
             case "profil":
                 destination = "/WEB-INF/brugerside.jsp";
                 break;
-
             case "logout":
                 session.removeAttribute("login");
-
                 destination = "/index.jsp";
                 break;
             case "admin":
@@ -64,17 +64,14 @@ public class FrontController extends HttpServlet {
                     destination = "index.jsp";
                 }
                 break;
-
         }
-
-        request.getRequestDispatcher(destination).forward(request,response);
+        request.getRequestDispatcher(destination).forward(request, response);
     }
 
 
     @Override
-    protected void doPost( HttpServletRequest request, HttpServletResponse response )
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
 
         String destination = "index.jsp";
         String source = request.getParameter("source");
@@ -85,11 +82,29 @@ public class FrontController extends HttpServlet {
         login = (Customer) session.getAttribute("login");
         int roleCheck = 0;
 
+        session.removeAttribute("specs");
+
+        ArrayList<Integer> specs;
+        specs = (ArrayList<Integer>) session.getAttribute("specs");
+        if(specs == null){
+            specs = new ArrayList<>();
+        }
+
+        session.removeAttribute("materials");
+
+        ArrayList<Material> materialBeregning;
+        materialBeregning = (ArrayList<Material>) session.getAttribute("materials");
+        if(materialBeregning == null){
+            materialBeregning = new ArrayList<>();
+        }
+
         if (login != null) {
             roleCheck = login.getRole();
         }
 
-        switch(source){
+
+
+        switch (source) {
 
             case "login":
                 String email = request.getParameter("email");
@@ -109,7 +124,6 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "register":
-
                 String customer_name = request.getParameter("name");
                 String customer_email = request.getParameter("email");
                 String customer_password = request.getParameter("password");
@@ -122,7 +136,6 @@ public class FrontController extends HttpServlet {
 
                 try {
                     KundeFacade.checkRegister(createCustomer);
-
                     destination = "/login.jsp";
                 } catch (RegisterException ex) {
                     ex.printStackTrace();
@@ -141,18 +154,46 @@ public class FrontController extends HttpServlet {
 
                 break;
 
-            case "generate_SVG":
+            case "bygcarport":
 
-                int width = Integer.parseInt(request.getParameter("width"));
+                ArrayList<Material> materials;
+
+                int size = Integer.parseInt(request.getParameter("size"));
+                int shed = Integer.parseInt(request.getParameter("shed"));
+                int shedtype = Integer.parseInt(request.getParameter("shedtype"));
                 int length = Integer.parseInt(request.getParameter("length"));
+                int width = Integer.parseInt(request.getParameter("width"));
+                int height = Integer.parseInt(request.getParameter("height"));
+                int shedLength = Integer.parseInt(request.getParameter("shed_length"));
+                int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
+                int rooftype = Integer.parseInt(request.getParameter("rooftype"));
+                int roofsort = Integer.parseInt(request.getParameter("roofsort"));
+
+                int[] carportSettings = {size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort};
+
+                session.setAttribute("carportSettings", carportSettings);
+
+                materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort);
+
+                session.setAttribute("materials", materials);
+
+
+
+
+                int spær_antal = 0;
+                int stolperAntal = materials.get(0).getAmount();
+
+                for (int i = 0; i < materials.size(); i++) {
+                    if(materials.get(i).getProduct_name().equals("spærtræ")){
+                        spær_antal = materials.get(i).getAmount();
+                    }
+                }
+
                 SVG svg = new SVG();
 
-                session.setAttribute("svg", svg.createSVG(width,length));
+                session.setAttribute("svg", svg.createSVG(width,length, spær_antal, rooftype, stolperAntal, size));
 
-                destination = "printDrawing.jsp";
-                break;
 
-            case "bygcarport":
                 destination = "bestilling.jsp";
                 break;
 
@@ -180,8 +221,6 @@ public class FrontController extends HttpServlet {
                             action = "mail";
                             foundCustomer = KundeFacade.getCustomer(kundeSearchLower, action);
                         } else {
-                            // Extract all numbers to make sure it's only numbers.
-
                             StringBuilder sb = new StringBuilder();
                             boolean found = false;
                             for (char c : kundeSearch.toCharArray()) {
@@ -189,7 +228,6 @@ public class FrontController extends HttpServlet {
                                     sb.append(c);
                                     found = true;
                                 } else if (found) {
-                                    // If we already found a digit before and this char is not a digit, stop looping
                                     break;
                                 }
                             }
@@ -226,73 +264,64 @@ public class FrontController extends HttpServlet {
                 String type = request.getParameter("type");
                 ArrayList<Order> orderArrayList;
 
-                if (roleCheck == 1) {
+                switch (type) {
+                    case "single":
 
-                    switch (type) {
-                        case "single":
-                            String order_id = request.getParameter("order_id");
+                        String order_id = request.getParameter("order_id");
+                        Order order;
+                        order = OrderFacade.getOrder(Integer.parseInt(order_id));
+                        Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
 
-                            Order order;
-                            order = OrderFacade.getOrder(Integer.parseInt(order_id));
-                            if (order != null) {
-
-                                Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+                        if (order != null) {
+                            if (roleCheck == 1) {
 
                                 request.setAttribute("customerIQ", customerRelative);
                                 request.setAttribute("foundOrder", order);
                                 request.setAttribute("type", type);
 
-                                destination = "WEB-INF/order.jsp";
-                            }
-                            break;
-                        case "personal":
-                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+                            } else if (roleCheck == 0) {
+                                if (order.getCustomer_id() == login.getCustomer_id()) {
 
-                            request.setAttribute("orderlist", customerOrders);
-                            request.setAttribute("type", type);
+                                    request.setAttribute("customerIQ", customerRelative);
+                                    request.setAttribute("foundOrder", order);
+                                    request.setAttribute("type", type);
+                                } else {
+                                    destination = "index.jsp";
+                                    break;
+                                }
+                            }
                             destination = "WEB-INF/order.jsp";
-                            break;
-                        default:
+                        } else {
+                            destination = "index.jsp";
+                        }
+                        break;
+                    case "personal":
+                        ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
+
+                        request.setAttribute("orderlist", customerOrders);
+                        request.setAttribute("type", type);
+                        destination = "WEB-INF/order.jsp";
+                        break;
+                    case "all":
+                        if (roleCheck == 1) {
                             orderArrayList = OrderFacade.getOrderList();
 
                             request.setAttribute("orderlist", orderArrayList);
                             request.setAttribute("type", type);
 
                             destination = "WEB-INF/order.jsp";
-                            break;
-                    }
-
-                } else if (roleCheck == 0) {
-
-                    switch (type) {
-                        case "single":
-                            String order_id = request.getParameter("order_id");
-                            Order order;
-                            order = OrderFacade.getOrder(Integer.parseInt(order_id));
-
-                            if (order != null && order.getCustomer_id() == login.getCustomer_id()) {
-                                Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
-
-                                request.setAttribute("customerIQ", customerRelative);
-                                request.setAttribute("foundOrder", order);
-                                request.setAttribute("type", type);
-
-                                destination = "WEB-INF/order.jsp";
-                            }
-                            break;
-                        case "all":
-                            ArrayList<Order> customerOrders = OrderFacade.getOrderListForCustomer(login.getCustomer_id());
-
-                            request.setAttribute("orderlist", customerOrders);
-                            request.setAttribute("type", type);
-                            destination = "WEB-INF/order.jsp";
-                            break;
-                        default:
+                        } else {
                             destination = "index.jsp";
-                    }
+                        }
+                        break;
+                    default:
+                        orderArrayList = OrderFacade.getOrderList();
 
-                } else {
-                    destination = "index.jsp";
+                        request.setAttribute("orderlist", orderArrayList);
+                        request.setAttribute("type", type);
+
+                        destination = "WEB-INF/order.jsp";
+                        break;
                 }
                 break;
 
@@ -310,29 +339,36 @@ public class FrontController extends HttpServlet {
 
                             int updateOrder_id = Integer.parseInt(request.getParameter("order_id"));
                             int updateCustomer_id = Integer.parseInt(request.getParameter("customer_id"));
-                            int updateLength = Integer.parseInt(request.getParameter("length")); // length
-                            int updateHeight = Integer.parseInt(request.getParameter("height")); // height
-                            int updateWidth = Integer.parseInt(request.getParameter("width")); // width
-                            int updateRoof = Integer.parseInt(request.getParameter("roof")); // roof
-                            int updateShed = Integer.parseInt(request.getParameter("shed")); // shed
-                            int updateShedtype = Integer.parseInt(request.getParameter("shedtype")); // shedtype
+                            int updateSize = Integer.parseInt(request.getParameter("size"));
+                            int updateLength = Integer.parseInt(request.getParameter("length"));
+                            int updateWidth = Integer.parseInt(request.getParameter("width"));
+                            int updateHeight = Integer.parseInt(request.getParameter("height"));
+                            int updateRooftype = Integer.parseInt(request.getParameter("roof_type"));
+                            int updateRoofsort = Integer.parseInt(request.getParameter("roof_sort"));
+                            int updateShed = Integer.parseInt(request.getParameter("shed"));
+                            int updateShedtype = Integer.parseInt(request.getParameter("shedtype"));
+                            int updateShedLength = Integer.parseInt(request.getParameter("shed_length"));
+                            int updateShedWidth = Integer.parseInt(request.getParameter("shed_width"));
                             int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
                             String updateDate = request.getParameter("date"); // date
 
                             String newDate = updateDate.replace("-", "");
 
-                            Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateLength, updateHeight, updateWidth, updateRoof, updateShed, updateShedtype, updateOrder_status, newDate);
+                            if (updateShed == 0) {
+                                updateShedtype = 0;
+                                updateShedLength = 0;
+                                updateShedWidth = 0;
+                            }
+
+                            Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateSize, updateLength, updateWidth, updateHeight, updateRooftype, updateRoofsort, updateShed, updateShedtype, updateShedLength, updateShedWidth, updateOrder_status, newDate);
 
                             Order result = OrderFacade.changeOrder(updateOrder);
 
                             if (result != null) {
-
                                 Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
 
                                 request.setAttribute("foundOrder", result);
-
                                 request.setAttribute("customerIQ", updatedCustomerIQ1);
-
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
@@ -342,9 +378,7 @@ public class FrontController extends HttpServlet {
 
                                 request.setAttribute("updateOrderStatus", "fail");
                                 request.setAttribute("updateOrderId", updateOrder_id);
-
                                 request.setAttribute("customerIQ", updatedCustomerIQ2);
-
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
@@ -392,21 +426,12 @@ public class FrontController extends HttpServlet {
 
                                 orderList = OrderFacade.getOrderList();
 
-                                if (success2.equals("success")) {
-                                    request.setAttribute("deletedOrder_id", order_id);
-                                    request.setAttribute("deletedOrder", success2);
-                                    request.setAttribute("orderlist", orderList);
-                                    request.setAttribute("type", typeOf);
+                                request.setAttribute("deletedOrder_id", order_id);
+                                request.setAttribute("deletedOrder", success2);
+                                request.setAttribute("orderlist", orderList);
+                                request.setAttribute("type", typeOf);
 
-                                    destination = "WEB-INF/order.jsp";
-                                } else {
-                                    request.setAttribute("deletedOrder_id", order_id);
-                                    request.setAttribute("deletedOrder", success2);
-                                    request.setAttribute("orderlist", orderList);
-                                    request.setAttribute("type", typeOf);
-
-                                    destination = "WEB-INF/order.jsp";
-                                }
+                                destination = "WEB-INF/order.jsp";
                             }
                             break;
                     }
@@ -418,28 +443,48 @@ public class FrontController extends HttpServlet {
                     ArrayList<Customer> customerlist = KundeFacade.getKunderList();
 
                     request.setAttribute("customerlist", customerlist);
-
                     destination = "/WEB-INF/allCustomers.jsp";
                 }
+                break;
 
+            case "complete":
+                System.out.println("kommer til \"complete\" ");
+
+                size = (int)session.getAttribute("size");
+                length = (int)session.getAttribute("length");
+                width = (int)session.getAttribute("width");
+                height = (int)session.getAttribute("height");
+                rooftype = (int)session.getAttribute("rooftype");
+                roofsort = (int)session.getAttribute("roofsort");
+                shed = (int)session.getAttribute("shed");
+                shedtype = (int)session.getAttribute("shedtype");
+                shedLength = (int)session.getAttribute("shedLength");
+                shedWidth = (int)session.getAttribute("shedWidth");
+
+                LocalDateTime localDateTime;
+                localDateTime = LocalDateTime.now();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String dato = formatter.format(localDateTime);
+
+                 Order order = new Order(1, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
+
+
+                try {
+                    OrderFacade.createOrder(order);
+                } catch (OrderException e) {
+                    System.out.println("der skete en fejl i oprettelse af ordre i databasen");
+                    e.printStackTrace();
+                }
+
+                destination = "index.jsp";
                 break;
 
         }
 
-        request.getRequestDispatcher(destination).forward(request,response);
+        request.getRequestDispatcher(destination).
 
-//        processRequest( request, response );
+                forward(request, response);
 
     }
-
-    /**
-     Returns a short description of the servlet.
-
-     @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

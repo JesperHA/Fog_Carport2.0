@@ -21,6 +21,10 @@
     <%--</section>--%>
 <%--</main>--%>
 <main class="page login-page">
+
+    <form action="FrontController" method="post">
+        <input type="hidden" name="source" value="complete"/>
+
     <section class="clean-block clean-form dark">
         <div class="container" style="margin-top: 50px;">
             <div class="block-heading">
@@ -38,12 +42,12 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
+        <div class="row" id="fullscreen" style="display:none;margin-bottom:50px;">
+            <div class="col-md-12">
+                <div class="card niceBackground">
                     <div class="card-body">
                         <h4 class="card-title">Plantegning</h4>
-                        <h6 class="text-muted card-subtitle mb-2">Her kan du se tegning</h6>
+                        <h6 class="text-muted card-subtitle mb-2">Fuldstørrelse</h6>
 
                         <%
                             String svgString = "0";
@@ -54,13 +58,40 @@
                                 out.println(svgString);
                             }
                         %>
-
-
+                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'none';document.getElementById('planogmat').style.display = 'flex'" style="float:right;">Luk plantegning </button>
 
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+        </div>
+        <div class="row" id="planogmat">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Plantegning</h4>
+                        <h6 class="text-muted card-subtitle mb-2">Her kan du se tegning</h6>
+                        <div class="box niceBackground" style="margin-top:30px;margin-bottom:40px;max-height: 300px;">
+                            <div class="ribbon ribbon-top-right"><span>Eksempel</span></div>
+                                <div style="opacity: 0.2;">
+                                <%
+
+                                    svgString = (String) session.getAttribute("svg");
+
+                                    if (!svgString.equals("0")) {
+                                        out.println(svgString);
+                                    }
+                                %>
+                                </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit" onclick="document.getElementById('fullscreen').style.display = 'block';document.getElementById('planogmat').style.display = 'none'" style="float:right;">Se plantegning </button>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Materialeliste</h4>
@@ -98,6 +129,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <button style="float: right" class="btn btn-success" name="complete" type="submit">Fuldfør bestilling</button>
                         </div>
 
 
@@ -107,6 +139,6 @@
         </div>
     </div>
     </section>
+    </form>
 </main>
-
 <%@include file="include/footer.jsp"%>
