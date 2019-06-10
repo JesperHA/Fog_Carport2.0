@@ -79,7 +79,7 @@ public class FrontController extends HttpServlet {
         // Initiate Logging
         try {
             // Tilføj filehandler med formattering
-            fileHandler = new FileHandler("C:\\Users\\Jesper\\Desktop\\Fog_Carport3.0\\logs\\frontcontroller_logfile.log", true);
+            fileHandler = new FileHandler("C:\\Users\\GuniP\\Desktop\\Fog_Carport2.0\\logs\\frontcontroller_logfile.log", true);
             simpleFormatter = new SimpleFormatter();
             LOGGER.addHandler(fileHandler);
             fileHandler.setFormatter(simpleFormatter);
@@ -210,6 +210,17 @@ public class FrontController extends HttpServlet {
                 int shedWidth = Integer.parseInt(request.getParameter("shed_width"));
                 int rooftype = Integer.parseInt(request.getParameter("rooftype"));
                 int roofsort = Integer.parseInt(request.getParameter("roofsort"));
+
+                session.setAttribute("size", size);
+                session.setAttribute("shed", shed);
+                session.setAttribute("shedtype", shedtype);
+                session.setAttribute("length", length);
+                session.setAttribute("width", width);
+                session.setAttribute("height", height);
+                session.setAttribute("shedLength", shedLength);
+                session.setAttribute("shedWidth", shedWidth);
+                session.setAttribute("rooftype", rooftype);
+                session.setAttribute("roofsort", roofsort);
 
                 int[] carportSettings = {size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort};
 
@@ -490,18 +501,17 @@ public class FrontController extends HttpServlet {
                 break;
 
             case "complete":
-                System.out.println("kommer til \"complete\" ");
 
-                size = (int)session.getAttribute("size");
-                length = (int)session.getAttribute("length");
-                width = (int)session.getAttribute("width");
-                height = (int)session.getAttribute("height");
-                rooftype = (int)session.getAttribute("rooftype");
-                roofsort = (int)session.getAttribute("roofsort");
-                shed = (int)session.getAttribute("shed");
-                shedtype = (int)session.getAttribute("shedtype");
-                shedLength = (int)session.getAttribute("shedLength");
-                shedWidth = (int)session.getAttribute("shedWidth");
+                size = (int) session.getAttribute("size");
+                length = (int) session.getAttribute("length");
+                width = (int) session.getAttribute("width");
+                height = (int) session.getAttribute("height");
+                rooftype = (int) session.getAttribute("rooftype");
+                roofsort = (int) session.getAttribute("roofsort");
+                shed = (int) session.getAttribute("shed");
+                shedtype = (int) session.getAttribute("shedtype");
+                shedLength = (int) session.getAttribute("shedLength");
+                shedWidth = (int) session.getAttribute("shedWidth");
 
                 LocalDateTime localDateTime;
                 localDateTime = LocalDateTime.now();
