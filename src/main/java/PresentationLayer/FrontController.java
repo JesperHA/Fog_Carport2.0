@@ -79,7 +79,7 @@ public class FrontController extends HttpServlet {
         // Initiate Logging
         try {
             // Tilføj filehandler med formattering
-            fileHandler = new FileHandler("C:\\Users\\GuniP\\Desktop\\Fog_Carport2.0\\logs\\frontcontroller_logfile.log", true);
+            fileHandler = new FileHandler("C:\\Users\\Jesper\\Desktop\\Fog_Carport3.0\\logs\\frontcontroller_logfile.log", true);
             simpleFormatter = new SimpleFormatter();
             LOGGER.addHandler(fileHandler);
             fileHandler.setFormatter(simpleFormatter);
@@ -166,6 +166,7 @@ public class FrontController extends HttpServlet {
                     KundeFacade.checkRegister(createCustomer);
                     destination = "/login.jsp";
                 } catch (RegisterException ex) {
+
                     ex.printStackTrace();
 
                     request.setAttribute("name", customer_name);
