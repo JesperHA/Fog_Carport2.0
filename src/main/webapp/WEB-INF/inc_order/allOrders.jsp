@@ -24,7 +24,7 @@
                                         <span class="input-group-btn">
                                                 <button class="btn btn-primary" type="button">Søg</button>
                                            </span>
-                                    </div> 
+                                    </div>
                                 </form>
                             </div>
 

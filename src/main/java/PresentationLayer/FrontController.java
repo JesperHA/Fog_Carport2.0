@@ -6,7 +6,6 @@ import Exceptions.RegisterException;
 import FacadeLayer.KundeFacade;
 import FacadeLayer.OrderFacade;
 import FunctionLayer.SVG;
-import Logging.LogMapper;
 import Model.Customer;
 import Model.Material;
 import Model.Order;
@@ -21,11 +20,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.logging.*;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/FrontController"})
 public class FrontController extends HttpServlet {
-
-    final public static LogMapper LOGGER = new LogMapper();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -68,10 +66,35 @@ public class FrontController extends HttpServlet {
         request.getRequestDispatcher(destination).forward(request, response);
     }
 
+    private static final Logger LOGGER = Logger.getLogger(FrontController.class.getName());
+
+    private Handler fileHandler = null;
+    private SimpleFormatter simpleFormatter = null;
+    private ConsoleHandler consoleHandler = null;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Initiate Logging
+        try {
+            // Tilføj filehandler med formattering
+            fileHandler = new FileHandler("C:\\Users\\GuniP\\Desktop\\Fog_Carport2.0\\logs\\frontcontroller_logfile.log", true);
+            simpleFormatter = new SimpleFormatter();
+            LOGGER.addHandler(fileHandler);
+            fileHandler.setFormatter(simpleFormatter);
+
+            fileHandler.setLevel(Level.ALL); // Alle logging levels kommer i filer.
+
+            // Tilføj consolehandler uden formattering (rå format)
+            consoleHandler = new ConsoleHandler();
+            consoleHandler.setLevel(Level.CONFIG); // Levels som kommer i console er Severe, Warning, Info og Config
+            LOGGER.addHandler(consoleHandler);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Logging Færdig
 
         String destination = "index.jsp";
         String source = request.getParameter("source");
@@ -120,6 +143,11 @@ public class FrontController extends HttpServlet {
 
                     request.setAttribute("fail", "failed");
                     destination = "login.jsp";
+
+                    String userAddr = request.getRemoteAddr();
+                    String userFailed = "(Email: " + email + " Password:" + password + ")";
+                    LOGGER.log(Level.INFO, "Failed login attempt for user " + userFailed);
+                    fileHandler.close();
                 }
                 break;
 
@@ -150,6 +178,9 @@ public class FrontController extends HttpServlet {
 
                     request.setAttribute("fail", ex.getMessage());
                     destination = "registration.jsp";
+
+                    LOGGER.log(Level.INFO, "Failed registration attempt, email used was (" + customer_email + ")");
+                    fileHandler.close();
                 }
 
                 break;
@@ -274,14 +305,12 @@ public class FrontController extends HttpServlet {
 
                         if (order != null) {
                             if (roleCheck == 1) {
-
                                 request.setAttribute("customerIQ", customerRelative);
                                 request.setAttribute("foundOrder", order);
                                 request.setAttribute("type", type);
 
                             } else if (roleCheck == 0) {
                                 if (order.getCustomer_id() == login.getCustomer_id()) {
-
                                     request.setAttribute("customerIQ", customerRelative);
                                     request.setAttribute("foundOrder", order);
                                     request.setAttribute("type", type);
@@ -301,6 +330,7 @@ public class FrontController extends HttpServlet {
                         request.setAttribute("orderlist", customerOrders);
                         request.setAttribute("type", type);
                         destination = "WEB-INF/order.jsp";
+
                         break;
                     case "all":
                         if (roleCheck == 1) {
@@ -469,12 +499,14 @@ public class FrontController extends HttpServlet {
 
                  Order order = new Order(1, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
 
-
                 try {
                     OrderFacade.createOrder(order);
                 } catch (OrderException e) {
                     System.out.println("der skete en fejl i oprettelse af ordre i databasen");
-                    e.printStackTrace();
+
+                    String failedOrder = "(ID: " + order.getCustomer_id() + " Size: " + order.getSize() + " Length: " + order.getLength() + " Width: " + order.getWidth() + " Height: " + order.getHeight() + " Tagtype: " + order.getRoof_type() + " Tag Materiale: " + order.getRoof_sort() + " Redskabsskur: " + order.getShed() + " Reds. Type: " + order.getShedtype() + " Reds. Length: " + order.getShed_length() + " Reds. Width: " + order.getShed_width() + " Dato: " + order.getDate() + ")";
+                    LOGGER.log(Level.WARNING,login.getId() + ". " + login.getName() + " - Fejl: Ordren blev ikke oprettet i databasen. For ordre " + failedOrder);
+                    fileHandler.close();
                 }
 
                 destination = "index.jsp";
@@ -487,4 +519,5 @@ public class FrontController extends HttpServlet {
                 forward(request, response);
 
     }
+
 }

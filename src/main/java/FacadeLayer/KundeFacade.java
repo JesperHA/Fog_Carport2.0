@@ -3,7 +3,6 @@ package FacadeLayer;
 import DBAccess.CustomerMapper;
 import Exceptions.LoginException;
 import Exceptions.RegisterException;
-import Logging.LogMapper;
 import Model.Customer;
 
 import java.util.ArrayList;
