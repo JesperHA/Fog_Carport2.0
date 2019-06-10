@@ -2,12 +2,10 @@
 <%@ page import="java.util.ArrayList" %>
 
 <%
-
     Customer customer = (Customer) session.getAttribute("login");
 
     Customer foundCustomer = null;
     foundCustomer = (Customer) request.getAttribute("foundCustomer");
-
 %>
 
 <%@include file="../include/header.jsp"%>
@@ -52,6 +50,6 @@
 
         <% } else { %>
             <%@include file="inc_order/allOrders.jsp"%>
-       <% } %>
+        <% } %>
 
 <%@include file="../include/footer.jsp"%>

@@ -10,17 +10,17 @@ import Model.Customer;
 import Model.Material;
 import Model.Order;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.logging.*;
 
 @WebServlet(name = "FrontController", urlPatterns = {"/FrontController"})
 public class FrontController extends HttpServlet {
@@ -66,10 +66,35 @@ public class FrontController extends HttpServlet {
         request.getRequestDispatcher(destination).forward(request, response);
     }
 
+    private static final Logger LOGGER = Logger.getLogger(FrontController.class.getName());
+
+    private Handler fileHandler = null;
+    private SimpleFormatter simpleFormatter = null;
+    private ConsoleHandler consoleHandler = null;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Initiate Logging
+        try {
+            // Tilføj filehandler med formattering
+            fileHandler = new FileHandler("C:\\Users\\GuniP\\Desktop\\Fog_Carport2.0\\logs\\frontcontroller_logfile.log", true);
+            simpleFormatter = new SimpleFormatter();
+            LOGGER.addHandler(fileHandler);
+            fileHandler.setFormatter(simpleFormatter);
+
+            fileHandler.setLevel(Level.ALL); // Alle logging levels kommer i filer.
+
+            // Tilføj consolehandler uden formattering (rå format)
+            consoleHandler = new ConsoleHandler();
+            consoleHandler.setLevel(Level.CONFIG); // Levels som kommer i console er Severe, Warning, Info og Config
+            LOGGER.addHandler(consoleHandler);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Logging Færdig
 
         String destination = "index.jsp";
         String source = request.getParameter("source");
@@ -118,6 +143,11 @@ public class FrontController extends HttpServlet {
 
                     request.setAttribute("fail", "failed");
                     destination = "login.jsp";
+
+                    String userAddr = request.getRemoteAddr();
+                    String userFailed = "(Email: " + email + " Password:" + password + ")";
+                    LOGGER.log(Level.INFO, "Failed login attempt for user " + userFailed);
+                    fileHandler.close();
                 }
                 break;
 
@@ -148,6 +178,9 @@ public class FrontController extends HttpServlet {
 
                     request.setAttribute("fail", ex.getMessage());
                     destination = "registration.jsp";
+
+                    LOGGER.log(Level.INFO, "Failed registration attempt, email used was (" + customer_email + ")");
+                    fileHandler.close();
                 }
 
                 break;
@@ -177,17 +210,9 @@ public class FrontController extends HttpServlet {
                 int rooftype = Integer.parseInt(request.getParameter("rooftype"));
                 int roofsort = Integer.parseInt(request.getParameter("roofsort"));
 
-                session.setAttribute("size", size);
-                session.setAttribute("shed", shed);
-                session.setAttribute("shedtype", shedtype);
-                session.setAttribute("length", length);
-                session.setAttribute("width", width);
-                session.setAttribute("height", height);
-                session.setAttribute("shedLength", shedLength);
-                session.setAttribute("shedWidth", shedWidth);
-                session.setAttribute("rooftype", rooftype);
-                session.setAttribute("roofsort", roofsort);
+                int[] carportSettings = {size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort};
 
+                session.setAttribute("carportSettings", carportSettings);
 
                 materials = FunctionLayer.MaterialCalculator.carportUdregner(size, shed, shedtype, length, width, height, shedLength, shedWidth, rooftype, roofsort);
 
@@ -291,14 +316,12 @@ public class FrontController extends HttpServlet {
 
                         if (order != null) {
                             if (roleCheck == 1) {
-
                                 request.setAttribute("customerIQ", customerRelative);
                                 request.setAttribute("foundOrder", order);
                                 request.setAttribute("type", type);
 
                             } else if (roleCheck == 0) {
                                 if (order.getCustomer_id() == login.getCustomer_id()) {
-
                                     request.setAttribute("customerIQ", customerRelative);
                                     request.setAttribute("foundOrder", order);
                                     request.setAttribute("type", type);
@@ -318,6 +341,7 @@ public class FrontController extends HttpServlet {
                         request.setAttribute("orderlist", customerOrders);
                         request.setAttribute("type", type);
                         destination = "WEB-INF/order.jsp";
+
                         break;
                     case "all":
                         if (roleCheck == 1) {
@@ -360,8 +384,8 @@ public class FrontController extends HttpServlet {
                             int updateLength = Integer.parseInt(request.getParameter("length"));
                             int updateWidth = Integer.parseInt(request.getParameter("width"));
                             int updateHeight = Integer.parseInt(request.getParameter("height"));
-                            int updateRooftype = Integer.parseInt(request.getParameter("rooftype"));
-                            int updateRoofsort = Integer.parseInt(request.getParameter("roofsort"));
+                            int updateRooftype = Integer.parseInt(request.getParameter("roof_type"));
+                            int updateRoofsort = Integer.parseInt(request.getParameter("roof_sort"));
                             int updateShed = Integer.parseInt(request.getParameter("shed"));
                             int updateShedtype = Integer.parseInt(request.getParameter("shedtype"));
                             int updateShedLength = Integer.parseInt(request.getParameter("shed_length"));
@@ -369,21 +393,23 @@ public class FrontController extends HttpServlet {
                             int updateOrder_status = Integer.parseInt(request.getParameter("order_status")); // order_status
                             String updateDate = request.getParameter("date"); // date
 
-
                             String newDate = updateDate.replace("-", "");
+
+                            if (updateShed == 0) {
+                                updateShedtype = 0;
+                                updateShedLength = 0;
+                                updateShedWidth = 0;
+                            }
 
                             Order updateOrder = new Order(updateOrder_id, updateCustomer_id, updateSize, updateLength, updateWidth, updateHeight, updateRooftype, updateRoofsort, updateShed, updateShedtype, updateShedLength, updateShedWidth, updateOrder_status, newDate);
 
                             Order result = OrderFacade.changeOrder(updateOrder);
 
                             if (result != null) {
-
                                 Customer updatedCustomerIQ1 = KundeFacade.getCustomer("" + updateCustomer_id, "id");
 
                                 request.setAttribute("foundOrder", result);
-
                                 request.setAttribute("customerIQ", updatedCustomerIQ1);
-
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
@@ -393,9 +419,7 @@ public class FrontController extends HttpServlet {
 
                                 request.setAttribute("updateOrderStatus", "fail");
                                 request.setAttribute("updateOrderId", updateOrder_id);
-
                                 request.setAttribute("customerIQ", updatedCustomerIQ2);
-
                                 request.setAttribute("orderlist", orderList);
                                 request.setAttribute("type", typeOf);
 
@@ -478,10 +502,11 @@ public class FrontController extends HttpServlet {
                 shedLength = (int)session.getAttribute("shedLength");
                 shedWidth = (int)session.getAttribute("shedWidth");
 
-                DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
-                Date date = new Date();
-                String dato = dateFormat.format(date);
+                LocalDateTime localDateTime;
+                localDateTime = LocalDateTime.now();
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                String dato = formatter.format(localDateTime);
                 int customer_id = 1;
 
                 Customer loggedIn = (Customer) session.getAttribute("login");
@@ -491,12 +516,14 @@ public class FrontController extends HttpServlet {
 
                  Order order = new Order(customer_id, size, length, width, height, rooftype, roofsort, shed, shedtype, shedLength, shedWidth, 0, dato);
 
-
                 try {
                     OrderFacade.createOrder(order);
                 } catch (OrderException e) {
                     System.out.println("der skete en fejl i oprettelse af ordre i databasen");
-                    e.printStackTrace();
+
+                    String failedOrder = "(ID: " + order.getCustomer_id() + " Size: " + order.getSize() + " Length: " + order.getLength() + " Width: " + order.getWidth() + " Height: " + order.getHeight() + " Tagtype: " + order.getRoof_type() + " Tag Materiale: " + order.getRoof_sort() + " Redskabsskur: " + order.getShed() + " Reds. Type: " + order.getShedtype() + " Reds. Length: " + order.getShed_length() + " Reds. Width: " + order.getShed_width() + " Dato: " + order.getDate() + ")";
+                    LOGGER.log(Level.WARNING,login.getId() + ". " + login.getName() + " - Fejl: Ordren blev ikke oprettet i databasen. For ordre " + failedOrder);
+                    fileHandler.close();
                 }
 
                 destination = "index.jsp";
@@ -509,4 +536,5 @@ public class FrontController extends HttpServlet {
                 forward(request, response);
 
     }
+
 }

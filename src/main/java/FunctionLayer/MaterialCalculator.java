@@ -178,9 +178,6 @@ public class MaterialCalculator {
             klinkbeklædning.setAmount((int)antalKlink);
             klinkbeklædning3.setAmount((int)antalKlink);
 
-
-
-
             stolper.setUnit(længdeUdregning(stolper.getUnit()));
             remme.setUnit(længdeUdregning(remme.getUnit()));
             spærtræ.setUnit(længdeUdregning(spærtræ.getUnit()));
@@ -192,8 +189,6 @@ public class MaterialCalculator {
             enPåTo.setUnit(længdeUdregning(enPåTo.getUnit()));
             klinkbeklædning.setUnit(længdeUdregning(klinkbeklædning.getUnit()));
             klinkbeklædning3.setUnit(længdeUdregning(klinkbeklædning3.getUnit()));
-
-
 
             // udregner priser på materialer
 
@@ -405,13 +400,11 @@ public class MaterialCalculator {
                 material.setAmount(i2);
             }
 
-
             double prisIalt = prisUdregner(material.getPrice(), material.getAmount(), material.getUnit());
             material.setPrice(prisIalt);
 
 
             materialBeregning.add(material);
-
         }
     }
 
@@ -421,6 +414,7 @@ public class MaterialCalculator {
 
         return prisIalt;
     }
+
     private static int mængdeUdregner(int size, double Antal, int min, int max) {
 
         int amount = 0;
@@ -457,7 +451,6 @@ public class MaterialCalculator {
         }else if(længde > maxLængde){
             længde = maxLængde;
         }
-
         return længde;
     }
 
