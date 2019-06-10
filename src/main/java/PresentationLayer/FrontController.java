@@ -79,18 +79,16 @@ public class FrontController extends HttpServlet {
         // Initiate Logging
         try {
             // Tilføj filehandler med formattering
-            fileHandler = new FileHandler("C:\\Users\\GuniP\\Desktop\\Fog_Carport2.0\\logs\\frontcontroller_logfile.log", true);
+            fileHandler = new FileHandler("fog/frontcontroller_logfile.log", true);
             simpleFormatter = new SimpleFormatter();
             LOGGER.addHandler(fileHandler);
             fileHandler.setFormatter(simpleFormatter);
-
             fileHandler.setLevel(Level.ALL); // Alle logging levels kommer i filer.
 
             // Tilføj consolehandler uden formattering (rå format)
             consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.CONFIG); // Levels som kommer i console er Severe, Warning, Info og Config
             LOGGER.addHandler(consoleHandler);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -324,7 +322,8 @@ public class FrontController extends HttpServlet {
                         String order_id = request.getParameter("order_id");
                         Order order;
                         order = OrderFacade.getOrder(Integer.parseInt(order_id));
-                        Customer customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
+                        Customer customerRelative;
+                        customerRelative = KundeFacade.getCustomer("" + order.getCustomer_id(), "id");
 
                         if (order != null) {
                             if (roleCheck == 1) {

@@ -97,6 +97,7 @@ public class CustomerMapper {
 
     public static Customer getCustomer( String search, String action ) {
         String SQL;
+
         if (action.equals("mail")) {
             SQL = "SELECT * FROM customers "
                     + "WHERE email=?";
@@ -121,7 +122,7 @@ public class CustomerMapper {
                 int role = rs.getInt( "employee" );
                 return (new Customer(customer_id, name, email, password, phone, address, zipcode, city, role));
             } else {
-                throw new LoginException(search, "n/a", "Login exception, user does not exist ");
+                throw new LoginException(search, "n/a", "User not found (Loginexception), user does not exist ");
             }
         } catch (Exception e) {
         e.printStackTrace();
