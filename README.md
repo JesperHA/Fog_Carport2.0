@@ -2,4 +2,4 @@
 # ----------------------------------
 # 2. Semester Datamatiker Bornholm.
 
-# Featuring: Simon, Jesper, Marcus, Lil' Brain
+# Featuring: Simon, Jesper, Marcus, Mathias
